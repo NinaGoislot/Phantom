@@ -1,21 +1,26 @@
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
 #include "glad/glad.h"
-#include "draw_scene.hpp"
-#include "tools/matrix_stack.hpp"
+#include "glbasimac/glbi_engine.hpp"
+#include "glbasimac/glbi_set_of_points.hpp"
+#include "glbasimac/glbi_convex_2D_shape.hpp"
 #include <iostream>
-#include <cmath>
-
-/* Window size */
-
-int WINDOW_WIDTH = 800;
-int WINDOW_HEIGHT = 800;
+#include <array>
+#include <math.h>
+#include "draw_scene.hpp"
 
 using namespace glbasimac;
 
 /* Minimal time wanted between two images */
 static const double FRAMERATE_IN_SECONDS = 1. / 30.;
 static float aspectRatio = 1.0f;
+static const float GL_VIEW_SIZE = 40.; // changed to 40 here
+static const int WINDOW_WIDTH = 800;
+static const int WINDOW_HEIGHT = 800;
+static bool minusAngleActivated = false;
+
+static bool color_mode_activated = true;
+static std::array<float, 4> base_rgba{0.f, 0.f, 0.f, 0.f};
 
 /* Error handling function */
 void onError(int error, const char *description)
@@ -23,45 +28,70 @@ void onError(int error, const char *description)
     std::cout << "GLFW Error (" << error << ") : " << description << std::endl;
 }
 
-static const float GL_VIEW_SIZE = 6.0f;
-
-void onWindowResized(GLFWwindow *, int width, int height)
+void onWindowResized(GLFWwindow * /*window*/, int width, int height)
 {
     aspectRatio = width / (float)height;
-    myEngine.set3DProjection(90.0, aspectRatio, Z_NEAR, Z_FAR);
-};
-
-
-void key_callback(GLFWwindow *window, int key, int scancode, int action, int mods)
-{
-    if (action == GLFW_PRESS || action == GLFW_REPEAT)
+    glViewport(0, 0, width, height);
+    if (aspectRatio > 1.0)
     {
-        switch (key)
-        {
-        case GLFW_KEY_ESCAPE:
-            glfwSetWindowShouldClose(window, GL_TRUE);
-            break;
-        case GLFW_KEY_W:
-            angle_phy += 1.0f;
-            break;
-        case GLFW_KEY_S:
-            angle_phy -= 1.0f;
-            break;
-        case GLFW_KEY_A:
-            angle_theta -= 1.0f;
-            break;
-        case GLFW_KEY_D:
-            angle_theta += 1.0f;
-            break;
-        case GLFW_KEY_UP:
-            dist_zoom *=0.9f;
-            break;
-        case GLFW_KEY_DOWN:
-            dist_zoom *= 1.1f;
-            break;
-        default:
-            break;
-        }
+        myEngine.set2DProjection(-GL_VIEW_SIZE * aspectRatio / 2.,
+                                 GL_VIEW_SIZE * aspectRatio / 2.,
+                                 -GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.);
+    }
+    else
+    {
+        myEngine.set2DProjection(-GL_VIEW_SIZE / 2., GL_VIEW_SIZE / 2.,
+                                 -GL_VIEW_SIZE / (2. * aspectRatio),
+                                 GL_VIEW_SIZE / (2. * aspectRatio));
+    }
+}
+
+bool shiftPressed = false;
+bool lineMode = false;
+
+void onKeyDown(GLFWwindow *window, int key, int scancode, int action, int mods)
+{
+
+    const char *key_name = glfwGetKeyName(key, 0);
+
+    // std::cout << key_name << std::endl;
+    // we want to exit on the q key but we are baguettes so here we need to set it to the A
+    if (key == GLFW_KEY_A && action == GLFW_PRESS)
+        glfwSetWindowShouldClose(window, 1);
+
+    if (key == GLFW_KEY_F && action == GLFW_PRESS)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+    }
+    if (key == GLFW_KEY_P && action == GLFW_PRESS)
+    {
+        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+    }
+}
+
+static void onMouseMove(GLFWwindow *window, double xpos, double ypos)
+{
+    // stuff here if needed
+}
+
+void onClick(GLFWwindow *window, int button, int action, int mods)
+{
+
+    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
+    {
+        minusAngleActivated = false;
+        double xpos, ypos;
+        // getting cursor position
+        glfwGetCursorPos(window, &xpos, &ypos);
+
+        int height, width;
+        // getting window size
+        glfwGetWindowSize(window, &width, &height);
+    }
+
+    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
+    {
+        minusAngleActivated = true;
     }
 }
 
@@ -77,15 +107,27 @@ int main()
     glfwSetErrorCallback(onError);
 
     // Create a windowed mode window and its OpenGL context
-    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "OpenGLTemplate", nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "TD 03 Ex 01", /*glfwGetPrimaryMonitor() for fullscreen*/ nullptr, nullptr);
+    // GLFWmonitor* monitor = glfwGetWindowMonitor(window);
+    // const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+
     if (!window)
     {
         glfwTerminate();
         return -1;
     }
 
-    // -- Callbacks --
+    // deal with resizing the window
     glfwSetWindowSizeCallback(window, onWindowResized);
+
+    // sets the window as fullscreen, but unplayable so we disable it for now
+    // glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+
+    // deal with exit button - q
+    glfwSetKeyCallback(window, onKeyDown);
+
+    glfwSetCursorPosCallback(window, onMouseMove);
+    glfwSetMouseButtonCallback(window, onClick);
 
     // Make the window's context current
     glfwMakeContextCurrent(window);
@@ -97,16 +139,26 @@ int main()
     }
 
     // Initialize Rendering Engine
-
-    myEngine.mode2D = false;
-
     myEngine.initGL();
 
-    onWindowResized(window, WINDOW_WIDTH, WINDOW_HEIGHT);
-
-    glfwSetKeyCallback(window, key_callback);
-
+    // Initializing the scene
     initScene();
+
+    // deal with resizing the window
+    int width, height;
+    glfwGetWindowSize(window, &width, &height);
+    onWindowResized(window, width, height);
+
+    // deal with closing the window
+
+    onKeyDown(window, GLFW_KEY_A, GLFW_PRESS, 0, 0);
+
+    if (color_mode_activated)
+    {
+        onClick(window, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
+    }
+
+    glClearColor(0.2f, 0.f, 0.f, 0.f);
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
@@ -115,22 +167,16 @@ int main()
         double startTime = glfwGetTime();
 
         /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glEnable(GL_DEPTH_TEST);
 
-        /* Fix camera position */
-        myEngine.mvMatrixStack.loadIdentity();
-        Vector3D pos_camera = Vector3D(dist_zoom * cos(deg2rad(angle_theta)) * cos(deg2rad(angle_phy)),
-                                       dist_zoom * sin(deg2rad(angle_theta)) * cos(deg2rad(angle_phy)),
-                                       dist_zoom * sin(deg2rad(angle_phy)));
+        glClear(GL_COLOR_BUFFER_BIT);
+        if (!color_mode_activated)
+        {
+            glClearColor(base_rgba[0], base_rgba[1], base_rgba[2], base_rgba[3]);
+        }
 
-        Vector3D viewed_point = Vector3D(0.0f, 0.0f, 0.0f);
-        Vector3D up_vector = Vector3D(0.0f, 0.0f, 1.0f);
-        Matrix4D view_matrix = Matrix4D::lookAt(pos_camera, viewed_point, up_vector);
-        myEngine.setViewMatrix(view_matrix);
-        myEngine.updateMvMatrix();
+        // render here
 
-        drawScene();
+        renderScene();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

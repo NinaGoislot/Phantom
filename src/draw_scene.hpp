@@ -8,24 +8,15 @@
 using namespace glbasimac;
 
 /* Camera parameters and functions */
-static const float Z_NEAR {0.1f};
-static const float Z_FAR {500.f};
-extern float angle_theta;      // Angle between x axis and viewpoint
-extern float angle_phy  ;      // Angle between z axis and viewpoint
-extern float dist_zoom  ;      // Distance between origin and viewpoint
+extern bool flag_anim_rot_scale;
+extern bool flag_anim_rot_arm;
 
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
 
 void initScene();
 
-void drawFrame();
+void drawSquare();
 
-void drawBase();
-
-void drawArm();
-
-void drawPan();
-
-void drawScene();
+void renderScene();
 
