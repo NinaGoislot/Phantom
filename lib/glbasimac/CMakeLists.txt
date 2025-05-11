@@ -26,6 +26,16 @@ target_include_directories(glad PUBLIC glad/include)
 
 target_link_libraries(glbasimac PUBLIC glad)
 
+# ---Add glm---
+include(FetchContent)
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm
+    GIT_TAG efec5db081e3aad807d0731e172ac597f6a39447
+)
+FetchContent_MakeAvailable(glm)
+
+target_link_libraries(glbasimac PUBLIC glm)
 
 # ---Add exe_path---
 include(FetchContent)
