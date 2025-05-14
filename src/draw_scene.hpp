@@ -16,7 +16,9 @@ extern GLBI_Engine myEngine;
 
 void initScene();
 
-void drawSquare();
+//to add
+void drawOneTile(int& x, int& y, float color);
+void drawMap();
 
 void renderScene();
 

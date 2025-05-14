@@ -1,3 +1,7 @@
+//-----------------------------------------------------------------------------------------
+//------------------------------------- TEST MAP --------------------------------------
+//-----------------------------------------------------------------------------------------
+
 #include "map.hpp"
 
 //-----------------------------------------------------------------------------------------
@@ -5,8 +9,8 @@
 //-----------------------------------------------------------------------------------------
 
 
-#define MAP_WIDTH 30
-#define MAP_HEIGHT 15
+#define MAP_WIDTH 100
+#define MAP_HEIGHT 100
 
 // creation d'un objet pour dire si la case est en vie ou pas
 int ALIVE{1};
@@ -78,7 +82,7 @@ int countAliveNeighbors(int x, int y)
 
 //fonction qui genere la map avec un nombre de generations
 
-void generateMap(int generations)
+void generateMap(int generations = NB_GENERATIONS)
 {
     initializeMap();
     for (int gen{0}; gen < generations; gen++)
@@ -115,7 +119,7 @@ void displayMap()
 }
 
 // fonction qui genere le spawn du joueur (le spawn est un carré de taille size)
-void playerSpawner(int size)
+void playerSpawner(int size = SPAWN_SIZE)
 {
     int x = MAP_WIDTH / 2;
     int y = MAP_HEIGHT / 2;
@@ -132,13 +136,4 @@ void playerSpawner(int size)
 bool isAlive(int x, int y)
 {
     return map[y][x] == ALIVE;
-}
-
-int main()
-{
-    generateMap(NB_GENERATIONS);
-    playerSpawner(SPAWN_SIZE);
-    displayMap();
-    std::cout << (isAlive(1, 1) ? "true" : "false") << std::endl;
-    return 0;
 }

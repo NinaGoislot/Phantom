@@ -8,6 +8,7 @@
 #include <array>
 #include <math.h>
 #include "draw_scene.hpp"
+#include "map.hpp"
 
 using namespace glbasimac;
 
@@ -140,6 +141,10 @@ int main()
 
     // Initialize Rendering Engine
     myEngine.initGL();
+
+    //---------------------- to add -------------------------
+    generateMap(10);
+    playerSpawner(10);
 
     // Initializing the scene
     initScene();
