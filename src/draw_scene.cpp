@@ -60,8 +60,8 @@ void initScene()
     /////////////////////////////////////////////////////////////////////////////////////
 }
 
-void renderScene()
+void renderScene(const Game& game)
 {
-
 	drawSquare();
+    game.player->draw(myEngine);
 }

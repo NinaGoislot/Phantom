@@ -8,6 +8,8 @@
 #include <array>
 #include <math.h>
 #include "draw_scene.hpp"
+#include "controls/controls.hpp"
+#include "characters/player.hpp"
 
 using namespace glbasimac;
 
@@ -49,50 +51,11 @@ void onWindowResized(GLFWwindow * /*window*/, int width, int height)
 bool shiftPressed = false;
 bool lineMode = false;
 
-void onKeyDown(GLFWwindow *window, int key, int scancode, int action, int mods)
+void setupCallbacks(GLFWwindow *window)
 {
-
-    const char *key_name = glfwGetKeyName(key, 0);
-
-    // std::cout << key_name << std::endl;
-    // we want to exit on the q key but we are baguettes so here we need to set it to the A
-    if (key == GLFW_KEY_A && action == GLFW_PRESS)
-        glfwSetWindowShouldClose(window, 1);
-
-    if (key == GLFW_KEY_F && action == GLFW_PRESS)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-    }
-    if (key == GLFW_KEY_P && action == GLFW_PRESS)
-    {
-        glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-    }
-}
-
-static void onMouseMove(GLFWwindow *window, double xpos, double ypos)
-{
-    // stuff here if needed
-}
-
-void onClick(GLFWwindow *window, int button, int action, int mods)
-{
-
-    if (button == GLFW_MOUSE_BUTTON_LEFT && action == GLFW_PRESS)
-    {
-        minusAngleActivated = false;
-        double xpos, ypos;
-        // getting cursor position
-        glfwGetCursorPos(window, &xpos, &ypos);
-
-        int height, width;
-        // getting window size
-        glfwGetWindowSize(window, &width, &height);
-    }
-
-    if (button == GLFW_MOUSE_BUTTON_RIGHT && action == GLFW_PRESS)
-    {
-        minusAngleActivated = true;
-    }
+    // deal with resizing the window
+    glfwSetWindowSizeCallback(window, onWindowResized);
+    Controls::setupCallbacks(window);
 }
 
 int main()
@@ -107,7 +70,7 @@ int main()
     glfwSetErrorCallback(onError);
 
     // Create a windowed mode window and its OpenGL context
-    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "TD 03 Ex 01", /*glfwGetPrimaryMonitor() for fullscreen*/ nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Phantom", /*glfwGetPrimaryMonitor() for fullscreen*/ nullptr, nullptr);
     // GLFWmonitor* monitor = glfwGetWindowMonitor(window);
     // const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -116,18 +79,6 @@ int main()
         glfwTerminate();
         return -1;
     }
-
-    // deal with resizing the window
-    glfwSetWindowSizeCallback(window, onWindowResized);
-
-    // sets the window as fullscreen, but unplayable so we disable it for now
-    // glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
-
-    // deal with exit button - q
-    glfwSetKeyCallback(window, onKeyDown);
-
-    glfwSetCursorPosCallback(window, onMouseMove);
-    glfwSetMouseButtonCallback(window, onClick);
 
     // Make the window's context current
     glfwMakeContextCurrent(window);
@@ -138,8 +89,20 @@ int main()
         return -1;
     }
 
+    setupCallbacks(window);
+
+    // sets the window as fullscreen, but unplayable so we disable it for now
+    // glfwSetWindowMonitor(window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
+
     // Initialize Rendering Engine
     myEngine.initGL();
+
+    // Création partie
+    double deltaTime;
+    Player player{};
+    player.init();
+    Game current_game{&deltaTime, &player};
+    glfwSetWindowUserPointer(window, &current_game);
 
     // Initializing the scene
     initScene();
@@ -149,22 +112,16 @@ int main()
     glfwGetWindowSize(window, &width, &height);
     onWindowResized(window, width, height);
 
-    // deal with closing the window
-
-    onKeyDown(window, GLFW_KEY_A, GLFW_PRESS, 0, 0);
-
-    if (color_mode_activated)
-    {
-        onClick(window, GLFW_MOUSE_BUTTON_LEFT, GLFW_PRESS, 0);
-    }
-
     glClearColor(0.2f, 0.f, 0.f, 0.f);
+    double previousTime = glfwGetTime();
 
     /* Loop until the user closes the window */
     while (!glfwWindowShouldClose(window))
     {
         /* Get time (in second) at loop beginning */
         double startTime = glfwGetTime();
+        double currentTime = glfwGetTime();
+        deltaTime = currentTime - previousTime;
 
         /* Render here */
 
@@ -175,8 +132,7 @@ int main()
         }
 
         // render here
-
-        renderScene();
+        renderScene(current_game);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);
@@ -185,6 +141,7 @@ int main()
         glfwPollEvents();
 
         /* Elapsed time computation from loop begining */
+        double frameEndTime = glfwGetTime();
         double elapsedTime = glfwGetTime() - startTime;
         /* If to few time is spend vs our wanted FPS, we wait */
         while (elapsedTime < FRAMERATE_IN_SECONDS)
