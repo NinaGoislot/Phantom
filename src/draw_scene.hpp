@@ -1,6 +1,7 @@
 #pragma once
 
 #include "glbasimac/glbi_engine.hpp"
+#include "glbasimac/glbi_texture.hpp"
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/basic_mesh.hpp"
@@ -19,4 +20,6 @@ void initScene();
 void drawSquare();
 
 void renderScene();
+
+static StandardMesh createAutoTiledMesh();
 

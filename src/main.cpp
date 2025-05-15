@@ -22,6 +22,8 @@ static bool minusAngleActivated = false;
 static bool color_mode_activated = true;
 static std::array<float, 4> base_rgba{0.f, 0.f, 0.f, 0.f};
 
+GLBI_Engine myEngine;
+
 /* Error handling function */
 void onError(int error, const char *description)
 {
