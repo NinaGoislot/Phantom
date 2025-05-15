@@ -13,6 +13,8 @@
 
 using namespace glbasimac;
 
+GLBI_Engine myEngine;
+
 static StandardMesh createAutoTiledMesh()
 {
     // Coordonnées des sommets (x, y)
