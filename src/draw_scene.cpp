@@ -109,7 +109,7 @@ void initScene()
 	stbi_image_free(imgData);
 }
 
-void renderScene()
+void renderScene(const Game& game)
 {
     myEngine.mvMatrixStack.pushMatrix();
 
@@ -130,4 +130,6 @@ void renderScene()
     }
 
     myEngine.mvMatrixStack.popMatrix();
+
+    game.player->draw(myEngine);
 }

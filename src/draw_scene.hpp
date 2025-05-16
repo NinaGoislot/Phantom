@@ -6,6 +6,10 @@
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/basic_mesh.hpp"
 
+#include "controls/controls.hpp"
+#include "game.hpp"
+
+
 using namespace glbasimac;
 
 /* Camera parameters and functions */
@@ -17,9 +21,7 @@ extern GLBI_Engine myEngine;
 
 void initScene();
 
-void drawSquare();
-
-void renderScene();
+void renderScene(const Game& game);
 
 static StandardMesh createAutoTiledMesh();
 
