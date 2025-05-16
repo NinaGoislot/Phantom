@@ -46,6 +46,8 @@ void updatePlayer(GLFWwindow *window, const float &deltaTime, const int key, Pla
 
         //Afficher position du joueur
         printf("Position: (%f, %f)\n", player.position.x, player.position.y);
+        // Afficher la vitesse du joueur
+        printf("Vitesse: %f\n", player.speed);
     
     }
 }

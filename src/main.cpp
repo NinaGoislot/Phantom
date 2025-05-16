@@ -149,6 +149,8 @@ int main()
             glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS - elapsedTime);
             elapsedTime = glfwGetTime() - startTime;
         }
+
+        previousTime = currentTime;
     }
 
     glfwTerminate();
