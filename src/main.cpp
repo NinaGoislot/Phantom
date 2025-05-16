@@ -143,8 +143,8 @@ int main()
     myEngine.initGL();
 
     //---------------------- to add -------------------------
-    generateMap(10);
-    playerSpawner(10);
+    // generateMap(10);
+    // playerSpawner(5);
 
     // Initializing the scene
     initScene();

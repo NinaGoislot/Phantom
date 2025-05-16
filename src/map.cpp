@@ -8,10 +8,6 @@
 //------------------------------------- DECLARATIONS --------------------------------------
 //-----------------------------------------------------------------------------------------
 
-
-#define MAP_WIDTH 100
-#define MAP_HEIGHT 100
-
 // creation d'un objet pour dire si la case est en vie ou pas
 int ALIVE{1};
 int DEAD{0};
@@ -26,7 +22,7 @@ int seed = time(NULL);
 //----------------------------------------- DATAS -----------------------------------------
 //-----------------------------------------------------------------------------------------
 
-// creation d'une probabilite de vie pour la generation de la map 
+// creation d'une probabilite de vie pour la generation de la map
 // ----- 58 est une bonne valeur ------
 int ALIVE_PROBABILITY = 58;
 
@@ -52,9 +48,14 @@ void initializeMap()
     {
         for (int w{0}; w < MAP_WIDTH; w++)
         {
-            map[h][w] = ALIVE;
             if (rand() % 100 > ALIVE_PROBABILITY)
+            {
                 map[h][w] = DEAD;
+            }
+            else
+            {
+                map[h][w] = ALIVE;
+            }
         }
     }
 }
@@ -73,33 +74,55 @@ int countAliveNeighbors(int x, int y)
             // on verifie que la case est bien dans la map
             if (!(w == x && h == y))
             {
-                count += map[h][w];
+                if (h >= 0 && h < MAP_HEIGHT && w >= 0 && w < MAP_WIDTH)
+                {
+                    count += map[h][w];
+                }
             }
         }
     }
     return count;
 }
 
-//fonction qui genere la map avec un nombre de generations
+// fonction qui genere la map avec un nombre de generations
 
 void generateMap(int generations = NB_GENERATIONS)
 {
     initializeMap();
+    std::cout << std::endl;
+
     for (int gen{0}; gen < generations; gen++)
     {
-        for (int h{1}; h < MAP_HEIGHT - 1; h++)
+        // on passe par une map temporaire pour ne pas modifier la map en cours
+        int newMap[MAP_HEIGHT][MAP_WIDTH];
+
+        for (int h{0}; h < MAP_HEIGHT; h++)
         {
-            for (int w{1}; w < MAP_WIDTH - 1; w++)
+            for (int w{0}; w < MAP_WIDTH; w++)
             {
                 int count = countAliveNeighbors(w, h);
                 if (map[h][w] == DEAD && count >= 6)
-                    map[h][w] = ALIVE;
-                if (map[h][w] == ALIVE && count <= 3)
-                    map[h][w] = DEAD;
+                    newMap[h][w] = ALIVE;
+                else if (map[h][w] == ALIVE && count <= 3)
+                    newMap[h][w] = DEAD;
+                else
+                    newMap[h][w] = map[h][w];
             }
         }
+
+        // on copie la map temporaire dans la map principale
+        for (int h = 0; h < MAP_HEIGHT; h++)
+        {
+            for (int w = 0; w < MAP_WIDTH; w++)
+            {
+                map[h][w] = newMap[h][w];
+            }
+        }
+
     }
+        displayMap();
 }
+
 
 // fonction qui affiche la map
 
@@ -124,9 +147,9 @@ void playerSpawner(int size = SPAWN_SIZE)
     int x = MAP_WIDTH / 2;
     int y = MAP_HEIGHT / 2;
 
-    for (int h{y - size +1}; h < y + size; h++)
+    for (int h{y - size + 1}; h < y + size; h++)
     {
-        for (int w{x - size +1}; w < x + size; w++)
+        for (int w{x - size + 1}; w < x + size; w++)
         {
             map[h][w] = ALIVE;
         }

@@ -36,6 +36,9 @@ void drawOneTile(int& x, int& y, float color)
 //to add
 void drawMap()
 {
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addHomothety(0.2);
+    myEngine.updateMvMatrix();
     carre.drawShape();
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH/2, -MAP_HEIGHT/2, 0.0));
@@ -54,6 +57,7 @@ void drawMap()
             }
         }
     }
+    myEngine.mvMatrixStack.popMatrix();
     myEngine.mvMatrixStack.popMatrix();
 }
 
@@ -88,6 +92,10 @@ void initScene()
     // cercle.initShape(circleLoc);
     // trapeze.initShape(trapezeLoc);
     // /////////////////////////////////////////////////////////////////////////////////////
+
+    //to add
+    generateMap(10);
+    playerSpawner(5);
 
     std::vector<float> originCoord {1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0}; // manually put coord here to match the first arm not ideal
     carre.initShape(originCoord);
