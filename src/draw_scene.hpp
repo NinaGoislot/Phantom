@@ -1,5 +1,6 @@
 #pragma once
 
+#include <random>
 #include "glbasimac/glbi_engine.hpp"
 #include "glbasimac/glbi_texture.hpp"
 #include "glbasimac/glbi_set_of_points.hpp"
@@ -23,5 +24,7 @@ void initScene();
 
 void renderScene(const Game& game);
 
-static StandardMesh createAutoTiledMesh();
+void drawSquare(const StandardMesh& square);
+
+StandardMesh createAutoTiledMesh();
 

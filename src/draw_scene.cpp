@@ -15,55 +15,50 @@ using namespace glbasimac;
 
 GLBI_Engine myEngine;
 
-static StandardMesh createAutoTiledMesh()
+StandardMesh createAutoTiledMesh(float uvSize)
 {
     // Coordonnées des sommets (x, y)
-    static float positions[] = {
-        -0.6f, -0.5f,
+    float positions[] = {
+        -0.5f, -0.5f,
         0.5f, -0.5f,
         0.5f, 0.5f,
         -0.5f, 0.5f};
     // Coordonnées UV (u, v)
-    static float uvs[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f};
+    float uvs[] = {
+        0, 0,
+        uvSize, 0,
+        uvSize, uvSize,
+        0, uvSize};
 
     StandardMesh mesh(4, GL_TRIANGLE_FAN);
     mesh.setNbElt(4);
     // Attrib location 0 pour position, 2 floats
     mesh.addOneBuffer(0, 2, positions, "position", true);
-    // Attrib location 1 pour UV, 2 floats
+    // Attrib location 2 pour UV, 2 floats
     mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
-    mesh.addOneBuffer(1, 2, uvs, "uvs", true);
-    mesh.createVAO();
     return mesh;
 }
 
 // OpenGL Shapes
 // GLBI_Convex_2D_Shape carre;
 StandardMesh square;
-StandardMesh* rectangle;
-GLBI_Convex_2D_Shape triangle;
-GLBI_Convex_2D_Shape cercle;
-GLBI_Convex_2D_Shape trapeze;
+StandardMesh square2;
 
 // Textures 
-GLBI_Texture myTexture;
+GLBI_Texture textureAtlas;
 
-static bool minusAngleActivated = false;
+bool minusAngleActivated = false;
 
-void drawSquare() {
+void drawTile(const StandardMesh& textureTile) {
     myEngine.activateTexturing(true);
-	myTexture.attachTexture();
+	textureAtlas.attachTexture();
     myEngine.setFlatColor(1.0,1.0,1.0);
 
     myEngine.mvMatrixStack.pushMatrix();
-        square.draw();
+        textureTile.draw();
     myEngine.mvMatrixStack.popMatrix();
 
-    myTexture.detachTexture();
+    textureAtlas.detachTexture();
 	myEngine.activateTexturing(false);
 }
 
@@ -72,40 +67,29 @@ void initScene()
   
     int w, h, c;
     stbi_set_flip_vertically_on_load(true);  
-	unsigned char* imgData {stbi_load("../../assets/images/poulpile.jpg", &w, &h, &c, 0)};
+	unsigned char* imgData {stbi_load("../../assets/images/poulpile.jpg", &w, &h, &c, 0)}; // texture atlas
     if (!imgData) {
         std::cout << "Failed to load image: " << stbi_failure_reason() << std::endl;
     }
-    myTexture.createTexture();
-	myTexture.attachTexture();
-    myTexture.setParameters(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	myTexture.loadImage(w, h, c, imgData);
+    textureAtlas.createTexture();
+	textureAtlas.attachTexture();
+    textureAtlas.setParameters(GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    textureAtlas.setParameters(GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    textureAtlas.setParameters(GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	textureAtlas.loadImage(w, h, c, imgData);
 
-    square = createAutoTiledMesh();
+    // Deal with uv position TODO add like a uv function to generate
+
+    // TODO : Change uv during animation to create animation
+    // add animator manager
+
+    square = createAutoTiledMesh(0.5f);
     square.createVAO();
-
-    std::vector<float> squareLoc{1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0};
-
-    std::vector<float> circleLoc{};
-    int nbCirclePoints{100};
-    float circleRadius{1};
-    float dbPi{2.0 * M_PI};
-    float theta{};
-    float xCircle{};
-    float yCircle{};
-
-    for (size_t i = 0; i < nbCirclePoints; i++)
-    {
-        theta = (dbPi * i) / nbCirclePoints;
-        xCircle = circleRadius * cos(theta);
-        yCircle = circleRadius * sin(theta);
-
-        circleLoc.push_back(xCircle);
-        circleLoc.push_back(yCircle);
-    }
+    square2 = createAutoTiledMesh(1.0f);
+    square2.createVAO();
 
     /////////////////////////////////////////////////////////////////////////////////////
-    myTexture.detachTexture();
+    textureAtlas.detachTexture();
 	stbi_image_free(imgData);
 }
 
@@ -113,7 +97,7 @@ void renderScene(const Game& game)
 {
     myEngine.mvMatrixStack.pushMatrix();
 
-    const float spacing = 1.1f;
+    const float spacing = 1.0f;
     const int rows = 5;
     const int cols = 5;
 
@@ -124,7 +108,13 @@ void renderScene(const Game& game)
             myEngine.mvMatrixStack.pushMatrix();
             myEngine.mvMatrixStack.addTranslation({j * spacing, i * spacing, 0.0f});
             myEngine.updateMvMatrix();
-            drawSquare();
+            if ((i+j) % 2) // if broken like add condition to change the textures // add randomness
+            {
+                drawTile(square);
+            } else {
+                drawTile(square2);
+            }
+            
             myEngine.mvMatrixStack.popMatrix();
         }
     }
