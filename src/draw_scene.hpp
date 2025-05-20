@@ -8,6 +8,7 @@
 #include "tools/basic_mesh.hpp"
 
 #include "controls/controls.hpp"
+#include "texturing/texture_manager.hpp"
 #include "game.hpp"
 
 
