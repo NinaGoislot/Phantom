@@ -63,18 +63,9 @@ void drawMap()
     myEngine.mvMatrixStack.popMatrix();
 }
 
-// SimpleText& TextRenderer(){
-//     static SimpleText textRenderer;
-//     return textRenderer;
-// }
 
 void initScene()
 {
-    // TextRenderer().ResetFont();
-    // TextRenderer().SetColor(SimpleText::TEXT_COLOR, SimpleText::Color::YELLOW);
-    // TextRenderer().SetColorf(SimpleText::BACKGROUND_COLOR, 0.f, 0.f, 0.f, 0.f);
-    // TextRenderer().EnableBlending(true);
-
     textInit();
 
     // to add
@@ -90,8 +81,5 @@ void renderScene()
 {
     myEngine.switchToFlatShading();
     drawMap();
-    // TextRenderer().Label("Lorem ipsum dolor sit amet, consectetur adipiscing elit", 100, 100, SimpleText::CENTER);
-    // TextRenderer().Render();
-    textDraw("Lorem ipsum dolor sit amet, consectetur adipiscing elit", 500, 100, SimpleText::CENTER);
-
+    textDraw("Lorem ipsum", 500, 100, SimpleText::CENTER, SimpleText::SIZE_16);
 }

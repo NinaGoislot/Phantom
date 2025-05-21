@@ -8,4 +8,6 @@
 
 void textInit();
 
-void textDraw(std::string text, float x, float y, SimpleText::Alignment alignment, SimpleText::FontSize size = SimpleText::SIZE_16);
+std::string textWritten(std::string const& text);
+
+void textDraw(std::string const& text, float x, float y, SimpleText::Alignment alignment, SimpleText::FontSize size = SimpleText::SIZE_16);

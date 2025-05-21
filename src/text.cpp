@@ -15,9 +15,23 @@ void textInit()
     TextRenderer().EnableBlending(true);
 }
 
-void textDraw(std::string text, float x, float y, SimpleText::Alignment alignment, SimpleText::FontSize size)
+int i {0};
+
+std::string textWritten(std::string const& text) {
+    if (i < text.length()) {
+        i++;
+    } else {
+        i = -1;
+    }
+    if (i == -1) {
+        return text;
+    }
+    return text.substr(0, i);
+}
+
+void textDraw(std::string const& text, float x, float y, SimpleText::Alignment alignment, SimpleText::FontSize size)
 {
     TextRenderer().SetTextSize(size);
-    TextRenderer().Label(text.c_str(), x, y, alignment);
+    TextRenderer().Label(textWritten(text).c_str(), x, y, alignment);
     TextRenderer().Render();
 }
