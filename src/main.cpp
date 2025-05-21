@@ -108,7 +108,7 @@ int main()
     glfwSetErrorCallback(onError);
 
     // Create a windowed mode window and its OpenGL context
-    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "TD 03 Ex 01", /*glfwGetPrimaryMonitor() for fullscreen*/ nullptr, nullptr);
+    GLFWwindow *window = glfwCreateWindow(WINDOW_WIDTH, WINDOW_HEIGHT, "Phantom", /*glfwGetPrimaryMonitor() for fullscreen*/ nullptr, nullptr);
     // GLFWmonitor* monitor = glfwGetWindowMonitor(window);
     // const GLFWvidmode* mode = glfwGetVideoMode(monitor);
 
@@ -142,9 +142,6 @@ int main()
     // Initialize Rendering Engine
     myEngine.initGL();
 
-    //---------------------- to add -------------------------
-    // generateMap(10);
-    // playerSpawner(5);
 
     // Initializing the scene
     initScene();

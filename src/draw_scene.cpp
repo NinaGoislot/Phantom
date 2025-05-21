@@ -9,10 +9,12 @@
 
 // to add
 #include "map.hpp"
+#include "text.hpp"
 
 using namespace glbasimac;
 
 GLBI_Engine myEngine;
+
 
 // OpenGL Shapes
 GLBI_Convex_2D_Shape carre;
@@ -22,8 +24,8 @@ GLBI_Convex_2D_Shape trapeze;
 
 static bool minusAngleActivated = false;
 
-//to add
-void drawOneTile(int& x, int& y, float color)
+// to add
+void drawOneTile(int &x, int &y, float color)
 {
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
@@ -33,7 +35,7 @@ void drawOneTile(int& x, int& y, float color)
     myEngine.mvMatrixStack.popMatrix();
 }
 
-//to add
+// to add
 void drawMap()
 {
     myEngine.mvMatrixStack.pushMatrix();
@@ -41,7 +43,7 @@ void drawMap()
     myEngine.updateMvMatrix();
     carre.drawShape();
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH/2, -MAP_HEIGHT/2, 0.0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
     myEngine.updateMvMatrix();
     for (int h{0}; h < MAP_WIDTH; h++)
     {
@@ -61,48 +63,35 @@ void drawMap()
     myEngine.mvMatrixStack.popMatrix();
 }
 
+// SimpleText& TextRenderer(){
+//     static SimpleText textRenderer;
+//     return textRenderer;
+// }
+
 void initScene()
 {
-    // std::vector<float> squareLoc{1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0};
+    // TextRenderer().ResetFont();
+    // TextRenderer().SetColor(SimpleText::TEXT_COLOR, SimpleText::Color::YELLOW);
+    // TextRenderer().SetColorf(SimpleText::BACKGROUND_COLOR, 0.f, 0.f, 0.f, 0.f);
+    // TextRenderer().EnableBlending(true);
 
-    // std::vector<float> circleLoc{};
-    // int nbCirclePoints{100};
-    // float circleRadius{1};
-    // float dbPi{2.0 * M_PI};
-    // float theta{};
-    // float xCircle{};
-    // float yCircle{};
+    textInit();
 
-    // for (size_t i = 0; i < nbCirclePoints; i++)
-    // {
-    //     theta = (dbPi * i) / nbCirclePoints;
-    //     xCircle = circleRadius * cos(theta);
-    //     yCircle = circleRadius * sin(theta);
-
-    //     circleLoc.push_back(xCircle);
-    //     circleLoc.push_back(yCircle);
-    // }
-
-    // std::vector<float> triangleLoc{-0.5, -0.5, 0.5, -0.5, 0.0, 0.5};
-    // std::vector<float> colors{1.0, 1.0, 1.0, 1.0, 0.0, 0.0, 0.0, 1.0, 0.0, 1.0, 0.0, 1.0};
-
-    // std::vector<float> trapezeLoc{0.0, 2.0, 0.0, -2.0, 6.0, -1.0, 6.0, 1.0}; // manually put coord here to match the first arm not ideal
-    // carre.initShape(squareLoc);
-    // triangle.initShape(triangleLoc);
-    // cercle.initShape(circleLoc);
-    // trapeze.initShape(trapezeLoc);
-    // /////////////////////////////////////////////////////////////////////////////////////
-
-    //to add
+    // to add
     generateMap(10);
     playerSpawner(5);
 
-    std::vector<float> originCoord {1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0}; // manually put coord here to match the first arm not ideal
+    std::vector<float> originCoord{1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0}; // manually put coord here to match the first arm not ideal
     carre.initShape(originCoord);
     carre.changeNature(GL_TRIANGLE_FAN);
 }
 
 void renderScene()
 {
+    myEngine.switchToFlatShading();
     drawMap();
+    // TextRenderer().Label("Lorem ipsum dolor sit amet, consectetur adipiscing elit", 100, 100, SimpleText::CENTER);
+    // TextRenderer().Render();
+    textDraw("Lorem ipsum dolor sit amet, consectetur adipiscing elit", 500, 100, SimpleText::CENTER);
+
 }

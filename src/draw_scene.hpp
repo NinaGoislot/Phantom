@@ -4,12 +4,15 @@
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/basic_mesh.hpp"
+#include "simpletext.h"
+#include "text.hpp"
 
 using namespace glbasimac;
 
 /* Camera parameters and functions */
 extern bool flag_anim_rot_scale;
 extern bool flag_anim_rot_arm;
+
 
 /* OpenGL Engine */
 extern GLBI_Engine myEngine;
@@ -21,4 +24,3 @@ void drawOneTile(int& x, int& y, float color);
 void drawMap();
 
 void renderScene();
-

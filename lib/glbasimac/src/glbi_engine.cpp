@@ -50,13 +50,14 @@ namespace glbasimac {
 	}
 
 	void GLBI_Engine::set2DProjection(float xmin,float xmax,float ymin,float ymax) {
+		glUseProgram(idShader[currentShader]);
 		Matrix4D proj = Matrix4D::ortho2D(xmin,xmax,ymin,ymax);
 		glUniformMatrix4fv(glGetUniformLocation(idShader[currentShader],"projectionMat"),1,GL_FALSE,proj);
 	}
 
 	void GLBI_Engine::set3DProjection(float fov,float ratio,float z_near,float z_far) {
 		Matrix4D proj = Matrix4D::perspective(fov,ratio,z_near,z_far);
-		glUseProgram(idShader[0]);
+		glUseProgram(idShader[currentShader]);
 		glUniformMatrix4fv(glGetUniformLocation(idShader[0],"projectionMat"),1,GL_FALSE,proj);
 		if (!mode2D) {
 			glUseProgram(idShader[1]);
