@@ -32,7 +32,7 @@ int main()
         /* Swap front and back buffers */
         glfwSwapBuffers(game.window);
 
-        /* Poll for and process events */
+        /* Poll for and process events */ //Met en place les keycallback
         glfwPollEvents();
 
         /* Elapsed time computation from loop begining */
