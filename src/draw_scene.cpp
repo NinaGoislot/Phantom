@@ -1,15 +1,22 @@
-#include "draw_scene.hpp"
+//Opengl
+#define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
-#include "glbasimac/glbi_engine.hpp"
+#include <glm/glm.hpp>
+#include "glbasimac/glbi_texture.hpp"
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
-#include <glm/glm.hpp>
-#include <vector>
-#include <cmath>
-#include "glbasimac/glbi_texture.hpp"
 #include "tools/shaders.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
+
+//External files
+#include "controls/controls.hpp"
+#include "draw_scene.hpp"
+
+//External libs
+#include <vector>
+#include <cmath>
+
 
 using namespace glbasimac;
 
@@ -130,6 +137,5 @@ void renderScene(const Game& game)
     }
 
     myEngine.mvMatrixStack.popMatrix();
-
     game.player->draw(myEngine);
 }
