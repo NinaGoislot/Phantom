@@ -7,6 +7,8 @@
 #include <iostream>
 #include <array>
 #include <math.h>
+#include <Windows.h>
+#include <mmsystem.h>
 #include "draw_scene.hpp"
 #include "controls/controls.hpp"
 #include "characters/player.hpp"
@@ -16,7 +18,7 @@ using namespace glbasimac;
 /* Minimal time wanted between two images */
 static const double FRAMERATE_IN_SECONDS = 1. / 30.;
 static float aspectRatio = 1.0f;
-static const float GL_VIEW_SIZE = 40.; // changed to 40 here
+static const float GL_VIEW_SIZE = 5.; // changed to 40 here
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 800;
 static bool minusAngleActivated = false;
@@ -60,6 +62,10 @@ void setupCallbacks(GLFWwindow *window)
 
 int main()
 {
+
+    // Playing sound
+    // PlaySound(TEXT("../../assets/sounds/sample.wav"), NULL, SND_FILENAME | SND_ASYNC);
+
     // Initialize the library
     if (!glfwInit())
     {

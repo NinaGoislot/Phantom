@@ -1,5 +1,7 @@
 #include "controls.hpp"
 #include "characters/player.hpp"
+#include <Windows.h>
+#include <mmsystem.h>
 
 bool isMoveControl(int key)
 {
@@ -15,10 +17,12 @@ void updatePlayer(GLFWwindow *window, const float &deltaTime, const int key, Pla
         {
         case GLFW_KEY_LEFT:
             printf("Fleche gauche.\n");
+            PlaySound(TEXT("../../assets/sounds/sample.wav"), NULL, SND_FILENAME | SND_ASYNC);
             direction.x -= 1.0f;
             break;
         case GLFW_KEY_RIGHT:
         printf("Fleche droit.\n");
+            PlaySound(0,0,0);
             direction.x += 1.0f;
             break;
         case GLFW_KEY_UP:

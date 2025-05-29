@@ -14,9 +14,9 @@ struct Player
 {
     glm::vec2 position {};
     float scale = 1.;
-    glm::vec2 size {1,1.};
+    glm::vec2 size {0.2,0.2}; // To change to 0.2 here
 
-    float speed = 1.0f;
+    float speed = 0.2f; // to change to fit map size
 
     void init();
     void draw(glbasimac::GLBI_Engine& engine);
