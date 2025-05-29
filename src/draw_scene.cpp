@@ -1,13 +1,20 @@
-#include "draw_scene.hpp"
+//Opengl
+#define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
-#include "glbasimac/glbi_engine.hpp"
+#include <glm/glm.hpp>
+#include "glbasimac/glbi_texture.hpp"
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
-#include <glm/glm.hpp>
+#include "tools/shaders.hpp"
+
+//External files
+#include "controls/controls.hpp"
+#include "draw_scene.hpp"
+
+//External libs
 #include <vector>
 #include <cmath>
-#include "glbasimac/glbi_texture.hpp"
-#include "tools/shaders.hpp"
+
 
 using namespace glbasimac;
 
@@ -106,31 +113,6 @@ void initScene()
 
 void renderScene(const Game& game)
 {
-    myEngine.mvMatrixStack.pushMatrix();
-
-    const float spacing = 1.0f;
-    const int rows = 5;
-    const int cols = 5;
-
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation({j * spacing, i * spacing, 0.0f});
-            myEngine.updateMvMatrix();
-            if ((i + j) % 2) // if broken like add condition to change the textures // add randomness
-            {
-                drawTile(square);
-            } else {
-                drawTile(square2);
-            }
-            
-            myEngine.mvMatrixStack.popMatrix();
-        }
-    }
-
-    myEngine.mvMatrixStack.popMatrix();
     drawMap();
 
     game.player->draw(myEngine);
