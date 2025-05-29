@@ -20,7 +20,7 @@ void updatePlayer(GLFWwindow *window, const int key, Player &player)
     {
         player.move_left();
     }
-    if (Controls::_keysState[GLFW_KEY_S])
+    if (Controls::_keysState[GLFW_KEY_RIGHT])
     {
         player.move_right();
     }

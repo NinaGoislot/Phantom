@@ -2,7 +2,7 @@
 #include <cmath>
 #include "glbasimac/glbi_texture.hpp"
 #include "tools/shaders.hpp"
-#include "texture_manager.hpp"
+#include "texture.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "tools/stb_image.h"
 

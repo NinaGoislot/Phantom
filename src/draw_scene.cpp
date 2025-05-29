@@ -6,8 +6,6 @@
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "tools/stb_image.h"
 
 //External files
 #include "controls/controls.hpp"
@@ -115,31 +113,6 @@ void initScene()
 
 void renderScene(const Game& game)
 {
-    myEngine.mvMatrixStack.pushMatrix();
-
-    const float spacing = 1.0f;
-    const int rows = 5;
-    const int cols = 5;
-
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation({j * spacing, i * spacing, 0.0f});
-            myEngine.updateMvMatrix();
-            if ((i + j) % 2) // if broken like add condition to change the textures // add randomness
-            {
-                drawTile(square);
-            } else {
-                drawTile(square2);
-            }
-            
-            myEngine.mvMatrixStack.popMatrix();
-        }
-    }
-
-    myEngine.mvMatrixStack.popMatrix();
     drawMap();
 
     game.player->draw(myEngine);
