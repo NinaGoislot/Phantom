@@ -9,5 +9,6 @@
 
 namespace Texturing {
     StandardMesh createAutoTiledMesh(float uvSize);
-    void initTexture(glbasimac::GLBI_Texture& textureAtlas);
+    StandardMesh createPlayerTileMesh(int frameIndex, float tileWidth = 16.0f, float tileHeight = 32.0f, float atlasWidth = 256.0f, float atlasHeight = 32.0f);
+    void initTexture(glbasimac::GLBI_Texture& textureAtlas, std::string const atlasName, std::string const ext);
 }

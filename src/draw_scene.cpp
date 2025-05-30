@@ -25,7 +25,6 @@ GLBI_Engine myEngine;
 GLBI_Texture textureAtlas;
 
 // OpenGL Shapes
-GLBI_Convex_2D_Shape carre;
 StandardMesh square;
 StandardMesh square2;
 
@@ -54,7 +53,6 @@ void drawMap()
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addHomothety(0.2);
     myEngine.updateMvMatrix();
-    carre.drawShape();
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH/2, -MAP_HEIGHT/2, 0.0));
     myEngine.updateMvMatrix();
@@ -91,7 +89,7 @@ void drawTile(const StandardMesh& textureTile) {
 
 void initScene()
 {
-    Texturing::initTexture(textureAtlas);
+    Texturing::initTexture(textureAtlas, "poulpile", "jpg");
 
     // Deal with uv position TODO add like a uv function to generate
 
@@ -105,10 +103,6 @@ void initScene()
 
     generateMap(10);
     playerSpawner(5);
-
-    std::vector<float> originCoord {1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0}; // manually put coord here to match the first arm not ideal
-    carre.initShape(originCoord);
-    carre.changeNature(GL_TRIANGLE_FAN);
 }
 
 void renderScene(const Game& game)

@@ -9,7 +9,10 @@
 #include "glbasimac/glbi_engine.hpp"
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
+#include "glbasimac/glbi_texture.hpp"
+#include "tools/basic_mesh.hpp"
 #include "managers/time.hpp"
+#include "managers/texture.hpp"
 
 struct Player
 {
@@ -18,15 +21,25 @@ struct Player
     glm::vec2 size {1,1.};
 
     float speed = 15.0f;
+    
+    glbasimac::GLBI_Texture playerAtlas;
+    int currentFrame = 0;
+    int frameDirection = 0;
+    int animationStep = 0;
+    float frameDuration = 0.1f; // seconds per animation frame
+    float animationTimer = 0.0f;
+    bool isMoving = false;
 
     void init();
     void draw(glbasimac::GLBI_Engine& engine);
-    glbasimac::GLBI_Convex_2D_Shape square;
+    StandardMesh square;
     
     void move_top();
     void move_bottom();
     void move_left();
     void move_right();
     void move(glm::vec2 direction);
+    void setFrame(int frameIndex);
+    void updateAnimatedFrame();
 };
 

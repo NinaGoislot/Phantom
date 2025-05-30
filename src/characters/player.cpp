@@ -2,15 +2,25 @@
 
 void Player::init()
 {
-    std::vector<float> squareCoords = {
-        -0.5f * size.x, 0.5f * size.y,
-        -0.5f * size.x, -0.5f * size.y,
-        0.5f * size.x, -0.5f * size.y,
-        0.5f * size.x, 0.5f * size.y};
-
-    square.initShape(squareCoords);
-    square.changeNature(GL_TRIANGLE_FAN);
+    Texturing::initTexture(playerAtlas, "Player", "png");
+    square = Texturing::createPlayerTileMesh(0);
+    square.createVAO();
 }
+
+void Player::setFrame(int frameIndex)
+{
+    square = Texturing::createPlayerTileMesh(frameIndex);
+    square.createVAO();
+}
+
+void Player::updateAnimatedFrame()
+{
+    currentFrame = frameDirection + animationStep;
+    setFrame(currentFrame);
+
+    animationStep = (animationStep + 1) % 4; 
+}
+
 
 void Player::move(glm::vec2 direction)
 {
@@ -23,29 +33,42 @@ void Player::move(glm::vec2 direction)
 
 void Player::move_top()
 {
+    frameDirection = 4;
+    updateAnimatedFrame();
     move(glm::vec2(0, 1));
 }
 void Player::move_bottom()
 {
+    frameDirection = 0;
+    updateAnimatedFrame();
     move(glm::vec2(0, -1));
 }
 void Player::move_left()
 {
+    frameDirection = 12;
+    updateAnimatedFrame();
     move(glm::vec2(-1, 0));
 }
 void Player::move_right()
 {
+    frameDirection = 8;
+    updateAnimatedFrame();
     move(glm::vec2(1, 0));
 }
 
 void Player::draw(glbasimac::GLBI_Engine &engine)
 {
+    engine.activateTexturing(true);
+    playerAtlas.attachTexture();
     // For now, it's juste a square
     engine.mvMatrixStack.pushMatrix();
     engine.mvMatrixStack.addTranslation(Vector3D(position.x, position.y, 0));
     // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));
     engine.setFlatColor(1.0f, 0.0f, 0.0f); // carré rouge
     engine.updateMvMatrix();
-    square.drawShape();
+    square.draw();
     engine.mvMatrixStack.popMatrix();
+
+    playerAtlas.detachTexture();
+    engine.activateTexturing(false);
 }

@@ -77,6 +77,9 @@ Game initGame(){
         exit(EXIT_FAILURE);
     }
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     setupCallbacks(window);
 
     // sets the window as fullscreen, but unplayable so we disable it for now
