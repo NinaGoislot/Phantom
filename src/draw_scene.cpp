@@ -25,8 +25,8 @@ GLBI_Engine myEngine;
 GLBI_Texture textureAtlas;
 
 // OpenGL Shapes
-StandardMesh square;
-StandardMesh square2;
+StandardMesh floorTile;
+StandardMesh wallTile;
 
 bool minusAngleActivated = false;
 
@@ -62,11 +62,11 @@ void drawMap()
         {
             if (isAlive(w, h))
             {
-                drawOneTile(w, h, square);
+                drawOneTile(w, h, floorTile);
             }
             else
             {
-                drawOneTile(w, h, square2);
+                drawOneTile(w, h, wallTile);
             }
         }
     }
@@ -89,17 +89,17 @@ void drawTile(const StandardMesh& textureTile) {
 
 void initScene()
 {
-    Texturing::initTexture(textureAtlas, "poulpile", "jpg");
+    Texturing::initTexture(textureAtlas, "Map", "png");
 
     // Deal with uv position TODO add like a uv function to generate
 
     // TODO : Change uv during animation to create animation
     // add animator manager
 
-    square = Texturing::createAutoTiledMesh(0.5f);
-    square.createVAO();
-    square2 = Texturing::createAutoTiledMesh(1.0f);
-    square2.createVAO();
+    floorTile = Texturing::createMapTileMesh(0, 2);
+    floorTile.createVAO();
+    wallTile = Texturing::createMapTileMesh(0, 3);
+    wallTile.createVAO();
 
     generateMap(10);
     playerSpawner(5);

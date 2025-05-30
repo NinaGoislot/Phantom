@@ -40,6 +40,41 @@ namespace Texturing
         return mesh;
     }
 
+    StandardMesh createMapTileMesh(int row, int col, int tileSize, int atlasSize) {
+        const int atlasCols = atlasSize / tileSize;
+        const int atlasRows = atlasSize / tileSize;
+
+        // Normalized UVs
+        float tileWidth  = static_cast<float>(tileSize) / atlasSize;
+        float tileHeight = static_cast<float>(tileSize) / atlasSize;
+
+        float u0 = col * tileWidth;
+        float v0 = 1.0f - (row + 1) * tileHeight;
+        float u1 = u0 + tileWidth;
+        float v1 = v0 + tileHeight;
+
+        // Quad vertex positions (can adjust if tile aspect is not 1:1)
+        float positions[] = {
+            -0.5f, -1.0f,
+             0.5f, -1.0f,
+             0.5f,  1.0f,
+            -0.5f,  1.0f
+        };
+
+        float uvs[] = {
+            u0, v0,
+            u1, v0,
+            u1, v1,
+            u0, v1
+        };
+
+        StandardMesh mesh(4, GL_TRIANGLE_FAN);
+        mesh.setNbElt(4);
+        mesh.addOneBuffer(0, 2, positions, "position", true);
+        mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
+        return mesh;
+    }
+
     StandardMesh createAutoTiledMesh(float uvSize)
     {
         // Coordonnées des sommets (x, y)

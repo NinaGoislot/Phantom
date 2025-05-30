@@ -20,8 +20,8 @@ struct Player
     float scale = 1.;
     glm::vec2 size {1,1.};
 
-    float speed = 15.0f;
-    
+    float speed = 5.0f;
+
     glbasimac::GLBI_Texture playerAtlas;
     int currentFrame = 0;
     int frameDirection = 0;
