@@ -25,7 +25,7 @@ void updatePlayer(GLFWwindow *window, const int key, Player &player)
     }
     if (Controls::_keysState[GLFW_KEY_RIGHT])
     {
-        PlaySound(TEXT("../../assets/sounds/sample.wav"), NULL, SND_FILENAME | SND_ASYNC);
+        PlaySound(TEXT("../../assets/sounds/foot.wav"), NULL, SND_LOOP | SND_ASYNC);
         player.move_right();
     }
     if (Controls::_keysState[GLFW_KEY_UP])
