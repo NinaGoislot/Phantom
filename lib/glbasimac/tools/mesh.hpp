@@ -55,6 +55,7 @@ namespace STP3D {
 		void setNbElt(unsigned int elts) {nb_elts = elts;};
 		void addOneBuffer(unsigned int id_attribute,unsigned int one_elt_size,
 		                  float* data,std::string semantic,bool copy=false);
+		void updateBuffer(int id_attribute, const float* data, size_t count);
 		void releaseCPUMemory();
 		void reInit();
 		/*****************************************************************
@@ -155,6 +156,34 @@ private:
 		size_one_elt.push_back(one_elt_size);
 		attr_semantic.push_back(semantic);
 	}
+
+	inline void StandardMesh::updateBuffer(int id_attribute, const float* data, size_t count)
+{
+    for (size_t i = 0; i < attr_id.size(); ++i)
+    {
+        if (attr_id[i] == id_attribute)
+        {
+            if (i >= vbo_id.size()) {
+                std::cerr << "VBO not initialized for attribute " << id_attribute << std::endl;
+                return;
+            }
+
+            glBindBuffer(GL_ARRAY_BUFFER, vbo_id[i]);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(float), data);
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+            // Also update CPU-side buffer if owned
+            if (copied[i] && buffers[i]) {
+                memcpy(buffers[i], data, count * sizeof(float));
+            }
+            return;
+        }
+    }
+
+    std::cerr << "Attribute ID " << id_attribute << " not found in mesh." << std::endl;
+}
+
+	
 
 	inline void StandardMesh::draw() const {
 		glBindVertexArray(id_vao);

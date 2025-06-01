@@ -9,8 +9,11 @@ void Player::init()
 
 void Player::setFrame(int frameIndex)
 {
-    square = Texturing::createPlayerTileMesh(frameIndex);
-    square.createVAO();
+    // square = Texturing::createPlayerTileMesh(frameIndex);
+    // square.createVAO();
+    currentFrame = frameIndex;
+    Texturing::updateUVs(square, frameIndex, 16.0f, 32.0f, 256.0f, 32.0f);
+
 }
 
 void Player::updateAnimatedFrame()

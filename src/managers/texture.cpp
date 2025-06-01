@@ -40,12 +40,13 @@ namespace Texturing
         return mesh;
     }
 
-    StandardMesh createMapTileMesh(int row, int col, int tileSize, int atlasSize) {
+    StandardMesh createMapTileMesh(int row, int col, int tileSize, int atlasSize)
+    {
         const int atlasCols = atlasSize / tileSize;
         const int atlasRows = atlasSize / tileSize;
 
         // Normalized UVs
-        float tileWidth  = static_cast<float>(tileSize) / atlasSize;
+        float tileWidth = static_cast<float>(tileSize) / atlasSize;
         float tileHeight = static_cast<float>(tileSize) / atlasSize;
 
         float u0 = col * tileWidth;
@@ -56,17 +57,15 @@ namespace Texturing
         // Quad vertex positions (can adjust if tile aspect is not 1:1)
         float positions[] = {
             -0.5f, -1.0f,
-             0.5f, -1.0f,
-             0.5f,  1.0f,
-            -0.5f,  1.0f
-        };
+            0.5f, -1.0f,
+            0.5f, 1.0f,
+            -0.5f, 1.0f};
 
         float uvs[] = {
             u0, v0,
             u1, v0,
             u1, v1,
-            u0, v1
-        };
+            u0, v1};
 
         StandardMesh mesh(4, GL_TRIANGLE_FAN);
         mesh.setNbElt(4);
@@ -97,6 +96,24 @@ namespace Texturing
         // Attrib location 2 pour UV, 2 floats
         mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
         return mesh;
+    }
+
+    //////// MAKE THIS WORK FOR TILESHEETS AS WELL
+
+    void updateUVs(StandardMesh &mesh, int frameIndex, float tileWidth, float tileHeight, float atlasWidth, float atlasHeight)
+    {
+        float u0 = (frameIndex * tileWidth) / atlasWidth;
+        float v0 = 0.0f;
+        float u1 = ((frameIndex + 1) * tileWidth) / atlasWidth;
+        float v1 = tileHeight / atlasHeight;
+
+        float uvs[] = {
+            u0, v0,
+            u1, v0,
+            u1, v1,
+            u0, v1};
+
+        mesh.updateBuffer(2, uvs, 8);
     }
 
     void initTexture(GLBI_Texture &textureAtlas, std::string const atlasName, std::string const ext)
