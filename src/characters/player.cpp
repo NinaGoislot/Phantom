@@ -12,7 +12,7 @@ void Player::setFrame(int frameIndex)
     // square = Texturing::createPlayerTileMesh(frameIndex);
     // square.createVAO();
     currentFrame = frameIndex;
-    Texturing::updateUVs(square, frameIndex, 16.0f, 32.0f, 256.0f, 32.0f);
+    Texturing::updateUVs(square, frameIndex, 0, 16.0f, 32.0f, 256.0f, 32.0f);
 
 }
 

@@ -5,6 +5,7 @@
 #include "tools/basic_mesh.hpp"
 #include "managers/texture.hpp"
 #include "managers/game.hpp"
+#include <unordered_map>
 
 
 using namespace glbasimac;
@@ -17,4 +18,6 @@ void initScene();
 void renderScene(const Game& game);
 
 void drawSquare(const StandardMesh& square);
+
+void drawOneTile(int& x, int& y, StandardMesh& textureTile);
 

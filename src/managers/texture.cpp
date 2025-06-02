@@ -56,62 +56,37 @@ namespace Texturing
 
         // Quad vertex positions (can adjust if tile aspect is not 1:1)
         float positions[] = {
-            -0.5f, -1.0f,
-            0.5f, -1.0f,
-            0.5f, 1.0f,
-            -0.5f, 1.0f};
-
-        float uvs[] = {
-            u0, v0,
-            u1, v0,
-            u1, v1,
-            u0, v1};
-
-        StandardMesh mesh(4, GL_TRIANGLE_FAN);
-        mesh.setNbElt(4);
-        mesh.addOneBuffer(0, 2, positions, "position", true);
-        mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
-        return mesh;
-    }
-
-    StandardMesh createAutoTiledMesh(float uvSize)
-    {
-        // Coordonnées des sommets (x, y)
-        float positions[] = {
             -0.5f, -0.5f,
             0.5f, -0.5f,
             0.5f, 0.5f,
             -0.5f, 0.5f};
-        // Coordonnées UV (u, v)
-        float uvs[] = {
-            0, 0,
-            uvSize, 0,
-            uvSize, uvSize,
-            0, uvSize};
-
-        StandardMesh mesh(4, GL_TRIANGLE_FAN);
-        mesh.setNbElt(4);
-        // Attrib location 0 pour position, 2 floats
-        mesh.addOneBuffer(0, 2, positions, "position", true);
-        // Attrib location 2 pour UV, 2 floats
-        mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
-        return mesh;
-    }
-
-    //////// MAKE THIS WORK FOR TILESHEETS AS WELL
-
-    void updateUVs(StandardMesh &mesh, int frameIndex, float tileWidth, float tileHeight, float atlasWidth, float atlasHeight)
-    {
-        float u0 = (frameIndex * tileWidth) / atlasWidth;
-        float v0 = 0.0f;
-        float u1 = ((frameIndex + 1) * tileWidth) / atlasWidth;
-        float v1 = tileHeight / atlasHeight;
 
         float uvs[] = {
             u0, v0,
             u1, v0,
             u1, v1,
             u0, v1};
+
+        StandardMesh mesh(4, GL_TRIANGLE_FAN);
+        mesh.setNbElt(4);
+        mesh.addOneBuffer(0, 2, positions, "position", true);
+        mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
+        return mesh;
+    }
+
+    void updateUVs(StandardMesh &mesh, int col, int row, float tileWidth, float tileHeight, float atlasWidth, float atlasHeight)
+    {
+        float u0 = (col * tileWidth) / atlasWidth;
+        float v0 = 1.0f - ((row + 1) * tileHeight / atlasHeight);
+        float u1 = u0 + (tileWidth / atlasWidth);
+        float v1 = v0 + (tileHeight / atlasHeight);
+
+        float uvs[] = {
+            u0, v0, // bottom-left
+            u1, v0, // bottom-right
+            u1, v1, // top-right
+            u0, v1  // top-left
+        };
 
         mesh.updateBuffer(2, uvs, 8);
     }
