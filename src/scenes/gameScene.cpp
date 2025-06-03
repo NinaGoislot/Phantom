@@ -1,5 +1,5 @@
 #include "scenes/gameScene.hpp"
-#include "managers/game.hpp"
+#include "managers/gameManager.hpp"
 #include "scenes/draw_game.hpp"
 
 void GameScene::init()

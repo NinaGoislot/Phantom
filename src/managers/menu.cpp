@@ -9,4 +9,3 @@ void displayMenu(int item)
     textDraw(playerName, 50, 50, SimpleText::Color::GREEN, SimpleText::Alignment::LEFT, SimpleText::SIZE_16);
     textDraw(itemCollected, 50, 100, SimpleText::Color::WHITE, SimpleText::Alignment::LEFT, SimpleText::SIZE_16);
 }
-

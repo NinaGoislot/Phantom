@@ -13,9 +13,9 @@
 //External files
 #include "controls/controls.hpp"
 #include "time.hpp"
-#include "game.hpp"
 #include "scenes/gameScene.hpp"
-#include "managers/game.hpp"
+#include "managers/gameManager.hpp"
+#include "managers/text.hpp"
 
 
 //External libs
@@ -104,6 +104,8 @@ Game initGame(){
 
     // Initialize Rendering Engine
     myEngine.initGL();
+
+    textInit();
 
     // deal with resizing the window
     int width, height;

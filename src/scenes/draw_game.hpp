@@ -1,6 +1,6 @@
 #pragma once
 
-#include "managers/game.hpp"
+#include "managers/gameManager.hpp"
 
 /* Camera parameters and functions */
 extern bool flag_anim_rot_scale;
