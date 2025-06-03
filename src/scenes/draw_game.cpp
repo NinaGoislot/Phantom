@@ -1,24 +1,26 @@
 //Opengl
+#include "glad/glad.h" // DOIT être le premier include lié à OpenGL
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
+
 #include <glm/glm.hpp>
 #include "glbasimac/glbi_texture.hpp"
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
-#define STB_IMAGE_IMPLEMENTATION
+#include "tools/basic_mesh.hpp"
 #include "tools/stb_image.h"
+#include "glbasimac/glbi_engine.hpp"
+using namespace glbasimac;
 
 //External files
 #include "controls/controls.hpp"
-#include "draw_scene.hpp"
+#include "scenes/draw_game.hpp"
 
 //External libs
 #include <vector>
 #include <cmath>
 
-
-using namespace glbasimac;
 
 GLBI_Engine myEngine;
 
@@ -74,7 +76,7 @@ void drawSquare() {
 	myEngine.activateTexturing(false);
 }
 
-void initScene()
+void DrawGame::init()
 {
   
     int w, h, c;
@@ -116,7 +118,7 @@ void initScene()
 	stbi_image_free(imgData);
 }
 
-void renderScene(const Game& game)
+void DrawGame::render(const Game& game)
 {
     myEngine.mvMatrixStack.pushMatrix();
 

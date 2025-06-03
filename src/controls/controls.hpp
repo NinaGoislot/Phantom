@@ -5,8 +5,16 @@
 #include <glm/glm.hpp>
 #include <unordered_map>
 
-namespace Controls {
-    void setupCallbacks(GLFWwindow *window);
-    extern std::unordered_map<int, bool> _keysState;
-}
+class Controls
+{
+public:
+    void setKeyState(int key, bool isPressed);
+    bool isKeyPressed(int key) const;
+    void reset();
 
+private:
+    std::unordered_map<int, bool> keyStates;
+};
+
+void setupControlsCallbacks(GLFWwindow *window);
+void onKeyPress(GLFWwindow* window, int key, int scancode, int action, int mods);

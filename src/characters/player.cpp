@@ -21,11 +21,11 @@ void Player::move(glm::vec2 direction)
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
 }
 
-void Player::move_top()
+void Player::move_up()
 {
     move(glm::vec2(0, 1));
 }
-void Player::move_bottom()
+void Player::move_down()
 {
     move(glm::vec2(0, -1));
 }

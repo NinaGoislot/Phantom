@@ -17,14 +17,14 @@ struct Player
     float scale = 1.;
     glm::vec2 size {1,1.};
 
-    float speed = 15.0f;
+    float speed = 5.0f;
 
     void init();
     void draw(glbasimac::GLBI_Engine& engine);
     glbasimac::GLBI_Convex_2D_Shape square;
     
-    void move_top();
-    void move_bottom();
+    void move_up();
+    void move_down();
     void move_left();
     void move_right();
     void move(glm::vec2 direction);
