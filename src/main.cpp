@@ -8,7 +8,7 @@
 #include <array>
 #include <math.h>
 #include "draw_scene.hpp"
-#include "map.hpp"
+// #include "menu.hpp"
 
 using namespace glbasimac;
 
@@ -68,6 +68,17 @@ void onKeyDown(GLFWwindow *window, int key, int scancode, int action, int mods)
     {
         glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
     }
+    // if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    // {
+    //     if (displayMenu() == true)
+    //     {
+    //         displayMenu() = false;
+    //     }
+    //     else
+    //     {
+    //         displayMenu() = true;
+    //     }
+    // }
 }
 
 static void onMouseMove(GLFWwindow *window, double xpos, double ypos)
@@ -142,7 +153,6 @@ int main()
     // Initialize Rendering Engine
     myEngine.initGL();
 
-
     // Initializing the scene
     initScene();
 
@@ -179,6 +189,9 @@ int main()
         // render here
 
         renderScene();
+        // int width, height;
+        // glfwGetWindowSize(window, &width, &height);
+        // textDraw("Lorem ipsum dolor sit amet", width, 200, SimpleText::CENTER, SimpleText::SIZE_16);
 
         /* Swap front and back buffers */
         glfwSwapBuffers(window);

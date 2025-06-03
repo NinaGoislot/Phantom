@@ -10,11 +10,11 @@
 // to add
 #include "map.hpp"
 #include "text.hpp"
+#include "menu.hpp"
 
 using namespace glbasimac;
 
 GLBI_Engine myEngine;
-
 
 // OpenGL Shapes
 GLBI_Convex_2D_Shape carre;
@@ -63,7 +63,6 @@ void drawMap()
     myEngine.mvMatrixStack.popMatrix();
 }
 
-
 void initScene()
 {
     textInit();
@@ -81,5 +80,6 @@ void renderScene()
 {
     myEngine.switchToFlatShading();
     drawMap();
-    textDraw("Lorem ipsum", 500, 100, SimpleText::CENTER, SimpleText::SIZE_16);
+    displayMenu(0); // Display the menu with item 0
+    // textDraw("Lorem ipsum", width, height, SimpleText::CENTER, SimpleText::SIZE_16);
 }

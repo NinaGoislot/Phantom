@@ -10,4 +10,5 @@ void textInit();
 
 std::string textWritten(std::string const& text);
 
-void textDraw(std::string const& text, float x, float y, SimpleText::Alignment alignment, SimpleText::FontSize size = SimpleText::SIZE_16);
+void textDraw(std::string const& text, float x, float y, SimpleText::Color color, SimpleText::Alignment alignment, SimpleText::FontSize size = SimpleText::SIZE_16,
+              bool isWriting = false);

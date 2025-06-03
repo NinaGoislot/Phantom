@@ -27,7 +27,7 @@ int seed = time(NULL);
 int ALIVE_PROBABILITY = 58;
 
 // nombre de generations
-int NB_GENERATIONS = 10;
+int NB_GENERATIONS = 15;
 
 // taille du spawn du joueur
 int SPAWN_SIZE = 5;
