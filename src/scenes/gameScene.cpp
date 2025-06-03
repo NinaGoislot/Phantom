@@ -1,6 +1,7 @@
 #include "scenes/gameScene.hpp"
 #include "managers/gameManager.hpp"
 #include "scenes/draw_game.hpp"
+#include "managers/menu.hpp"
 
 void GameScene::init()
 {
@@ -37,6 +38,8 @@ void GameScene::update()
 void GameScene::draw()
 {
     DrawGame::render(*getGame());
+
+    displayMenu(0); // Display the menu with item 0
 }
 void GameScene::destroy()
 {

@@ -16,7 +16,6 @@ using namespace glbasimac;
 //External files
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
-#include "managers/menu.hpp"
 
 //External libs
 #include <vector>
@@ -145,8 +144,6 @@ void DrawGame::render(const Game& game)
 
     myEngine.mvMatrixStack.popMatrix();
     game.player->draw(myEngine);
-
-    displayMenu(0); // Display the menu with item 0
 }
 
 
