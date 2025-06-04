@@ -9,11 +9,8 @@ void Player::init()
 
 void Player::setFrame(int frameIndex)
 {
-    // square = Texturing::createPlayerTileMesh(frameIndex);
-    // square.createVAO();
     currentFrame = frameIndex;
     Texturing::updateUVs(square, frameIndex, 0, 16.0f, 32.0f, 256.0f, 32.0f);
-
 }
 
 void Player::updateAnimatedFrame()
@@ -74,4 +71,8 @@ void Player::draw(glbasimac::GLBI_Engine &engine)
 
     playerAtlas.detachTexture();
     engine.activateTexturing(false);
+}
+
+glm::vec2 Player::getPosition() {
+    return position;
 }

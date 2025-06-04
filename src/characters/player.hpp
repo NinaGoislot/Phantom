@@ -41,5 +41,6 @@ struct Player
     void move(glm::vec2 direction);
     void setFrame(int frameIndex);
     void updateAnimatedFrame();
+    glm::vec2 getPosition();
 };
 

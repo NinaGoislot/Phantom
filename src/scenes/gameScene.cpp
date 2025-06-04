@@ -32,6 +32,12 @@ void GameScene::update()
     {
         game->player->move_down();
     }
+    if (controls.isKeyPressed(GLFW_KEY_S))
+    {
+        glm::vec2 playerPos = game->player->getPosition();
+        // TO FIX TO WHEN WE'D HAVE COLLISIONS
+        digTile(round(playerPos.x+50), round(playerPos.y+50));  // add 50 because the map coords don't have negatives
+    }
 }
 
 void GameScene::draw()

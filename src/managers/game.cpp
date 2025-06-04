@@ -13,7 +13,6 @@
 #include "time.hpp"
 #include "game.hpp"
 #include "scenes/gameScene.hpp"
-#include "managers/game.hpp"
 
 
 //External libs

@@ -10,6 +10,7 @@ using namespace glbasimac;
 //External files
 #include "managers/sceneManager.hpp"
 #include "characters/player.hpp"
+#include "map.hpp"
 
 /* Minimal time wanted between two images */
 // static const double FRAMERATE_IN_SECONDS = 1. / 30.;
