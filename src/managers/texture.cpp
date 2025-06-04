@@ -2,9 +2,13 @@
 #include <cmath>
 #include "glbasimac/glbi_texture.hpp"
 #include "tools/shaders.hpp"
-#include "texture.hpp"
+#include <GLFW/glfw3.h>
 #define STB_IMAGE_IMPLEMENTATION // va avec
-#include "tools/stb_image.h" // doit être présent qu'une seule fois dans le programme et dans un cpp
+#include "tools/stb_image.h"     // doit être présent qu'une seule fois dans le programme et dans un cpp
+#include "glbasimac/glbi_engine.hpp"
+
+#include "texture.hpp"
+#include "managers/gameManager.hpp"
 
 using namespace glbasimac;
 
@@ -12,6 +16,13 @@ namespace Texturing
 {
     StandardMesh createPlayerTileMesh(int frameIndex, float tileWidth, float tileHeight, float atlasWidth, float atlasHeight)
     {
+        if (tileWidth <= 0 || tileHeight <= 0 || atlasWidth <= 0 || atlasHeight <= 0)
+        {
+            std::cerr << "[createPlayerTileMesh] Invalides sizes : "
+                      << "tile(" << tileWidth << "x" << tileHeight << "), atlas(" << atlasWidth << "x" << atlasHeight << ")" << std::endl;
+            throw std::runtime_error("createPlayerTileMesh: Dimensions invalides.");
+        }
+
         // Basic quad positions (centered)
         float positions[] = {
             -0.5f, -1.0f, // bottom-left
@@ -30,8 +41,7 @@ namespace Texturing
             u0, v0,
             u1, v0,
             u1, v1,
-            u0, v1
-        };
+            u0, v1};
 
         StandardMesh mesh(4, GL_TRIANGLE_FAN);
         mesh.setNbElt(4);
@@ -42,6 +52,11 @@ namespace Texturing
 
     StandardMesh createMapTileMesh(int row, int col, int tileSize, int atlasSize)
     {
+        if (tileSize <= 0 || atlasSize <= 0)
+        {
+            std::cerr << "[createMapTileMesh] Invalide settings : tileSize = " << tileSize << ", atlasSize = " << atlasSize << std::endl;
+            throw std::runtime_error("Parametres invalides pour createMapTileMesh.");
+        }
         const int atlasCols = atlasSize / tileSize;
         const int atlasRows = atlasSize / tileSize;
 
@@ -93,13 +108,16 @@ namespace Texturing
 
     void initTexture(GLBI_Texture &textureAtlas, std::string const atlasName, std::string const ext)
     {
+        glfwMakeContextCurrent(getGame()->window);
+
         int w, h, c;
         stbi_set_flip_vertically_on_load(true);
         std::string imagePath{"../../assets/images/" + atlasName + "." + ext};
         unsigned char *imgData{stbi_load(imagePath.c_str(), &w, &h, &c, ext == "jpg" ? 0 : STBI_rgb_alpha)};
         if (!imgData)
         {
-            std::cout << "Failed to load image: " << stbi_failure_reason() << std::endl;
+            std::cerr << "[initTexture] Failed to load image '" << imagePath << "': " << stbi_failure_reason() << std::endl;
+            throw std::runtime_error("initTexture: Echec du chargement de l'image.");
         }
         textureAtlas.createTexture();
         textureAtlas.attachTexture();
@@ -113,5 +131,6 @@ namespace Texturing
 
         textureAtlas.detachTexture();
         stbi_image_free(imgData);
+        std::cout << "[initTexture] Image '" << imagePath << "' loaded (" << w << "x" << h << ", " << c << " canaux)." << std::endl;
     }
 }

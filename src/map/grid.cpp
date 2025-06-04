@@ -1,22 +1,13 @@
-//-----------------------------------------------------------------------------------------
-//------------------------------------- TEST MAP --------------------------------------
-//-----------------------------------------------------------------------------------------
-
-#include "map.hpp"
+#include "grid.hpp"
+#include "managers/gameManager.hpp"
 
 //-----------------------------------------------------------------------------------------
 //------------------------------------- DECLARATIONS --------------------------------------
 //-----------------------------------------------------------------------------------------
 
 // creation d'un objet pour dire si la case est en vie ou pas
-int ALIVE{1};
-int DEAD{0};
-
-// creation de la map
-int map[MAP_HEIGHT][MAP_WIDTH];
-
-// creation d'une seed pour la generation de la map
-int seed = time(NULL);
+const int ALIVE{1};
+const int DEAD{0};
 
 //-----------------------------------------------------------------------------------------
 //----------------------------------------- DATAS -----------------------------------------
@@ -24,22 +15,16 @@ int seed = time(NULL);
 
 // creation d'une probabilite de vie pour la generation de la map
 // ----- 58 est une bonne valeur ------
-int ALIVE_PROBABILITY = 58;
-
-// nombre de generations
-int NB_GENERATIONS = 10;
-
-// taille du spawn du joueur
-int SPAWN_SIZE = 5;
+const int ALIVE_PROBABILITY = 58;
 
 //-----------------------------------------------------------------------------------------
 //------------------------------------- FUNCTIONS -----------------------------------------
 //-----------------------------------------------------------------------------------------
 
-// fonction qui initialise la map
-
-void initializeMap()
+void initializeMap(std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& grid)
 {
+    // creation d'une seed pour la generation de la map
+    int seed = time(NULL);
     // srand(seed) permet de generer une seed aleatoire
     srand(seed);
 
@@ -50,19 +35,33 @@ void initializeMap()
         {
             if (rand() % 100 > ALIVE_PROBABILITY)
             {
-                map[h][w] = DEAD;
+                grid[h][w].walkable = DEAD;
             }
             else
             {
-                map[h][w] = ALIVE;
+                grid[h][w].walkable = ALIVE; 
             }
         }
     }
 }
 
-// fonction qui calcule le nombre de voisins vivants d'une case
+// fonction qui genere le spawn du joueur (le spawn est un carré de taille size)
+void playerSpawner(int size, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &map)
+{
+    int x = MAP_WIDTH / 2;
+    int y = MAP_HEIGHT / 2;
 
-int countAliveNeighbors(int x, int y)
+    for (int h{y - size + 1}; h < y + size; h++)
+    {
+        for (int w{x - size + 1}; w < x + size; w++)
+        {
+            map[h][w].walkable = ALIVE;
+        }
+    }
+}
+
+// fonction qui calcule le nombre de voisins vivants d'une case
+int countAliveNeighbors(int x, int y, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& grid)
 {
     int count{0};
     // on retire 1 à x et y pour aller dans le coin superieur gauche de la case
@@ -76,7 +75,7 @@ int countAliveNeighbors(int x, int y)
             {
                 if (h >= 0 && h < MAP_HEIGHT && w >= 0 && w < MAP_WIDTH)
                 {
-                    count += map[h][w];
+                    count += grid[h][w].walkable;
                 }
             }
         }
@@ -86,27 +85,27 @@ int countAliveNeighbors(int x, int y)
 
 // fonction qui genere la map avec un nombre de generations
 
-void generateMap(int generations = NB_GENERATIONS)
+std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> generateMap(int generations, int spawnSize)
 {
-    initializeMap();
-    std::cout << std::endl;
+    std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> grid;
+    initializeMap(grid);
 
     for (int gen{0}; gen < generations; gen++)
     {
         // on passe par une map temporaire pour ne pas modifier la map en cours
-        int newMap[MAP_HEIGHT][MAP_WIDTH];
+        std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> newGrid;
 
         for (int h{0}; h < MAP_HEIGHT; h++)
         {
             for (int w{0}; w < MAP_WIDTH; w++)
             {
-                int count = countAliveNeighbors(w, h);
-                if (map[h][w] == DEAD && count >= 6)
-                    newMap[h][w] = ALIVE;
-                else if (map[h][w] == ALIVE && count <= 3)
-                    newMap[h][w] = DEAD;
+                int count = countAliveNeighbors(w, h, grid);
+                if (grid[h][w].walkable == DEAD && count >= 6)
+                    newGrid[h][w].walkable = ALIVE;
+                else if (grid[h][w].walkable == ALIVE && count <= 3)
+                    newGrid[h][w].walkable = DEAD;
                 else
-                    newMap[h][w] = map[h][w];
+                    newGrid[h][w] = grid[h][w];
             }
         }
 
@@ -115,24 +114,26 @@ void generateMap(int generations = NB_GENERATIONS)
         {
             for (int w = 0; w < MAP_WIDTH; w++)
             {
-                map[h][w] = newMap[h][w];
+                grid[h][w] = newGrid[h][w];
             }
         }
-
     }
-        // displayMap();
-}
+    // displayMap();
 
+    playerSpawner(spawnSize, grid);
+
+    return grid;
+}
 
 // fonction qui affiche la map
 
-void displayMap()
+void displayMap(std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &map)
 {
     for (int h{0}; h < MAP_HEIGHT; h++)
     {
         for (int w{0}; w < MAP_WIDTH; w++)
         {
-            if (map[h][w] == ALIVE)
+            if (map[h][w].walkable == ALIVE)
                 std::cout << ".";
             else
                 std::cout << "#";
@@ -141,27 +142,17 @@ void displayMap()
     }
 }
 
-// fonction qui genere le spawn du joueur (le spawn est un carré de taille size)
-void playerSpawner(int size = SPAWN_SIZE)
-{
-    int x = MAP_WIDTH / 2;
-    int y = MAP_HEIGHT / 2;
-
-    for (int h{y - size + 1}; h < y + size; h++)
-    {
-        for (int w{x - size + 1}; w < x + size; w++)
-        {
-            map[h][w] = ALIVE;
-        }
-    }
-}
-
 bool isAlive(int x, int y)
 {
-    return map[y][x] == ALIVE;
+    Game *game = getGame();
+    return game->grid[y][x].walkable == ALIVE;
 }
+
+
 
 void digTile(int x, int y)
 {
-    map[y][x] = ALIVE;
-}
+    Game *game = getGame();
+    game->grid[y][x].walkable = ALIVE;
+}   
+

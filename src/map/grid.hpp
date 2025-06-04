@@ -9,27 +9,30 @@
 #include <iostream>
 #include <ctime>
 #include <random>
+#include <glm/glm.hpp>
+#include <array>
 
 #define MAP_WIDTH 100
 #define MAP_HEIGHT 100
 
 //-----------------------------------------------------------------------------------------
-//-------------------------------------- FUNCTIONS ----------------------------------------
+//---------------------------------------- PARAMS -----------------------------------------
 //-----------------------------------------------------------------------------------------
 
-// generation de la map
-void initializeMap();
-void generateMap(int generations);
+struct Cell {
+    glm::ivec2 direction {0, 0};
+    bool walkable {false};
+};
 
-// fonction qui compte le nombre de voisins vivants
-int countAliveNeighbors(int x, int y);
 
-// definition de la taille du spawn
-void playerSpawner(int size);
+//-----------------------------------------------------------------------------------------
+//--------------------------------------- FUNCTIONS ---------------------------------------
+//-----------------------------------------------------------------------------------------
 
-// vérifie si la case est vivante
+// Generation de la map
+std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> generateMap(int generations = 10, int spawnSize = 5);
+
 bool isAlive(int x, int y);
-
 // détruit la case (action de creuser)
 void digTile(int x, int y);
 

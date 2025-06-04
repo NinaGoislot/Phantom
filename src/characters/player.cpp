@@ -2,9 +2,24 @@
 
 void Player::init()
 {
-    Texturing::initTexture(playerAtlas, "Player", "png");
+    try
+    {
+        Texturing::initTexture(playerAtlas, "Player", "png");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[Player::init] Erreur lors de l'initialisation de la texture : " << e.what() << std::endl;
+        return;
+    }
+
     square = Texturing::createPlayerTileMesh(0);
-    square.createVAO();
+    if (!square.createVAO())
+    {
+        std::cerr << "[Player::init] Echec de la création du VAO pour le joueur." << std::endl;
+        return;
+    }
+
+    std::cout << "[Player::init] Player initialized" << std::endl;
 }
 
 void Player::setFrame(int frameIndex)
@@ -15,24 +30,24 @@ void Player::setFrame(int frameIndex)
 
 void Player::updateAnimatedFrame()
 {
-    if (frameDirection != lastFrameDirection) {
+    if (frameDirection != lastFrameDirection)
+    {
         animationStep = 0;
         animationTimer = 0.0f;
         lastFrameDirection = frameDirection;
-        setFrame(frameDirection);  // Immediately show first frame of new direction
+        setFrame(frameDirection); // Immediately show first frame of new direction
     }
 
     animationTimer += static_cast<float>(get_loop_time().getDeltaTime());
 
     if (animationTimer >= frameDuration)
     {
-        animationTimer = 0.0f; // reset timer
+        animationTimer = 0.0f;                   // reset timer
         animationStep = (animationStep + 1) % 4; // loop through frames
         currentFrame = frameDirection + animationStep;
         setFrame(currentFrame);
     }
 }
-
 
 void Player::move(glm::vec2 direction)
 {
@@ -105,6 +120,7 @@ void Player::draw(glbasimac::GLBI_Engine &engine)
     engine.activateTexturing(false);
 }
 
-glm::vec2 Player::getPosition() {
+glm::vec2 Player::getPosition()
+{
     return position;
 }
