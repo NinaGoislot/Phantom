@@ -6,7 +6,6 @@
 #include "managers/gameManager.hpp"
 #include "managers/time.hpp"
 
-static bool color_mode_activated = true;
 static std::array<float, 4> base_rgba{0.f, 0.f, 0.f, 0.f};
 
 int main()
@@ -20,10 +19,6 @@ int main()
 
         /* Render here */
         glClear(GL_COLOR_BUFFER_BIT);
-        if (!color_mode_activated)
-        {
-            glClearColor(base_rgba[0], base_rgba[1], base_rgba[2], base_rgba[3]);
-        }
 
         // render here
         game.sceneManager.getCurrentScene()->update();

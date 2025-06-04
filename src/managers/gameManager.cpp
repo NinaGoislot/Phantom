@@ -7,8 +7,6 @@
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "tools/stb_image.h"
 
 //External files
 #include "controls/controls.hpp"
@@ -97,6 +95,9 @@ Game initGame(){
         exit(EXIT_FAILURE);
     }
 
+    glEnable(GL_BLEND);
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
     setupCallbacks(window);
 
     // sets the window as fullscreen, but unplayable so we disable it for now
@@ -128,4 +129,13 @@ Game* getGame() {
     }
 
     return game;
+}
+
+std::shared_ptr<Scene> getCurrentScene() {
+    Game* game = getGame();
+    return game->sceneManager.getCurrentScene();
+}
+Player* getPlayer(){
+    Game* game = getGame();
+    return game->player;
 }
