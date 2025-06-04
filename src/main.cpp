@@ -8,42 +8,49 @@
 
 static std::array<float, 4> base_rgba{0.f, 0.f, 0.f, 0.f};
 
+void cleanupGame()
+{
+    Game *game = getGame();
+    if (game)
+    {
+        delete game->player;
+        delete game;
+    }
+}
+
 int main()
 {
-    Game game = initGame();
-    
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(game.window))
+    try
     {
-        get_loop_time().updateTime();
+        initGame();
+        Game *game = getGame();
 
-        /* Render here */
-        glClear(GL_COLOR_BUFFER_BIT);
+        /* Loop until the user closes the window */
+        while (!glfwWindowShouldClose(glfwGetCurrentContext()))
+        {
+            get_loop_time().updateTime();
 
-        // render here
-        game.sceneManager.getCurrentScene()->update();
-        game.sceneManager.getCurrentScene()->draw();
+            glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(game.window);
+            // render here
+            game->sceneManager.getCurrentScene()->update();
+            game->sceneManager.getCurrentScene()->draw();
 
-        /* Poll for and process events */ //Met en place les keycallback
-        glfwPollEvents();
+            /* Swap front and back buffers */
+            glfwSwapBuffers(glfwGetCurrentContext());
 
-        /* Elapsed time computation from loop begining */
-        
-        // double frameEndTime = glfwGetTime();
-        // double elapsedTime = glfwGetTime() - LoopTime::startTime;
-        // /* If to few time is spend vs our wanted FPS, we wait */
-        // while (elapsedTime < FRAMERATE_IN_SECONDS)
-        // {
-        //     glfwWaitEventsTimeout(FRAMERATE_IN_SECONDS - elapsedTime);
-        //     elapsedTime = glfwGetTime() - LoopTime::startTime;
-        // }
+            /* Poll for and process events */ // Met en place les keycallback
+            glfwPollEvents();
+        }
 
-        // LoopTime::updateTime();
+        cleanupGame();
+
+        glfwTerminate();
     }
-
-    glfwTerminate();
+    catch (const std::exception &e)
+    {
+        std::cerr << "[main] Exception non geree : " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
     return 0;
 }

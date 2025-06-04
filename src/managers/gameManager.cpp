@@ -1,4 +1,4 @@
-//Opengl
+// Opengl
 #include "glad/glad.h"
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -8,7 +8,7 @@
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
 
-//External files
+// External files
 #include "controls/controls.hpp"
 #include "time.hpp"
 #include "scenes/gameScene.hpp"
@@ -20,8 +20,7 @@
 
 #include "tools/camera.hpp"
 
-
-//External libs
+// External libs
 #include <iostream>
 #include <array>
 #include <math.h>
@@ -56,23 +55,32 @@ void setupCallbacks(GLFWwindow *window)
     setupControlsCallbacks(window);
 }
 
-Game createGame(GLFWwindow *window)
+void createGame(GLFWwindow *window)
 {
-    generateMap(10);
-    playerSpawner(5);
-    Player* player = new Player{};
+    std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> grid = generateMap();
+
+    Player *player = new Player{};
+    Game *game = new Game{window, player, SceneManager{}, grid};
+    glfwSetWindowUserPointer(window, game);
+    if (getGame())
+    {
+        std::cout << "[gameManager] Game created" << std::endl;
+    }
+    else
+    {
+        std::cerr << "[gameManager] Failed to create game object" << std::endl;
+        exit(EXIT_FAILURE);
+    }
     player->init();
-    Game game{window, player, SceneManager{}};
-    game.sceneManager.setCurrentScene(std::make_shared<GameScene>());
-    glfwSetWindowUserPointer(window, &game);
-    return game;
+    game->sceneManager.setCurrentScene(std::make_shared<GameScene>()); // Initialisation de la première scène
 }
 
-Game initGame(){
+void initGame()
+{
     // Initialize the library
     if (!glfwInit())
     {
-        std::cerr << "Failed to initialize GLFW" << std::endl;
+        std::cerr << "[gameManager] Failed to initialize GLFW" << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -87,7 +95,7 @@ Game initGame(){
     if (!window)
     {
         glfwTerminate();
-        std::cerr << "Failed to create GLFW window" << std::endl;
+        std::cerr << "[gameManager] Failed to create GLFW window" << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -98,7 +106,7 @@ Game initGame(){
     // Intialize glad (loads the OpenGL functions)
     if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
     {
-        std::cerr << "Failed to initialize GLAD" << std::endl;
+        std::cerr << "[gameManager] Failed to initialize GLAD" << std::endl;
         exit(EXIT_FAILURE);
     }
 
@@ -121,19 +129,53 @@ Game initGame(){
     onWindowResized(window, width, height);
 
     glClearColor(0.2f, 0.f, 0.f, 0.f);
-    return createGame(window);
+
+    createGame(window);
 }
 
-Game* getGame() {
-    GLFWwindow* window = glfwGetCurrentContext();
-    if (!window) {
-        throw std::runtime_error("GetGame : No current OpenGL context found.");
+Game *getGame()
+{
+    GLFWwindow *window = glfwGetCurrentContext();
+    if (!window)
+    {
+        throw std::runtime_error("[gameManager] GetGame : No current OpenGL context found.");
     }
 
-    Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
-    if (!game) {
-        throw std::runtime_error("GetGame : Game object not found via glfwGetWindowUserPointer.");
+    Game *game = static_cast<Game *>(glfwGetWindowUserPointer(window));
+    if (!game)
+    {
+        throw std::runtime_error("[gameManager] GetGame : Game object not found via glfwGetWindowUserPointer.");
     }
 
     return game;
+}
+
+std::shared_ptr<Scene> getCurrentScene()
+{
+    Game *game = getGame();
+    auto scene = game->sceneManager.getCurrentScene();
+    if (!scene)
+    {
+        throw std::runtime_error("[GameManager: getCurrentScene] No active scene found in SceneManager.");
+    }
+    return game->sceneManager.getCurrentScene();
+}
+Player *getPlayer()
+{
+    Game *game = getGame();
+    if (!game->player)
+    {
+        throw std::runtime_error("[GameManager: getPlayer] Player pointer is null.");
+    }
+    return game->player;
+}
+
+std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &getGrid()
+{
+    Game *game = getGame();
+    if (game->grid.empty())
+    {
+        throw std::runtime_error("[GameManager: getGrid] Grid is empty.");
+    }
+    return game->grid;
 }

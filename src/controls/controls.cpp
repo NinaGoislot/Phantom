@@ -2,12 +2,17 @@
 #include "characters/player.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/time.hpp"
-#include "map/map.hpp"
+#include "map/grid.hpp"
 
-bool isMoveControl(int key)
+bool isMoveControl(int key, Controls &controls)
 {
-    return key == GLFW_KEY_UP || key == GLFW_KEY_DOWN ||
-           key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT;
+  for (const int& moveKey : controls.moveControls)
+  {
+    if (key == moveKey)
+    {
+      return true;
+    }
+  }
 }
 
 // void key_callback(int key, int /*scancode*/, int action, int mods)
@@ -30,7 +35,7 @@ void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int
         throw std::runtime_error("Aucune scène active trouvée dans SceneManager.");
     }
 
-    if (!isMoveControl(key))
+    if (!isMoveControl(key, currentScene->controls))
     {
         const char *keyName = glfwGetKeyName(key, 0);
         if (key >= 0 && keyName != nullptr)
@@ -117,6 +122,18 @@ void Controls::reset()
     {
         state = false;
     }
+}
+
+int Controls::nbMoveControlsActive() {
+    int count = 0;
+    for (const int &key : moveControls)
+    {
+        if (isKeyPressed(key))
+        {
+            count++;
+        }
+    }
+    return count;
 }
 
 void setupControlsCallbacks(GLFWwindow *window)

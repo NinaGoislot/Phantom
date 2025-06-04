@@ -16,7 +16,7 @@ using namespace glbasimac;
 // External files
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
-#include "map/map.hpp"
+#include "map/grid.hpp"
 #include "managers/item.hpp"
 
 // External libs
@@ -63,6 +63,9 @@ void drawOneTile(int &x, int &y, StandardMesh &textureTile)
     myEngine.setFlatColor(1.0, 1.0, 1.0);
 
     myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
+    myEngine.updateMvMatrix();
+    textureTile.draw();
     myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
     myEngine.updateMvMatrix();
     textureTile.draw();
@@ -139,12 +142,26 @@ void drawMap()
 
 void initTextures()
 {
-    floorTile = Texturing::createMapTileMesh(0, 0);
-    floorTile.createVAO();
-    wallTile = Texturing::createMapTileMesh(3, 0);
-    wallTile.createVAO();
-    itemTile = Texturing::createMapTileMesh(0, 4);
-    itemTile.createVAO();
+    try
+    {
+        floorTile = Texturing::createMapTileMesh(0, 0);
+        if (!floorTile.createVAO())
+        {
+            throw std::runtime_error("Echec createVAO() pour floorTile.");
+        }
+
+        wallTile = Texturing::createMapTileMesh(3, 0);
+        if (!wallTile.createVAO())
+        {
+            throw std::runtime_error("Echec createVAO() pour wallTile.");
+        }
+
+        std::cout << "[Draw_game] wall and floor tiles initialized." << std::endl;
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[Draw_game] Error : " << e.what() << std::endl;
+    }
 }
 
 void DrawGame::init()
@@ -161,9 +178,26 @@ void DrawGame::render(const Game &game)
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
-    drawMap();
-    drawItems(); // Draw items after the map to ensure they are on top
+    try
+    {
+        drawMap();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur dans drawMap : " << e.what() << std::endl;
+    }
 
+    try
+    {
+        game.player->draw(myEngine);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur lors du draw du joueur : " << e.what() << std::endl;
+    }
+}
+
+// voilà comment j'ai appelé mes fonctions tah l'époque
     game.player->draw(myEngine);
 
     myEngine.mvMatrixStack.loadIdentity();

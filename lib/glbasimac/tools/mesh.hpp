@@ -113,7 +113,7 @@ namespace STP3D
 		glGenVertexArrays(1, &id_vao);
 		if (id_vao == 0)
 		{
-			STP3D::setError("Unable to find a value for a VAO");
+			STP3D::setError("[createVAO] Unable to find a value for a VAO");
 			return false;
 		}
 		glBindVertexArray(id_vao);
@@ -121,7 +121,7 @@ namespace STP3D
 		// Check if mesh is defined
 		if (buffers.size() == 0)
 		{
-			STP3D::setError("Impossible to create VBO from empty buffers. This mesh has not been initialized");
+			STP3D::setError("[createVAO] Impossible to create VBO from empty buffers. This mesh has not been initialized");
 			return false;
 		}
 
@@ -133,7 +133,7 @@ namespace STP3D
 		// Transfer all data for all VBO from CPU to GPU
 		for (std::vector<int>::size_type i = 0; i < buffers.size(); ++i)
 		{
-			std::cerr << "Id VBO for " << attr_semantic[i] << " : " << vbo_id[i] << std::endl;
+			// std::cerr << "[createVAO] Id VBO for " << attr_semantic[i] << " : " << vbo_id[i] << std::endl;
 			glBindBuffer(GL_ARRAY_BUFFER, vbo_id[i]);
 
 			glBufferData(GL_ARRAY_BUFFER, nb_elts * size_one_elt[i] * sizeof(GLfloat), buffers[i], GL_STATIC_DRAW);

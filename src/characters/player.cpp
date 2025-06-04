@@ -2,9 +2,24 @@
 
 void Player::init()
 {
-    Texturing::initTexture(playerAtlas, "Player", "png");
+    try
+    {
+        Texturing::initTexture(playerAtlas, "Player", "png");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[Player::init] Erreur lors de l'initialisation de la texture : " << e.what() << std::endl;
+        return;
+    }
+
     square = Texturing::createPlayerTileMesh(0);
-    square.createVAO();
+    if (!square.createVAO())
+    {
+        std::cerr << "[Player::init] Echec de la création du VAO pour le joueur." << std::endl;
+        return;
+    }
+
+    std::cout << "[Player::init] Player initialized" << std::endl;
 }
 
 void Player::setFrame(int frameIndex)

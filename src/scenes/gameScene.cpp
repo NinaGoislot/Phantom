@@ -13,48 +13,55 @@ void GameScene::update()
 {
     Game *game = getGame();
     auto currentScene = game->sceneManager.getCurrentScene();
-    if (!currentScene)
-    {
-        throw std::runtime_error("Aucune scène active trouvée dans SceneManager.");
-    }
 
-    if (controls.isKeyPressed(GLFW_KEY_LEFT))
+    try
     {
-        game->player->move_left();
+      if (controls.nbMoveControlsActive() < 2)
+      {
+          if (controls.isKeyPressed(GLFW_KEY_LEFT))
+        {
+            game->player->move_left();
+        }
+        if (controls.isKeyPressed(GLFW_KEY_RIGHT))
+        {
+            game->player->move_right();
+        }
+        if (controls.isKeyPressed(GLFW_KEY_UP))
+        {
+            game->player->move_up();
+        }
+        if (controls.isKeyPressed(GLFW_KEY_DOWN))
+        {
+            game->player->move_down();
+        }
+      }
+      
+
+        if (controls.isKeyPressed('s'))
+        {
+            glm::vec2 pos = game->player->getPosition();
+            digTile(static_cast<int>(round(pos.x + 50)), static_cast<int>(round(pos.y + 50)));
+        }
     }
-    if (controls.isKeyPressed(GLFW_KEY_RIGHT))
+    catch (const std::exception &e)
     {
-        game->player->move_right();
-    }
-    if (controls.isKeyPressed(GLFW_KEY_UP))
-    {
-        game->player->move_up();
-    }
-    if (controls.isKeyPressed(GLFW_KEY_DOWN))
-    {
-        game->player->move_down();
-    }
-    if (controls.isKeyPressed('s'))
-    {
-        glm::vec2 playerPos = game->player->getPosition();
-        // TO FIX TO WHEN WE'D HAVE COLLISIONS
-        digTile(round(playerPos.x + 50), round(playerPos.y + 50)); // add 50 because the map coords don't have negatives
-    }
-    if (controls.isKeyPressed('e'))
-    {
-        getItem(items());
-    }
-    if (controls.isKeyPressed('a'))
-    {
-        displayItems(items());
+        std::cerr << "[GameScene::update] Erreur durant input ou mouvement : " << e.what() << std::endl;
+        throw;
     }
 }
 
 void GameScene::draw()
 {
     DrawGame::render(*getGame());
-    
-    displayMenu(countItemsCollected(items()));
+
+    try
+    {
+        displayMenu(0);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[GameScene::draw] Erreur dans displayMenu() : " << e.what() << std::endl;
+    }
 }
 void GameScene::destroy()
 {
