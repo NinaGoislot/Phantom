@@ -1,6 +1,6 @@
 #include "controls.hpp"
 #include "characters/player.hpp"
-#include "managers/game.hpp"
+#include "managers/gameManager.hpp"
 #include "managers/time.hpp"
 
 bool isMoveControl(int key)

@@ -3,7 +3,7 @@
 #include <math.h>
 #include "controls/controls.hpp"
 #include "characters/player.hpp"
-#include "managers/game.hpp"
+#include "managers/gameManager.hpp"
 #include "managers/time.hpp"
 
 static bool color_mode_activated = true;
