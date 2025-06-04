@@ -15,10 +15,8 @@
 #include <vector>
 #include <cmath>
 
-
 using namespace glbasimac;
 
-// to add 
 #include "map.hpp"
 
 GLBI_Engine myEngine;
@@ -27,27 +25,9 @@ GLBI_Texture textureAtlas;
 // OpenGL Shapes
 StandardMesh floorTile;
 StandardMesh wallTile;
-StandardMesh wallTileW;
-StandardMesh wallTileE;
-StandardMesh wallTileS;
-StandardMesh wallTileN;
-StandardMesh wallTileSE;
-StandardMesh wallTileSW;
-StandardMesh wallTileNW;
-StandardMesh wallTileNE;
-StandardMesh wallTileNEW;
-StandardMesh wallTileNWS;
-StandardMesh wallTileNES;
-StandardMesh wallTileWES;
-StandardMesh wallTileNWSE;
 
-bool minusAngleActivated = false;
-
-//to add
 void drawOneTile(int& x, int& y, StandardMesh& textureTile)
 {
-    myEngine.activateTexturing(true);
-	textureAtlas.attachTexture();
     myEngine.setFlatColor(1.0,1.0,1.0);
 
     myEngine.mvMatrixStack.pushMatrix();
@@ -55,20 +35,18 @@ void drawOneTile(int& x, int& y, StandardMesh& textureTile)
         myEngine.updateMvMatrix();
         textureTile.draw();
     myEngine.mvMatrixStack.popMatrix();
-
-    textureAtlas.detachTexture();
-	myEngine.activateTexturing(false);
 }
 
-//to add
 void drawMap()
 {
+    myEngine.activateTexturing(true);
+	textureAtlas.attachTexture();
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addHomothety(0.2);
+    myEngine.mvMatrixStack.addHomothety(1);
     myEngine.updateMvMatrix();
-    myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH/2, -MAP_HEIGHT/2, 0.0));
-    myEngine.updateMvMatrix();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH/2, -MAP_HEIGHT/2, 0.0));
+        myEngine.updateMvMatrix();
     for (int h{0}; h < MAP_WIDTH; h++)
     {
         for (int w{0}; w < MAP_HEIGHT; w++)
@@ -86,78 +64,91 @@ void drawMap()
 
                 if (hasWest && !hasEast && !hasNorth && !hasSouth)
                 {
-                    drawOneTile(w, h, wallTileW);
+                    // W
+                    Texturing::updateUVs(wallTile, 0,4, 16, 16, 128, 128);
                 }
                 else if (!hasWest && !hasNorth && !hasSouth && hasEast)
                 {
-                    drawOneTile(w, h, wallTileE);
+                    // E
+                    Texturing::updateUVs(wallTile, 2,3, 16, 16, 128, 128);
                 }
                 else if (!hasWest && !hasNorth && hasEast && hasSouth)
                 {
-                    drawOneTile(w, h, wallTileSE);
+                    // SE
+                    Texturing::updateUVs(wallTile, 2,4, 16, 16, 128, 128);
                 }
                 else if (!hasWest && hasNorth && !hasEast && !hasSouth)
                 {
-                    drawOneTile(w, h, wallTileN);
+                    // N
+                    Texturing::updateUVs(wallTile, 1,4, 16, 16, 128, 128);
                 }
                 else if (hasWest && hasNorth && !hasEast && !hasSouth)
                 {
-                    drawOneTile(w, h, wallTileNW);
+                    // WN
+                    Texturing::updateUVs(wallTile, 1,5, 16, 16, 128, 128);
                 }
                 else if (!hasWest && hasNorth && hasEast && !hasSouth)
                 {
-                    drawOneTile(w, h, wallTileNE);
+                    // NE
+                    Texturing::updateUVs(wallTile, 2,5, 16, 16, 128, 128);
                 }
                 else if (hasWest && !hasNorth && !hasEast && hasSouth)
                 {
-                    drawOneTile(w, h, wallTileSW);
+                    // SW
+                    Texturing::updateUVs(wallTile, 0,5, 16, 16, 128, 128);
                 }
                 else if (!hasWest && !hasNorth && !hasEast && hasSouth)
                 {
-                    drawOneTile(w, h, wallTileS);
+                    // S
+                    Texturing::updateUVs(wallTile, 1,3, 16, 16, 128, 128);
                 }
                 else if (hasWest && hasNorth && hasEast && !hasSouth)
                 {
-                    drawOneTile(w, h, wallTileNEW);
+                    // NEW
+                    Texturing::updateUVs(wallTile, 2,6, 16, 16, 128, 128);
                 }
                 else if (hasWest && hasNorth && !hasEast && hasSouth)
                 {
-                    drawOneTile(w, h, wallTileNWS);
+                    // NSW
+                    Texturing::updateUVs(wallTile, 0,7, 16, 16, 128, 128);
                 }
                 else if (!hasWest && hasNorth && hasEast && hasSouth)
                 {
-                    drawOneTile(w, h, wallTileNES);
+                    // NES
+                    Texturing::updateUVs(wallTile, 0,6, 16, 16, 128, 128);
                 }
                 else if (hasWest && !hasNorth && hasEast && hasSouth)
                 {
-                    drawOneTile(w, h, wallTileWES);
+                    // WES
+                    Texturing::updateUVs(wallTile, 1,6, 16, 16, 128, 128);
                 }
                 else if (hasWest && hasNorth && hasEast && hasSouth)
                 {
-                    drawOneTile(w, h, wallTileNWSE);
+                    Texturing::updateUVs(wallTile, 1,7, 16, 16, 128, 128);
+                }
+                else if (!hasWest && hasNorth && !hasEast && hasSouth)
+                {
+                    // NS
+                    Texturing::updateUVs(wallTile, 3,7, 16, 16, 128, 128);
+                }
+                else if (hasWest && !hasNorth && hasEast && !hasSouth)
+                {
+                    // WE
+                    Texturing::updateUVs(wallTile, 3,6, 16, 16, 128, 128);
                 }
                 else
                 {
-                    drawOneTile(w, h, wallTile);
+                    // Surrounded/default
+                    Texturing::updateUVs(wallTile, 0,3, 16, 16, 128, 128);
                 }
+                drawOneTile(w, h, wallTile);
             }
         }
     }
+        myEngine.mvMatrixStack.popMatrix();
     myEngine.mvMatrixStack.popMatrix();
-    myEngine.mvMatrixStack.popMatrix();
-}
-
-void drawTile(const StandardMesh& textureTile) {
-    myEngine.activateTexturing(true);
-	textureAtlas.attachTexture();
-    myEngine.setFlatColor(1.0,1.0,1.0);
-
-    myEngine.mvMatrixStack.pushMatrix();
-        textureTile.draw();
-    myEngine.mvMatrixStack.popMatrix();
-
-    textureAtlas.detachTexture();
-	myEngine.activateTexturing(false);
+    myEngine.activateTexturing(false);
+	textureAtlas.detachTexture();
 }
 
 void initTextures() {
@@ -165,42 +156,11 @@ void initTextures() {
     floorTile.createVAO();
     wallTile = Texturing::createMapTileMesh(3,0);
     wallTile.createVAO();
-    wallTileW = Texturing::createMapTileMesh(4,0);
-    wallTileW.createVAO();
-    wallTileE = Texturing::createMapTileMesh(3,2);
-    wallTileE.createVAO();
-    wallTileSE = Texturing::createMapTileMesh(4,2);
-    wallTileSE.createVAO();
-    wallTileS = Texturing::createMapTileMesh(3,1);
-    wallTileS.createVAO();
-    wallTileN = Texturing::createMapTileMesh(4,1);
-    wallTileN.createVAO();
-    wallTileNW = Texturing::createMapTileMesh(5,1);
-    wallTileNW.createVAO();
-    wallTileNE = Texturing::createMapTileMesh(5,2);
-    wallTileNE.createVAO();
-    wallTileSW = Texturing::createMapTileMesh(5,0);
-    wallTileSW.createVAO();
-    wallTileNEW = Texturing::createMapTileMesh(6,2);
-    wallTileNEW.createVAO();
-    wallTileNWS = Texturing::createMapTileMesh(7,0);
-    wallTileNWS.createVAO();
-    wallTileWES = Texturing::createMapTileMesh(6,1);
-    wallTileWES.createVAO();
-    wallTileNES = Texturing::createMapTileMesh(6,0);
-    wallTileNES.createVAO();
-    wallTileNWSE = Texturing::createMapTileMesh(7,1);
-    wallTileNWSE.createVAO();
 }
 
 void initScene()
 {
     Texturing::initTexture(textureAtlas, "Map", "png");
-
-    // Deal with uv position TODO add like a uv function to generate
-
-    // TODO : Change uv during animation to create animation
-    // add animator manager
 
     initTextures();
 
