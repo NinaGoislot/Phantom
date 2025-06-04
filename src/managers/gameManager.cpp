@@ -18,6 +18,8 @@
 #include "map/map.hpp"
 #include "managers/item.hpp"
 
+#include "tools/camera.hpp"
+
 
 //External libs
 #include <iostream>
@@ -56,6 +58,8 @@ void setupCallbacks(GLFWwindow *window)
 
 Game createGame(GLFWwindow *window)
 {
+    generateMap(10);
+    playerSpawner(5);
     Player* player = new Player{};
     player->init();
     Game game{window, player, SceneManager{}};

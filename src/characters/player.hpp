@@ -11,6 +11,7 @@
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "glbasimac/glbi_texture.hpp"
 #include "tools/basic_mesh.hpp"
+#include "tools/camera.hpp"
 #include "managers/time.hpp"
 #include "managers/texture.hpp"
 

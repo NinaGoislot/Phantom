@@ -10,6 +10,7 @@
 #include "tools/shaders.hpp"
 #include "tools/basic_mesh.hpp"
 #include "glbasimac/glbi_engine.hpp"
+#include "tools/camera.hpp"
 using namespace glbasimac;
 
 // External files
@@ -21,6 +22,8 @@ using namespace glbasimac;
 // External libs
 #include <vector>
 #include <cmath>
+
+STP3D::FPSCamera camera;
 
 // textures
 GLBI_Engine myEngine;
@@ -83,13 +86,9 @@ void drawItems()
     //         myEngine.mvMatrixStack.popMatrix();
     //     }
     // }
-    myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addHomothety(20.f);
-    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(-MAP_WIDTH / 2), static_cast<float>(-MAP_HEIGHT / 2), 0.0));
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(1.0, 1.0, 0.0); // Yellow color for items
-    floorTile.draw();                   
-    myEngine.mvMatrixStack.popMatrix();
+    int x = 5;
+    int y = 5;
+    drawOneTile(x, y, floorTile);
 }
 
 void drawMap()
@@ -144,9 +143,6 @@ void DrawGame::init()
     Texturing::initTexture(textureAtlas, "Map", "png");
 
     initTextures();
-
-    generateMap(10);
-    playerSpawner(5);
 }
 
 void DrawGame::render(const Game &game)
@@ -154,10 +150,18 @@ void DrawGame::render(const Game &game)
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
-    // drawMap();
-    drawItems(); // Draw items after the map to ensure they are on top
+    drawMap();
+    // drawItems(); // Draw items after the map to ensure they are on top
 
-    // game.player->draw(myEngine);
+    game.player->draw(myEngine);
+
+    // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
+    // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
+    camera.position_cam.x = game.player->getPosition().x;
+    // Set camera height to 1.0f
+    camera.position_cam.y = game.player->getPosition().y;
+    std::cout << "Camera position updated to: " << camera.position_cam.x << ", " << camera.position_cam.y << std::endl;
+    camera.updateViewMatrix();
 }
 
 // voilà comment j'ai appelé mes fonctions tah l'époque
