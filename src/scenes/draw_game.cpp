@@ -104,26 +104,10 @@ void drawMap()
 
 void initTextures()
 {
-    try
-    {
-        floorTile = Texturing::createMapTileMesh(0, 0);
-        if (!floorTile.createVAO())
-        {
-            throw std::runtime_error("Echec createVAO() pour floorTile.");
-        }
-
-        wallTile = Texturing::createMapTileMesh(3, 0);
-        if (!wallTile.createVAO())
-        {
-            throw std::runtime_error("Echec createVAO() pour wallTile.");
-        }
-
-        std::cout << "[Draw_game] wall and floor tiles initialized." << std::endl;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "[Draw_game] Error : " << e.what() << std::endl;
-    }
+    floorTile = Texturing::createMapTileMesh(0, 0);
+    floorTile.createVAO();
+    wallTile = Texturing::createMapTileMesh(3, 0);
+    wallTile.createVAO();
 }
 
 void DrawGame::init()

@@ -6,13 +6,14 @@
 
 bool isMoveControl(int key, Controls &controls)
 {
-  for (const int& moveKey : controls.moveControls)
-  {
-    if (key == moveKey)
+    for (const int &moveKey : controls.moveControls)
     {
-      return true;
+        if (key == moveKey)
+        {
+            return true;
+        }
     }
-  }
+    return false;
 }
 
 // void key_callback(int key, int /*scancode*/, int action, int mods)
@@ -55,8 +56,6 @@ void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int
     // printf("---------------------------------------------------\n");
 
     // updatePlayer(window, key, *(game->player));
-
-
 }
 
 // void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int action, const int mods)
@@ -124,7 +123,8 @@ void Controls::reset()
     }
 }
 
-int Controls::nbMoveControlsActive() {
+int Controls::nbMoveControlsActive()
+{
     int count = 0;
     for (const int &key : moveControls)
     {
