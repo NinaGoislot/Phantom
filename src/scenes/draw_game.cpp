@@ -16,6 +16,8 @@ using namespace glbasimac;
 //External files
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
+#include "map/map.hpp"
+#include "managers/item.hpp"
 
 //External libs
 #include <vector>
@@ -76,9 +78,59 @@ void drawSquare() {
 	myEngine.activateTexturing(false);
 }
 
+void drawOneTile(int x, int y, float color)
+{
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(color, color, color);
+    square.draw();
+    myEngine.mvMatrixStack.popMatrix();
+}
+
+void drawItems() {
+    for (const auto& item : items) {
+        if (item.collected == false) {
+            drawOneTile(item.positionX, item.positionY, 0.5f);
+        }
+    }
+}
+
+void drawMap()
+{
+    // myEngine.mvMatrixStack.pushMatrix();
+    // myEngine.mvMatrixStack.addHomothety(0.2);
+    // myEngine.updateMvMatrix();
+    // square.draw();
+    // myEngine.mvMatrixStack.pushMatrix();
+    // myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+    // myEngine.updateMvMatrix();
+    // for (int h{0}; h < MAP_WIDTH; h++)
+    // {
+    //     for (int w{0}; w < MAP_HEIGHT; w++)
+    //     {
+    //         if (isAlive(w, h))
+    //         {
+    //             drawOneTile(w, h, 1.0);
+    //         }
+    //         else
+    //         {
+    //             drawOneTile(w, h, 0.0);
+    //         }
+    //     }
+    // }
+    // myEngine.mvMatrixStack.popMatrix();
+    // myEngine.mvMatrixStack.popMatrix();
+
+    for (const auto& item : items) {
+        if (item.collected == false) {
+            drawOneTile(item.positionX, item.positionY, 1.f);
+        }
+    }
+}
+
 void DrawGame::init()
 {
-  
     int w, h, c;
     stbi_set_flip_vertically_on_load(true);  
 	unsigned char* imgData {stbi_load("../../assets/images/poulpile.jpg", &w, &h, &c, 0)};
@@ -122,27 +174,29 @@ void DrawGame::render(const Game& game)
 {
     // switch to opengl shaders
     myEngine.switchToFlatShading();
+    drawMap();
+    // drawItems();
+    
 
+    // myEngine.mvMatrixStack.pushMatrix();
 
-    myEngine.mvMatrixStack.pushMatrix();
+    // const float spacing = 1.1f;
+    // const int rows = 5;
+    // const int cols = 5;
 
-    const float spacing = 1.1f;
-    const int rows = 5;
-    const int cols = 5;
+    // for (int i = 0; i < rows; ++i)
+    // {
+    //     for (int j = 0; j < cols; ++j)
+    //     {
+    //         myEngine.mvMatrixStack.pushMatrix();
+    //         myEngine.mvMatrixStack.addTranslation({j * spacing, i * spacing, 0.0f});
+    //         myEngine.updateMvMatrix();
+    //         drawSquare();
+    //         myEngine.mvMatrixStack.popMatrix();
+    //     }
+    // }
 
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation({j * spacing, i * spacing, 0.0f});
-            myEngine.updateMvMatrix();
-            drawSquare();
-            myEngine.mvMatrixStack.popMatrix();
-        }
-    }
-
-    myEngine.mvMatrixStack.popMatrix();
+    // myEngine.mvMatrixStack.popMatrix();
     game.player->draw(myEngine);
 }
 

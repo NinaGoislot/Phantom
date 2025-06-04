@@ -17,6 +17,9 @@
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
 
+#include "map/map.hpp"
+#include "managers/item.hpp"
+
 
 //External libs
 #include <iostream>
@@ -106,6 +109,9 @@ Game initGame(){
     myEngine.initGL();
 
     textInit();
+    generateMap(10);
+    playerSpawner(5);
+    createItems();
 
     // deal with resizing the window
     int width, height;
