@@ -29,6 +29,7 @@ GLBI_Texture textureAtlas;
 // OpenGL Shapes
 StandardMesh floorTile;
 StandardMesh wallTile;
+StandardMesh itemTile;
 
 int computeBitmask(bool north, bool east, bool south, bool west)
 {
@@ -67,29 +68,32 @@ void drawOneTile(int &x, int &y, StandardMesh &textureTile)
 
 void drawItems()
 {
+    std::vector<item> itemList = items();
     // std::cout << "Drawing items..." << std::endl;
-    // // displayItems(); // Assuming this function is defined to display items
-    // std::cout << "items.size() = " << items.size() << std::endl;
-    // for (const auto &oneItem : items)
-    // {
-    //     std::cout << " dans la boucle drawItems" << std::endl;
-    //     if (!oneItem.collected)
-    //     {
-    //         myEngine.mvMatrixStack.pushMatrix();
-    //         myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(oneItem.positionX), static_cast<float>(oneItem.positionY), 0.0));
-    //         myEngine.updateMvMatrix();
-    //         myEngine.setFlatColor(1.0, 1.0, 0.0); // Yellow color for items
-    //         floorTile.draw();
-    //         myEngine.mvMatrixStack.popMatrix();
-    //     }
-    // }
-    myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addHomothety(20.f);
-    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(-MAP_WIDTH / 2), static_cast<float>(-MAP_HEIGHT / 2), 0.0));
-    myEngine.updateMvMatrix();
-    myEngine.setFlatColor(1.0, 1.0, 0.0); // Yellow color for items
-    floorTile.draw();                   
-    myEngine.mvMatrixStack.popMatrix();
+    // displayItems(itemList); // Assuming this function is defined to display items
+    // std::cout << "items.size() = " << itemList.size() << std::endl;
+    for (const auto &oneItem : itemList)
+    {
+        // std::cout << " dans la boucle drawItems" << std::endl;
+        if (!oneItem.collected)
+        {
+            myEngine.activateTexturing(true);
+            textureAtlas.attachTexture();
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.updateMvMatrix();
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+            myEngine.updateMvMatrix();
+
+            int x = oneItem.positionX;
+            int y = oneItem.positionY;
+            drawOneTile(x, y, itemTile);
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.activateTexturing(false);
+            textureAtlas.detachTexture();
+        }
+    }
 }
 
 void drawMap()
@@ -136,6 +140,8 @@ void initTextures()
     floorTile.createVAO();
     wallTile = Texturing::createMapTileMesh(3, 0);
     wallTile.createVAO();
+    testTile = Texturing::createMapTileMesh(0, 4);
+    testTile.createVAO();
 }
 
 void DrawGame::init()
@@ -154,10 +160,10 @@ void DrawGame::render(const Game &game)
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
-    // drawMap();
+    drawMap();
     drawItems(); // Draw items after the map to ensure they are on top
 
-    // game.player->draw(myEngine);
+    game.player->draw(myEngine);
 }
 
 // voilà comment j'ai appelé mes fonctions tah l'époque
