@@ -130,3 +130,12 @@ Game* getGame() {
 
     return game;
 }
+
+std::shared_ptr<Scene> getCurrentScene() {
+    Game* game = getGame();
+    return game->sceneManager.getCurrentScene();
+}
+Player* getPlayer(){
+    Game* game = getGame();
+    return game->player;
+}

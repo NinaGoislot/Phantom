@@ -31,3 +31,5 @@ struct Game
 
 Game initGame();
 Game* getGame();
+std::shared_ptr<Scene> getCurrentScene();
+Player* getPlayer();
