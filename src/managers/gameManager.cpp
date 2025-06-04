@@ -16,7 +16,7 @@
 #include "managers/text.hpp"
 
 #include "map/grid.hpp"
-#include "managers/item.hpp"
+#include "map/item.hpp"
 
 #include "tools/camera.hpp"
 

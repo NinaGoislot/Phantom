@@ -2,7 +2,7 @@
 #include "managers/gameManager.hpp"
 #include "scenes/draw_game.hpp"
 #include "managers/menu.hpp"
-#include "managers/item.hpp"
+#include "map/item.hpp"
 
 void GameScene::init()
 {
@@ -36,17 +36,25 @@ void GameScene::update()
             }
         }
 
-        if (controls.isKeyPressed('s'))
+        if (controls.isKeyPressed('a'))
         {
             glm::vec2 pos = game->player->getPosition();
             try
             {
                 digTile(static_cast<int>(round(pos.x + 50)), static_cast<int>(round(pos.y + 50)));
             }
-            catch(const std::exception& e)
+            catch (const std::exception &e)
             {
                 std::cerr << "[GameScene::update] dig impossible " << e.what() << '\n';
             }
+        }
+        if (controls.isKeyPressed('e'))
+        {
+            getItem(items());
+        }
+        if (controls.isKeyPressed('f'))
+        {
+            displayItems(items());
         }
     }
     catch (const std::exception &e)
@@ -60,6 +68,7 @@ void GameScene::draw()
 {
     DrawGame::render(*getGame());
 
+     displayMenu(countItemsCollected(items()));
     // try
     // {
     //     displayMenu(0);

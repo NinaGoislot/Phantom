@@ -1,7 +1,8 @@
-#include "managers/item.hpp"
+#include "map/item.hpp"
 #include "map/grid.hpp"
 #include "characters/player.hpp"
 #include "managers/gameManager.hpp"
+#include "managers/text.hpp"
 
 item createItems(int id, int positionX, int positionY, bool collected)
 {
@@ -43,10 +44,12 @@ void displayItems(std::vector<item> &items)
     }
 }
 
+
+
 std::vector<item> getItem(std::vector<item> &items)
 {
     Player *player = getGame()->player;
-    int playerZone = 3;
+    int playerZone = 1;
     int playerX = static_cast<int>(player->getPosition().x) + MAP_WIDTH / 2;
     int playerY = static_cast<int>(player->getPosition().y) + MAP_HEIGHT / 2;
     for (auto &oneItem : items)
@@ -65,6 +68,27 @@ std::vector<item> getItem(std::vector<item> &items)
     }
     std::cout << "There are no item to collect here" << std::endl;
     return items;
+}
+
+void playerCloseToItem(std::vector<item> &items)
+{
+    Player *player = getGame()->player;
+    int playerZone = 1;
+    int playerX = static_cast<int>(player->getPosition().x) + MAP_WIDTH / 2;
+    int playerY = static_cast<int>(player->getPosition().y) + MAP_HEIGHT / 2;
+
+    for (const auto &oneItem : items)
+    {
+        if (!oneItem.collected &&
+            std::abs(playerX - oneItem.positionX) <= playerZone &&
+            std::abs(playerY - oneItem.positionY) <= playerZone)
+        {
+            glfwGetWindowSize(getGame()->window, &playerX, &playerY);
+            textDraw("Press 'E' to collect a part of the cane!",
+                     playerX, playerY - 100, SimpleText::Color::WHITE,
+                     SimpleText::Alignment::CENTER, SimpleText::SIZE_16, true);
+        }
+    }
 }
 
 

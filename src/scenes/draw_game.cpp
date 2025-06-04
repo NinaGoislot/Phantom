@@ -17,7 +17,7 @@ using namespace glbasimac;
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
 #include "map/grid.hpp"
-#include "managers/item.hpp"
+#include "map/item.hpp"
 
 // External libs
 #include <vector>
@@ -191,6 +191,8 @@ void DrawGame::render(const Game &game)
     {
         std::cerr << "[DrawGame::render] Erreur lors du draw du joueur : " << e.what() << std::endl;
     }
+
+    playerCloseToItem(items());
 
     myEngine.mvMatrixStack.loadIdentity();
 

@@ -23,4 +23,6 @@ std::vector<item>& items();
 
 std::vector<item> getItem(std::vector<item> &items);
 
+void playerCloseToItem(std::vector<item> &items);
+
 int countItemsCollected(std::vector<item> &items);
