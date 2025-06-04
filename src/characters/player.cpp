@@ -15,10 +15,22 @@ void Player::setFrame(int frameIndex)
 
 void Player::updateAnimatedFrame()
 {
-    currentFrame = frameDirection + animationStep;
-    setFrame(currentFrame);
+    if (frameDirection != lastFrameDirection) {
+        animationStep = 0;
+        animationTimer = 0.0f;
+        lastFrameDirection = frameDirection;
+        setFrame(frameDirection);  // Immediately show first frame of new direction
+    }
 
-    animationStep = (animationStep + 1) % 4; 
+    animationTimer += static_cast<float>(get_loop_time().getDeltaTime());
+
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.0f; // reset timer
+        animationStep = (animationStep + 1) % 4; // loop through frames
+        currentFrame = frameDirection + animationStep;
+        setFrame(currentFrame);
+    }
 }
 
 
@@ -31,28 +43,44 @@ void Player::move(glm::vec2 direction)
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
 }
 
-void Player::move_up()
+void Player::anim_up()
 {
     frameDirection = 4;
     updateAnimatedFrame();
+}
+
+void Player::anim_down()
+{
+    frameDirection = 0;
+    updateAnimatedFrame();
+}
+
+void Player::anim_left()
+{
+    frameDirection = 12;
+    updateAnimatedFrame();
+}
+
+void Player::anim_right()
+{
+    frameDirection = 8;
+    updateAnimatedFrame();
+}
+
+void Player::move_up()
+{
     move(glm::vec2(0, 1));
 }
 void Player::move_down()
 {
-    frameDirection = 0;
-    updateAnimatedFrame();
     move(glm::vec2(0, -1));
 }
 void Player::move_left()
 {
-    frameDirection = 12;
-    updateAnimatedFrame();
     move(glm::vec2(-1, 0));
 }
 void Player::move_right()
 {
-    frameDirection = 8;
-    updateAnimatedFrame();
     move(glm::vec2(1, 0));
 }
 

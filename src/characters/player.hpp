@@ -26,14 +26,20 @@ struct Player
     int currentFrame = 0;
     int frameDirection = 0;
     int animationStep = 0;
-    float frameDuration = 0.1f; // seconds per animation frame
+    float frameDuration = 0.2f; // seconds per animation frame
     float animationTimer = 0.0f;
+    int lastFrameDirection = -1;
     bool isMoving = false;
 
     void init();
     void draw(glbasimac::GLBI_Engine& engine);
     StandardMesh square;
     
+    void anim_up();
+    void anim_down();
+    void anim_left();
+    void anim_right();
+
     void move_up();
     void move_down();
     void move_left();

@@ -19,18 +19,22 @@ void GameScene::update()
     if (controls.isKeyPressed(GLFW_KEY_LEFT))
     {
         game->player->move_left();
+        game->player->anim_left();
     }
     if (controls.isKeyPressed(GLFW_KEY_RIGHT))
     {
         game->player->move_right();
+        game->player->anim_right();
     }
     if (controls.isKeyPressed(GLFW_KEY_UP))
     {
         game->player->move_up();
+        game->player->anim_up();
     }
     if (controls.isKeyPressed(GLFW_KEY_DOWN))
     {
         game->player->move_down();
+        game->player->anim_down();
     }
     if (controls.isKeyPressed(GLFW_KEY_S))
     {
