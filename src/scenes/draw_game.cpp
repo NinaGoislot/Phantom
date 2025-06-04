@@ -145,6 +145,8 @@ void initTextures()
     wallTile.createVAO();
     itemTile = Texturing::createMapTileMesh(0, 4);
     itemTile.createVAO();
+    itemTile = Texturing::createMapTileMesh(0, 4);
+    itemTile.createVAO();
 }
 
 void DrawGame::init()
@@ -157,8 +159,7 @@ void DrawGame::init()
 
 void DrawGame::render(const Game &game)
 {
-    myEngine.setViewMatrix(camera.viewMatrix);
-
+    
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
@@ -166,6 +167,14 @@ void DrawGame::render(const Game &game)
     drawItems(); // Draw items after the map to ensure they are on top
 
     game.player->draw(myEngine);
+
+    myEngine.mvMatrixStack.loadIdentity();
+
+    myEngine.setViewMatrix(camera.viewMatrix);
+
+    myEngine.mvMatrixStack.loadIdentity();
+
+    myEngine.setViewMatrix(camera.viewMatrix);
 
 
     camera.updateViewMatrix();
