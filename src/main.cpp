@@ -10,7 +10,7 @@ static std::array<float, 4> base_rgba{0.f, 0.f, 0.f, 0.f};
 
 void cleanupGame()
 {
-    Game* game = getGame();
+    Game *game = getGame();
     if (game)
     {
         delete game->player;
@@ -18,32 +18,39 @@ void cleanupGame()
     }
 }
 
-
 int main()
 {
-    initGame();
-    Game* game = getGame();
-    
-    /* Loop until the user closes the window */
-    while (!glfwWindowShouldClose(glfwGetCurrentContext()))
+    try
     {
-        get_loop_time().updateTime();
+        initGame();
+        Game *game = getGame();
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        /* Loop until the user closes the window */
+        while (!glfwWindowShouldClose(glfwGetCurrentContext()))
+        {
+            get_loop_time().updateTime();
 
-        // render here
-        game->sceneManager.getCurrentScene()->update();
-        game->sceneManager.getCurrentScene()->draw();
+            glClear(GL_COLOR_BUFFER_BIT);
 
-        /* Swap front and back buffers */
-        glfwSwapBuffers(glfwGetCurrentContext());
+            // render here
+            game->sceneManager.getCurrentScene()->update();
+            game->sceneManager.getCurrentScene()->draw();
 
-        /* Poll for and process events */ //Met en place les keycallback
-        glfwPollEvents();
+            /* Swap front and back buffers */
+            glfwSwapBuffers(glfwGetCurrentContext());
+
+            /* Poll for and process events */ // Met en place les keycallback
+            glfwPollEvents();
+        }
+
+        cleanupGame();
+
+        glfwTerminate();
     }
-
-    cleanupGame();
-
-    glfwTerminate();
+    catch (const std::exception &e)
+    {
+        std::cerr << "[main] Exception non geree : " << e.what() << std::endl;
+        return EXIT_FAILURE;
+    }
     return 0;
 }
