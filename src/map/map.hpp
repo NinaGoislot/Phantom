@@ -30,5 +30,8 @@ void playerSpawner(int size);
 // vérifie si la case est vivante
 bool isAlive(int x, int y);
 
+// détruit la case (action de creuser)
+void digTile(int x, int y);
+
 // fonction d'affichage de la map
 void displayMap();
