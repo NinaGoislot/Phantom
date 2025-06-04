@@ -143,8 +143,8 @@ void initTextures()
     floorTile.createVAO();
     wallTile = Texturing::createMapTileMesh(3, 0);
     wallTile.createVAO();
-    testTile = Texturing::createMapTileMesh(0, 4);
-    testTile.createVAO();
+    itemTile = Texturing::createMapTileMesh(0, 4);
+    itemTile.createVAO();
 }
 
 void DrawGame::init()
@@ -157,6 +157,7 @@ void DrawGame::init()
 
 void DrawGame::render(const Game &game)
 {
+    
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
@@ -164,6 +165,10 @@ void DrawGame::render(const Game &game)
     drawItems(); // Draw items after the map to ensure they are on top
 
     game.player->draw(myEngine);
+
+    myEngine.mvMatrixStack.loadIdentity();
+
+    myEngine.setViewMatrix(camera.viewMatrix);
 
     // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
     // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
