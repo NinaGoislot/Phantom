@@ -7,8 +7,6 @@
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "tools/stb_image.h"
 
 //External files
 #include "controls/controls.hpp"

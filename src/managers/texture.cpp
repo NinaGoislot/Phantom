@@ -27,10 +27,10 @@ namespace Texturing
         float v1 = tileHeight / atlasHeight;
 
         float uvs[] = {
-            u0, v0, // bottom-left
-            u1, v0, // bottom-right
-            u1, v1, // top-right
-            u0, v1  // top-left
+            u0, v0,
+            u1, v0,
+            u1, v1,
+            u0, v1
         };
 
         StandardMesh mesh(4, GL_TRIANGLE_FAN);

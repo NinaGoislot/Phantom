@@ -9,7 +9,6 @@
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
 #include "tools/basic_mesh.hpp"
-#include "tools/stb_image.h"
 #include "glbasimac/glbi_engine.hpp"
 #include "map.hpp"
 using namespace glbasimac;
