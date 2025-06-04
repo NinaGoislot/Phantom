@@ -39,16 +39,14 @@ void GameScene::update()
         if (controls.isKeyPressed('s'))
         {
             glm::vec2 pos = game->player->getPosition();
-            digTile(static_cast<int>(round(pos.x + 50)), static_cast<int>(round(pos.y + 50)));
-        }
-
-        if (controls.isKeyPressed('e'))
-        {
-            getItem(items());
-        }
-        if (controls.isKeyPressed('a'))
-        {
-            displayItems(items());
+            try
+            {
+                digTile(static_cast<int>(round(pos.x + 50)), static_cast<int>(round(pos.y + 50)));
+            }
+            catch(const std::exception& e)
+            {
+                std::cerr << "[GameScene::update] dig impossible " << e.what() << '\n';
+            }
         }
     }
     catch (const std::exception &e)
@@ -62,14 +60,14 @@ void GameScene::draw()
 {
     DrawGame::render(*getGame());
 
-    try
-    {
-        displayMenu(countItemsCollected(items()));
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "[GameScene::draw] Erreur dans displayMenu() : " << e.what() << std::endl;
-    }
+    // try
+    // {
+    //     displayMenu(0);
+    // }
+    // catch (const std::exception &e)
+    // {
+    //     std::cerr << "[GameScene::draw] Erreur dans displayMenu() : " << e.what() << std::endl;
+    // }
 }
 void GameScene::destroy()
 {
