@@ -1,4 +1,4 @@
-//Opengl
+// Opengl
 #include "glad/glad.h" // DOIT être le premier include lié à OpenGL
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
@@ -10,17 +10,18 @@
 #include "tools/shaders.hpp"
 #include "tools/basic_mesh.hpp"
 #include "glbasimac/glbi_engine.hpp"
-#include "map.hpp"
 using namespace glbasimac;
 
-//External files
+// External files
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
+#include "map.hpp"
 
-//External libs
+// External libs
 #include <vector>
 #include <cmath>
 
+// textures
 GLBI_Engine myEngine;
 GLBI_Texture textureAtlas;
 
@@ -28,9 +29,33 @@ GLBI_Texture textureAtlas;
 StandardMesh floorTile;
 StandardMesh wallTile;
 
-void drawOneTile(int& x, int& y, StandardMesh& textureTile)
+int computeBitmask(bool north, bool east, bool south, bool west)
 {
-    myEngine.setFlatColor(1.0,1.0,1.0);
+    return (north ? 8 : 0) + (east ? 4 : 0) + (south ? 2 : 0) + (west ? 1 : 0);
+}
+
+std::pair<int, int> bitmaskUVs[16] = {
+    {0, 3}, // plain terrain/default
+    {0, 4}, // W
+    {1, 3}, // S
+    {0, 5}, // SW
+    {2, 3}, // E
+    {3, 6}, // WE
+    {2, 4}, // SE
+    {1, 6}, // WES
+    {1, 4}, // N
+    {1, 5}, // NW
+    {3, 7}, // NS
+    {0, 7}, // NSW
+    {2, 5}, // NE
+    {2, 6}, // NEW
+    {0, 6}, // NES
+    {1, 7}  // Surrounded
+};
+
+void drawOneTile(int &x, int &y, StandardMesh &textureTile)
+{
+    myEngine.setFlatColor(1.0, 1.0, 1.0);
 
     myEngine.mvMatrixStack.pushMatrix();
         myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
@@ -42,121 +67,46 @@ void drawOneTile(int& x, int& y, StandardMesh& textureTile)
 void drawMap()
 {
     myEngine.activateTexturing(true);
-	textureAtlas.attachTexture();
+    textureAtlas.attachTexture();
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addHomothety(1);
-    myEngine.updateMvMatrix();
-        myEngine.mvMatrixStack.pushMatrix();
-        myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH/2, -MAP_HEIGHT/2, 0.0));
         myEngine.updateMvMatrix();
-    for (int h{0}; h < MAP_WIDTH; h++)
-    {
-        for (int w{0}; w < MAP_HEIGHT; w++)
-        {
-            if (isAlive(w, h))
-            {
-                drawOneTile(w, h, floorTile);
-            }
-            else
-            {
-                bool hasWest = isAlive(w - 1, h);
-                bool hasEast = isAlive(w + 1, h);
-                bool hasNorth = isAlive(w, h + 1);
-                bool hasSouth = isAlive(w, h - 1);
-
-                if (hasWest && !hasEast && !hasNorth && !hasSouth)
+        myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+            myEngine.updateMvMatrix();
+            for (int h{0}; h < MAP_WIDTH; h++)
                 {
-                    // W
-                    Texturing::updateUVs(wallTile, 0,4, 16, 16, 128, 128);
-                }
-                else if (!hasWest && !hasNorth && !hasSouth && hasEast)
+            for (int w{0}; w < MAP_HEIGHT; w++)
                 {
-                    // E
-                    Texturing::updateUVs(wallTile, 2,3, 16, 16, 128, 128);
-                }
-                else if (!hasWest && !hasNorth && hasEast && hasSouth)
+                if (isAlive(w, h))
                 {
-                    // SE
-                    Texturing::updateUVs(wallTile, 2,4, 16, 16, 128, 128);
-                }
-                else if (!hasWest && hasNorth && !hasEast && !hasSouth)
-                {
-                    // N
-                    Texturing::updateUVs(wallTile, 1,4, 16, 16, 128, 128);
-                }
-                else if (hasWest && hasNorth && !hasEast && !hasSouth)
-                {
-                    // WN
-                    Texturing::updateUVs(wallTile, 1,5, 16, 16, 128, 128);
-                }
-                else if (!hasWest && hasNorth && hasEast && !hasSouth)
-                {
-                    // NE
-                    Texturing::updateUVs(wallTile, 2,5, 16, 16, 128, 128);
-                }
-                else if (hasWest && !hasNorth && !hasEast && hasSouth)
-                {
-                    // SW
-                    Texturing::updateUVs(wallTile, 0,5, 16, 16, 128, 128);
-                }
-                else if (!hasWest && !hasNorth && !hasEast && hasSouth)
-                {
-                    // S
-                    Texturing::updateUVs(wallTile, 1,3, 16, 16, 128, 128);
-                }
-                else if (hasWest && hasNorth && hasEast && !hasSouth)
-                {
-                    // NEW
-                    Texturing::updateUVs(wallTile, 2,6, 16, 16, 128, 128);
-                }
-                else if (hasWest && hasNorth && !hasEast && hasSouth)
-                {
-                    // NSW
-                    Texturing::updateUVs(wallTile, 0,7, 16, 16, 128, 128);
-                }
-                else if (!hasWest && hasNorth && hasEast && hasSouth)
-                {
-                    // NES
-                    Texturing::updateUVs(wallTile, 0,6, 16, 16, 128, 128);
-                }
-                else if (hasWest && !hasNorth && hasEast && hasSouth)
-                {
-                    // WES
-                    Texturing::updateUVs(wallTile, 1,6, 16, 16, 128, 128);
-                }
-                else if (hasWest && hasNorth && hasEast && hasSouth)
-                {
-                    Texturing::updateUVs(wallTile, 1,7, 16, 16, 128, 128);
-                }
-                else if (!hasWest && hasNorth && !hasEast && hasSouth)
-                {
-                    // NS
-                    Texturing::updateUVs(wallTile, 3,7, 16, 16, 128, 128);
-                }
-                else if (hasWest && !hasNorth && hasEast && !hasSouth)
-                {
-                    // WE
-                    Texturing::updateUVs(wallTile, 3,6, 16, 16, 128, 128);
+                    drawOneTile(w, h, floorTile);
                 }
                 else
                 {
-                    // Surrounded/default
-                    Texturing::updateUVs(wallTile, 0,3, 16, 16, 128, 128);
+                    bool hasWest = isAlive(w - 1, h);
+                    bool hasEast = isAlive(w + 1, h);
+                    bool hasNorth = isAlive(w, h + 1);
+                    bool hasSouth = isAlive(w, h - 1);
+
+                    int bitmask = computeBitmask(hasNorth, hasEast, hasSouth, hasWest); // we calculate the bistmask id of each walltile based on their neighbours                
+                    auto [col, row] = bitmaskUVs[bitmask]; // we retrieve the uv of the texture we wanna apply
+
+                    Texturing::updateUVs(wallTile, col, row, 16, 16, 128, 128);
+                    drawOneTile(w, h, wallTile);
                 }
-                drawOneTile(w, h, wallTile);
             }
         }
-    }
         myEngine.mvMatrixStack.popMatrix();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.activateTexturing(false);
-	textureAtlas.detachTexture();
+    textureAtlas.detachTexture();
 }
 
-void initTextures() {
-    floorTile = Texturing::createMapTileMesh(0,0);
+void initTextures()
+{
+    floorTile = Texturing::createMapTileMesh(0, 0);
     floorTile.createVAO();
-    wallTile = Texturing::createMapTileMesh(3,0);
+    wallTile = Texturing::createMapTileMesh(3, 0);
     wallTile.createVAO();
 }
 
@@ -170,7 +120,7 @@ void DrawGame::init()
     playerSpawner(5);
 }
 
-void DrawGame::render(const Game& game)
+void DrawGame::render(const Game &game)
 {
     drawMap();
 

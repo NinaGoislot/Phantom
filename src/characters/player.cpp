@@ -63,7 +63,7 @@ void Player::draw(glbasimac::GLBI_Engine &engine)
 {
     engine.activateTexturing(true);
     playerAtlas.attachTexture();
-    // For now, it's juste a square
+
     engine.mvMatrixStack.pushMatrix();
     engine.mvMatrixStack.addTranslation(Vector3D(position.x, position.y, 0));
     // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));

@@ -3,8 +3,8 @@
 #include "glbasimac/glbi_texture.hpp"
 #include "tools/shaders.hpp"
 #include "texture.hpp"
-#define STB_IMAGE_IMPLEMENTATION
-#include "tools/stb_image.h"
+#define STB_IMAGE_IMPLEMENTATION // va avec
+#include "tools/stb_image.h" // doit être présent qu'une seule fois dans le programme et dans un cpp
 
 using namespace glbasimac;
 
