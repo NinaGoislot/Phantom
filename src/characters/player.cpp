@@ -70,18 +70,22 @@ void Player::anim_right()
 void Player::move_up()
 {
     move(glm::vec2(0, 1));
+    anim_up();
 }
 void Player::move_down()
 {
     move(glm::vec2(0, -1));
+    anim_down();
 }
 void Player::move_left()
 {
     move(glm::vec2(-1, 0));
+    anim_left();
 }
 void Player::move_right()
 {
     move(glm::vec2(1, 0));
+    anim_right();
 }
 
 void Player::draw(glbasimac::GLBI_Engine &engine)

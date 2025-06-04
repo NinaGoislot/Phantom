@@ -10,11 +10,6 @@ bool isMoveControl(int key)
            key == GLFW_KEY_LEFT || key == GLFW_KEY_RIGHT;
 }
 
-bool isInputControl(int key)
-{
-    return key == GLFW_KEY_S;
-}
-
 // void key_callback(int key, int /*scancode*/, int action, int mods)
 // {
 //     // update _keysState
@@ -35,7 +30,7 @@ void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int
         throw std::runtime_error("Aucune scène active trouvée dans SceneManager.");
     }
 
-    if (!isMoveControl(key) && (!isInputControl(key)))
+    if (!isMoveControl(key))
     {
         const char *keyName = glfwGetKeyName(key, 0);
         if (key >= 0 && keyName != nullptr)
