@@ -2,8 +2,7 @@
 #include "characters/player.hpp"
 #include "managers/game.hpp"
 #include "managers/time.hpp"
-
-#include "map.hpp"
+#include "map/map.hpp"
 
 bool isMoveControl(int key)
 {

@@ -15,7 +15,7 @@ using namespace glbasimac;
 // External files
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
-#include "map.hpp"
+#include "map/map.hpp"
 
 // External libs
 #include <vector>
