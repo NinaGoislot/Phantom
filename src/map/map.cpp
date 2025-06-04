@@ -27,7 +27,7 @@ int seed = time(NULL);
 int ALIVE_PROBABILITY = 58;
 
 // nombre de generations
-int NB_GENERATIONS = 15;
+int NB_GENERATIONS = 10;
 
 // taille du spawn du joueur
 int SPAWN_SIZE = 5;
@@ -120,7 +120,7 @@ void generateMap(int generations = NB_GENERATIONS)
         }
 
     }
-        displayMap();
+        // displayMap();
 }
 
 
@@ -159,4 +159,9 @@ void playerSpawner(int size = SPAWN_SIZE)
 bool isAlive(int x, int y)
 {
     return map[y][x] == ALIVE;
+}
+
+void digTile(int x, int y)
+{
+    map[y][x] = ALIVE;
 }
