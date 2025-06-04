@@ -50,8 +50,6 @@ void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int
     // printf("---------------------------------------------------\n");
 
     // updatePlayer(window, key, *(game->player));
-
-
 }
 
 // void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int action, const int mods)
