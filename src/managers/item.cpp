@@ -1,5 +1,7 @@
 #include "managers/item.hpp"
 #include "map/map.hpp"
+#include "characters/player.hpp"
+#include "managers/gameManager.hpp"
 
 
 item createItems(int id, int positionX, int positionY, bool collected)
@@ -7,26 +9,31 @@ item createItems(int id, int positionX, int positionY, bool collected)
     return item{id, positionX, positionY, collected};
 }
 
-void createItems()
+std::vector<item> items()
 {
-    std::srand(std::time({}));
-    for (int i{0}; i < 5; i++)
-    {
-        int posX, posY;
 
-        do
-        {
-            posX = std::rand() % MAP_WIDTH;
-            posY = std::rand() % MAP_HEIGHT;
-        } while (isAlive(posX, posY));
+    // std::srand(std::time({}));
+    // for (int i{0}; i < 5; i++)
+    // {
+    //     int posX, posY;
 
-        items.push_back(createItems(i, posX, posY, false));
-    }
-    displayItems();
+    //     do
+    //     {
+    //         posX = std::rand() % MAP_WIDTH;
+    //         posY = std::rand() % MAP_HEIGHT;
+    //     } while (isAlive(posX, posY));
+
+    //     items.push_back(createItems(i, posX, posY, false));
+    // }
+    std::vector<item> items;
+    items.push_back(createItems(0, MAP_WIDTH/2, MAP_HEIGHT/2, false));
+    displayItems(items);
+    return items;
 }
 
-void displayItems()
+void displayItems(std::vector<item> &items)
 {
+    std::cout << "items.size() = " << items.size() << std::endl;
     for (const auto &oneItem : items)
     {
         std::cout << "Item ID: " << oneItem.id
@@ -35,5 +42,29 @@ void displayItems()
     }
 }
 
+void getItem(std::vector<item> &items) {
+    Player* player = getGame()->player;
+    for (auto &oneItem : items)
+    {
+        if (!oneItem.collected && player->getPosition().x == oneItem.positionX && player->getPosition().y == oneItem.positionY)
+        {
+            oneItem.collected = true;
+            std::cout << "Item ID: " << oneItem.id << " collected!" << std::endl;
+            return; // Exit after collecting the first item found
+        }
+    }
+    std::cout << "No item collected." << std::endl;
+}
 
-// int countItemCollecteds();
+int count {0};
+
+int countItemsCollected(std::vector<item> &items) {
+    for (const auto &oneItem : items)
+    {
+        if (oneItem.collected)
+        {
+            count++;
+        }
+    }
+    return count;
+}

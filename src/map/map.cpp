@@ -120,7 +120,7 @@ void generateMap(int generations = NB_GENERATIONS)
         }
 
     }
-        displayMap();
+        // displayMap();
 }
 
 

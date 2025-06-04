@@ -1,4 +1,4 @@
-//Opengl
+// Opengl
 #include "glad/glad.h"
 #define GLFW_INCLUDE_NONE // DOIT être le premier include lié à OpenGL
 #include "GLFW/glfw3.h"
@@ -17,7 +17,6 @@ using namespace glbasimac;
 #include "scenes/draw_game.hpp"
 #include "map/map.hpp"
 #include "managers/item.hpp"
-#include "map/map.hpp"
 
 // External libs
 #include <vector>
@@ -60,9 +59,36 @@ void drawOneTile(int &x, int &y, StandardMesh &textureTile)
     myEngine.setFlatColor(1.0, 1.0, 1.0);
 
     myEngine.mvMatrixStack.pushMatrix();
-        myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
-        myEngine.updateMvMatrix();
-        textureTile.draw();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
+    myEngine.updateMvMatrix();
+    textureTile.draw();
+    myEngine.mvMatrixStack.popMatrix();
+}
+
+void drawItems()
+{
+    // std::cout << "Drawing items..." << std::endl;
+    // // displayItems(); // Assuming this function is defined to display items
+    // std::cout << "items.size() = " << items.size() << std::endl;
+    // for (const auto &oneItem : items)
+    // {
+    //     std::cout << " dans la boucle drawItems" << std::endl;
+    //     if (!oneItem.collected)
+    //     {
+    //         myEngine.mvMatrixStack.pushMatrix();
+    //         myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(oneItem.positionX), static_cast<float>(oneItem.positionY), 0.0));
+    //         myEngine.updateMvMatrix();
+    //         myEngine.setFlatColor(1.0, 1.0, 0.0); // Yellow color for items
+    //         floorTile.draw();
+    //         myEngine.mvMatrixStack.popMatrix();
+    //     }
+    // }
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addHomothety(20.f);
+    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(-MAP_WIDTH / 2), static_cast<float>(-MAP_HEIGHT / 2), 0.0));
+    myEngine.updateMvMatrix();
+    myEngine.setFlatColor(1.0, 1.0, 0.0); // Yellow color for items
+    floorTile.draw();                   
     myEngine.mvMatrixStack.popMatrix();
 }
 
@@ -71,34 +97,34 @@ void drawMap()
     myEngine.activateTexturing(true);
     textureAtlas.attachTexture();
     myEngine.mvMatrixStack.pushMatrix();
-        myEngine.updateMvMatrix();
-        myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
-            myEngine.updateMvMatrix();
-            for (int h{0}; h < MAP_WIDTH; h++)
-                {
-            for (int w{0}; w < MAP_HEIGHT; w++)
-                {
-                if (isAlive(w, h))
-                {
-                    drawOneTile(w, h, floorTile);
-                }
-                else
-                {
-                    bool hasWest = isAlive(w - 1, h);
-                    bool hasEast = isAlive(w + 1, h);
-                    bool hasNorth = isAlive(w, h + 1);
-                    bool hasSouth = isAlive(w, h - 1);
+    myEngine.updateMvMatrix();
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+    myEngine.updateMvMatrix();
+    for (int h{0}; h < MAP_WIDTH; h++)
+    {
+        for (int w{0}; w < MAP_HEIGHT; w++)
+        {
+            if (isAlive(w, h))
+            {
+                drawOneTile(w, h, floorTile);
+            }
+            else
+            {
+                bool hasWest = isAlive(w - 1, h);
+                bool hasEast = isAlive(w + 1, h);
+                bool hasNorth = isAlive(w, h + 1);
+                bool hasSouth = isAlive(w, h - 1);
 
-                    int bitmask = computeBitmask(hasNorth, hasEast, hasSouth, hasWest); // we calculate the bistmask id of each walltile based on their neighbours                
-                    auto [col, row] = bitmaskUVs[bitmask]; // we retrieve the uv of the texture we wanna apply
+                int bitmask = computeBitmask(hasNorth, hasEast, hasSouth, hasWest); // we calculate the bistmask id of each walltile based on their neighbours
+                auto [col, row] = bitmaskUVs[bitmask];                              // we retrieve the uv of the texture we wanna apply
 
-                    Texturing::updateUVs(wallTile, col, row, 16, 16, 128, 128);
-                    drawOneTile(w, h, wallTile);
-                }
+                Texturing::updateUVs(wallTile, col, row, 16, 16, 128, 128);
+                drawOneTile(w, h, wallTile);
             }
         }
-        myEngine.mvMatrixStack.popMatrix();
+    }
+    myEngine.mvMatrixStack.popMatrix();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.activateTexturing(false);
     textureAtlas.detachTexture();
@@ -114,6 +140,7 @@ void initTextures()
 
 void DrawGame::init()
 {
+
     Texturing::initTexture(textureAtlas, "Map", "png");
 
     initTextures();
@@ -127,14 +154,13 @@ void DrawGame::render(const Game &game)
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
+    // drawMap();
+    drawItems(); // Draw items after the map to ensure they are on top
 
-    drawMap();
-
-    game.player->draw(myEngine);
+    // game.player->draw(myEngine);
 }
 
-
-//voilà comment j'ai appelé mes fonctions tah l'époque
+// voilà comment j'ai appelé mes fonctions tah l'époque
 
 // void drawOneTile(int &x, int &y, float color)
 // {

@@ -5,8 +5,6 @@
 #include <vector>
 #include <ctime>
 
-
-
 struct item
 {
     int id;
@@ -15,12 +13,14 @@ struct item
     bool collected;
 };
 
-static std::vector<item> items;
+// static std::vector<item> items;
 
 item createItems(int id, int positionX, int positionY, bool collected = false);
 
-void createItems();
+void displayItems(std::vector<item> &items);
 
-void displayItems();
+std::vector<item> items();
 
-int countItemsCollected();
+void getItem(std::vector<item> &items);
+
+int countItemsCollected(std::vector<item> &items);
