@@ -2,15 +2,37 @@
 
 void Player::init()
 {
-    std::vector<float> squareCoords = {
-        -0.5f * size.x, 0.5f * size.y,
-        -0.5f * size.x, -0.5f * size.y,
-        0.5f * size.x, -0.5f * size.y,
-        0.5f * size.x, 0.5f * size.y};
-
-    square.initShape(squareCoords);
-    square.changeNature(GL_TRIANGLE_FAN);
+    Texturing::initTexture(playerAtlas, "Player", "png");
+    square = Texturing::createPlayerTileMesh(0);
+    square.createVAO();
 }
+
+void Player::setFrame(int frameIndex)
+{
+    currentFrame = frameIndex;
+    Texturing::updateUVs(square, frameIndex, 0, 16.0f, 32.0f, 256.0f, 32.0f);
+}
+
+void Player::updateAnimatedFrame()
+{
+    if (frameDirection != lastFrameDirection) {
+        animationStep = 0;
+        animationTimer = 0.0f;
+        lastFrameDirection = frameDirection;
+        setFrame(frameDirection);  // Immediately show first frame of new direction
+    }
+
+    animationTimer += static_cast<float>(get_loop_time().getDeltaTime());
+
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.0f; // reset timer
+        animationStep = (animationStep + 1) % 4; // loop through frames
+        currentFrame = frameDirection + animationStep;
+        setFrame(currentFrame);
+    }
+}
+
 
 void Player::move(glm::vec2 direction)
 {
@@ -21,31 +43,68 @@ void Player::move(glm::vec2 direction)
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
 }
 
+void Player::anim_up()
+{
+    frameDirection = 4;
+    updateAnimatedFrame();
+}
+
+void Player::anim_down()
+{
+    frameDirection = 0;
+    updateAnimatedFrame();
+}
+
+void Player::anim_left()
+{
+    frameDirection = 12;
+    updateAnimatedFrame();
+}
+
+void Player::anim_right()
+{
+    frameDirection = 8;
+    updateAnimatedFrame();
+}
+
 void Player::move_up()
 {
     move(glm::vec2(0, 1));
+    anim_up();
 }
 void Player::move_down()
 {
     move(glm::vec2(0, -1));
+    anim_down();
 }
 void Player::move_left()
 {
     move(glm::vec2(-1, 0));
+    anim_left();
 }
 void Player::move_right()
 {
     move(glm::vec2(1, 0));
+    anim_right();
 }
 
 void Player::draw(glbasimac::GLBI_Engine &engine)
 {
-    // For now, it's juste a square
+    engine.activateTexturing(true);
+    playerAtlas.attachTexture();
+
     engine.mvMatrixStack.pushMatrix();
     engine.mvMatrixStack.addTranslation(Vector3D(position.x, position.y, 0));
     // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));
     engine.setFlatColor(1.0f, 0.0f, 0.0f); // carré rouge
     engine.updateMvMatrix();
-    square.drawShape();
+    square.draw();
     engine.mvMatrixStack.popMatrix();
+
+    playerAtlas.detachTexture();
+    engine.activateTexturing(false);
+}
+
+glm::vec2 Player::getPosition() {
+    return position;
 }

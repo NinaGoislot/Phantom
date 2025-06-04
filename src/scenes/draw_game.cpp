@@ -9,140 +9,125 @@
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
 #include "tools/basic_mesh.hpp"
-#include "tools/stb_image.h"
 #include "glbasimac/glbi_engine.hpp"
 using namespace glbasimac;
 
-//External files
+// External files
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
+#include "map/map.hpp"
 
-//External libs
+// External libs
 #include <vector>
 #include <cmath>
 
-
+// textures
 GLBI_Engine myEngine;
-
-static StandardMesh createAutoTiledMesh()
-{
-    // Coordonnées des sommets (x, y)
-    static float positions[] = {
-        -0.6f, -0.5f,
-        0.5f, -0.5f,
-        0.5f, 0.5f,
-        -0.5f, 0.5f};
-    // Coordonnées UV (u, v)
-    static float uvs[] = {
-        0.0f, 0.0f,
-        1.0f, 0.0f,
-        1.0f, 1.0f,
-        0.0f, 1.0f};
-
-    StandardMesh mesh(4, GL_TRIANGLE_FAN);
-    mesh.setNbElt(4);
-    // Attrib location 0 pour position, 2 floats
-    mesh.addOneBuffer(0, 2, positions, "position", true);
-    // Attrib location 1 pour UV, 2 floats
-    mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
-    mesh.addOneBuffer(1, 2, uvs, "uvs", true);
-    mesh.createVAO();
-    return mesh;
-}
+GLBI_Texture textureAtlas;
 
 // OpenGL Shapes
-// GLBI_Convex_2D_Shape carre;
-StandardMesh square;
-StandardMesh* rectangle;
-GLBI_Convex_2D_Shape triangle;
-GLBI_Convex_2D_Shape cercle;
-GLBI_Convex_2D_Shape trapeze;
+StandardMesh floorTile;
+StandardMesh wallTile;
 
-// Textures 
-GLBI_Texture myTexture;
+int computeBitmask(bool north, bool east, bool south, bool west)
+{
+    return (north ? 8 : 0) + (east ? 4 : 0) + (south ? 2 : 0) + (west ? 1 : 0);
+}
 
-static bool minusAngleActivated = false;
+std::pair<int, int> bitmaskUVs[16] = {
+    {0, 3}, // plain terrain/default
+    {0, 4}, // W
+    {1, 3}, // S
+    {0, 5}, // SW
+    {2, 3}, // E
+    {3, 6}, // WE
+    {2, 4}, // SE
+    {1, 6}, // WES
+    {1, 4}, // N
+    {1, 5}, // NW
+    {3, 7}, // NS
+    {0, 7}, // NSW
+    {2, 5}, // NE
+    {2, 6}, // NEW
+    {0, 6}, // NES
+    {1, 7}  // Surrounded
+};
 
-void drawSquare() {
-    myEngine.activateTexturing(true);
-	myTexture.attachTexture();
-    myEngine.setFlatColor(1.0,1.0,1.0);
+void drawOneTile(int &x, int &y, StandardMesh &textureTile)
+{
+    myEngine.setFlatColor(1.0, 1.0, 1.0);
 
     myEngine.mvMatrixStack.pushMatrix();
-        square.draw();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
+        myEngine.updateMvMatrix();
+        textureTile.draw();
     myEngine.mvMatrixStack.popMatrix();
+}
 
-    myTexture.detachTexture();
-	myEngine.activateTexturing(false);
+void drawMap()
+{
+    myEngine.activateTexturing(true);
+    textureAtlas.attachTexture();
+    myEngine.mvMatrixStack.pushMatrix();
+        myEngine.updateMvMatrix();
+        myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+            myEngine.updateMvMatrix();
+            for (int h{0}; h < MAP_WIDTH; h++)
+                {
+            for (int w{0}; w < MAP_HEIGHT; w++)
+                {
+                if (isAlive(w, h))
+                {
+                    drawOneTile(w, h, floorTile);
+                }
+                else
+                {
+                    bool hasWest = isAlive(w - 1, h);
+                    bool hasEast = isAlive(w + 1, h);
+                    bool hasNorth = isAlive(w, h + 1);
+                    bool hasSouth = isAlive(w, h - 1);
+
+                    int bitmask = computeBitmask(hasNorth, hasEast, hasSouth, hasWest); // we calculate the bistmask id of each walltile based on their neighbours                
+                    auto [col, row] = bitmaskUVs[bitmask]; // we retrieve the uv of the texture we wanna apply
+
+                    Texturing::updateUVs(wallTile, col, row, 16, 16, 128, 128);
+                    drawOneTile(w, h, wallTile);
+                }
+            }
+        }
+        myEngine.mvMatrixStack.popMatrix();
+    myEngine.mvMatrixStack.popMatrix();
+    myEngine.activateTexturing(false);
+    textureAtlas.detachTexture();
+}
+
+void initTextures()
+{
+    floorTile = Texturing::createMapTileMesh(0, 0);
+    floorTile.createVAO();
+    wallTile = Texturing::createMapTileMesh(3, 0);
+    wallTile.createVAO();
 }
 
 void DrawGame::init()
 {
-  
-    int w, h, c;
-    stbi_set_flip_vertically_on_load(true);  
-	unsigned char* imgData {stbi_load("../../assets/images/poulpile.jpg", &w, &h, &c, 0)};
-    if (!imgData) {
-        std::cout << "Failed to load image: " << stbi_failure_reason() << std::endl;
-    }
-    myTexture.createTexture();
-	myTexture.attachTexture();
-    myTexture.setParameters(GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	myTexture.loadImage(w, h, c, imgData);
+    Texturing::initTexture(textureAtlas, "Map", "png");
 
-    square = createAutoTiledMesh();
-    square.createVAO();
+    initTextures();
 
-    std::vector<float> squareLoc{1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0};
-
-    std::vector<float> circleLoc{};
-    int nbCirclePoints{100};
-    float circleRadius{1};
-    float dbPi{2.0 * M_PI};
-    float theta{};
-    float xCircle{};
-    float yCircle{};
-
-    for (size_t i = 0; i < nbCirclePoints; i++)
-    {
-        theta = (dbPi * i) / nbCirclePoints;
-        xCircle = circleRadius * cos(theta);
-        yCircle = circleRadius * sin(theta);
-
-        circleLoc.push_back(xCircle);
-        circleLoc.push_back(yCircle);
-    }
-
-    /////////////////////////////////////////////////////////////////////////////////////
-    myTexture.detachTexture();
-	stbi_image_free(imgData);
+    generateMap(10);
+    playerSpawner(5);
 }
 
-void DrawGame::render(const Game& game)
+void DrawGame::render(const Game &game)
 {
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
 
-    myEngine.mvMatrixStack.pushMatrix();
+    drawMap();
 
-    const float spacing = 1.1f;
-    const int rows = 5;
-    const int cols = 5;
-
-    for (int i = 0; i < rows; ++i)
-    {
-        for (int j = 0; j < cols; ++j)
-        {
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation({j * spacing, i * spacing, 0.0f});
-            myEngine.updateMvMatrix();
-            drawSquare();
-            myEngine.mvMatrixStack.popMatrix();
-        }
-    }
-
-    myEngine.mvMatrixStack.popMatrix();
     game.player->draw(myEngine);
 }
 

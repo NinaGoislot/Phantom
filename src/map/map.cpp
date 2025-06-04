@@ -160,3 +160,8 @@ bool isAlive(int x, int y)
 {
     return map[y][x] == ALIVE;
 }
+
+void digTile(int x, int y)
+{
+    map[y][x] = ALIVE;
+}

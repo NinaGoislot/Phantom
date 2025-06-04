@@ -2,6 +2,7 @@
 #include "characters/player.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/time.hpp"
+#include "map/map.hpp"
 
 bool isMoveControl(int key)
 {
@@ -49,6 +50,8 @@ void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int
     // printf("---------------------------------------------------\n");
 
     // updatePlayer(window, key, *(game->player));
+
+
 }
 
 // void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int action, const int mods)
