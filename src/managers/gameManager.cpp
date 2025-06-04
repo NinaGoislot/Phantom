@@ -15,7 +15,7 @@
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
 
-#include "map/map.hpp"
+#include "map/grid.hpp"
 #include "managers/item.hpp"
 
 #include "tools/camera.hpp"

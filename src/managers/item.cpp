@@ -1,5 +1,5 @@
 #include "managers/item.hpp"
-#include "map/map.hpp"
+#include "map/grid.hpp"
 #include "characters/player.hpp"
 #include "managers/gameManager.hpp"
 
@@ -15,7 +15,7 @@ std::vector<item>& items()
     if (itemList.empty())
     {
         std::srand(std::time(nullptr));
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < 30; ++i)
         {
             int posX, posY;
             do

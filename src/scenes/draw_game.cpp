@@ -142,26 +142,12 @@ void drawMap()
 
 void initTextures()
 {
-    try
-    {
-        floorTile = Texturing::createMapTileMesh(0, 0);
-        if (!floorTile.createVAO())
-        {
-            throw std::runtime_error("Echec createVAO() pour floorTile.");
-        }
-
-        wallTile = Texturing::createMapTileMesh(3, 0);
-        if (!wallTile.createVAO())
-        {
-            throw std::runtime_error("Echec createVAO() pour wallTile.");
-        }
-
-        std::cout << "[Draw_game] wall and floor tiles initialized." << std::endl;
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "[Draw_game] Error : " << e.what() << std::endl;
-    }
+    floorTile = Texturing::createMapTileMesh(0, 0);
+    floorTile.createVAO();
+    wallTile = Texturing::createMapTileMesh(3, 0);
+    wallTile.createVAO();
+    itemTile = Texturing::createMapTileMesh(0, 4);
+    itemTile.createVAO();
 }
 
 void DrawGame::init()
@@ -189,16 +175,22 @@ void DrawGame::render(const Game &game)
 
     try
     {
+        drawItems();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur dans drawItems : " << e.what() << std::endl;
+    }
+
+    try
+    {
+        
         game.player->draw(myEngine);
     }
     catch (const std::exception &e)
     {
         std::cerr << "[DrawGame::render] Erreur lors du draw du joueur : " << e.what() << std::endl;
     }
-}
-
-// voilà comment j'ai appelé mes fonctions tah l'époque
-    game.player->draw(myEngine);
 
     myEngine.mvMatrixStack.loadIdentity();
 

@@ -15,7 +15,7 @@ using namespace glbasimac;
 /* Minimal time wanted between two images */
 // static const double FRAMERATE_IN_SECONDS = 1. / 30.;
 static float aspectRatio = 1.0f;
-static const float GL_VIEW_SIZE = 20.; // Vue caméra
+static const float GL_VIEW_SIZE = 80.; // Vue caméra
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 800;
 
