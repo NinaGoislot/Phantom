@@ -1,6 +1,6 @@
 //Opengl
-#include "glad/glad.h" // DOIT être le premier include lié à OpenGL
-#define GLFW_INCLUDE_NONE
+#include "glad/glad.h"
+#define GLFW_INCLUDE_NONE // DOIT être le premier include lié à OpenGL
 #include "GLFW/glfw3.h"
 
 #include <glm/glm.hpp>
