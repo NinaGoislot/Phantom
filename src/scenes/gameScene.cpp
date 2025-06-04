@@ -2,6 +2,7 @@
 #include "managers/gameManager.hpp"
 #include "scenes/draw_game.hpp"
 #include "managers/menu.hpp"
+#include "managers/item.hpp"
 
 void GameScene::init()
 {
@@ -45,7 +46,8 @@ void GameScene::draw()
 {
     DrawGame::render(*getGame());
 
-    displayMenu(0); // Display the menu with item 0
+    std::vector<item> AllItems = items();
+    displayMenu(countItemsCollected(AllItems));
 }
 void GameScene::destroy()
 {

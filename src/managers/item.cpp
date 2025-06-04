@@ -15,12 +15,12 @@ std::vector<item> items()
 
     if (itemList.empty()) {
         std::srand(std::time(nullptr));
-        for (int i = 0; i < 5; ++i)
+        for (int i = 0; i < 1; ++i)
         {
             int posX, posY;
             do {
-                posX = std::rand() % MAP_WIDTH;
-                posY = std::rand() % MAP_HEIGHT;
+                posX = std::rand() % 5;
+                posY = std::rand() % 5;
             } while (!isAlive(posX, posY));
             
             itemList.push_back(createItems(i, posX, posY, false));
@@ -50,7 +50,6 @@ void getItem(std::vector<item> &items) {
         {
             oneItem.collected = true;
             std::cout << "Item ID: " << oneItem.id << " collected!" << std::endl;
-            return; // Exit after collecting the first item found
         }
     }
     std::cout << "No item collected." << std::endl;
