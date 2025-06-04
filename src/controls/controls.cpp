@@ -3,6 +3,8 @@
 #include "managers/game.hpp"
 #include "managers/time.hpp"
 
+#include "map.hpp"
+
 namespace Controls
 {
     std::unordered_map<int, bool> _keysState;
@@ -73,6 +75,16 @@ void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int
     printf("---------------------------------------------------\n");
 
     updatePlayer(window, key, *(game->player));
+
+    /// TO CHANGE
+    
+    if (key == GLFW_KEY_S && action == GLFW_PRESS)
+    {
+        for (size_t i = 0; i < 100; i++)
+        {
+            digTile(i, 50);
+        }
+    }
 }
 
 // void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int action, const int mods)
