@@ -1,7 +1,27 @@
-#include "game.hpp"
-#include "draw_scene.hpp"
+//Opengl
+#include "glad/glad.h"
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
+#include <glm/glm.hpp>
+#include "glbasimac/glbi_texture.hpp"
+#include "glbasimac/glbi_set_of_points.hpp"
+#include "glbasimac/glbi_convex_2D_shape.hpp"
+#include "tools/shaders.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "tools/stb_image.h"
 
-using namespace glbasimac;
+//External files
+#include "controls/controls.hpp"
+#include "time.hpp"
+#include "game.hpp"
+#include "scenes/gameScene.hpp"
+#include "managers/game.hpp"
+
+
+//External libs
+#include <iostream>
+#include <array>
+#include <math.h>
 
 void onError(int error, const char *description)
 {
@@ -30,16 +50,16 @@ void setupCallbacks(GLFWwindow *window)
 {
     // deal with resizing the window
     glfwSetWindowSizeCallback(window, onWindowResized);
-    Controls::setupCallbacks(window);
+    setupControlsCallbacks(window);
 }
 
 Game createGame(GLFWwindow *window)
 {
     Player* player = new Player{};
     player->init();
-    Game game{window, player};
+    Game game{window, player, SceneManager{}};
+    game.sceneManager.setCurrentScene(std::make_shared<GameScene>());
     glfwSetWindowUserPointer(window, &game);
-
     return game;
 }
 
@@ -88,9 +108,6 @@ Game initGame(){
     // Initialize Rendering Engine
     myEngine.initGL();
 
-    // Initializing the scene
-    initScene();
-
     // deal with resizing the window
     int width, height;
     glfwGetWindowSize(window, &width, &height);
@@ -98,4 +115,18 @@ Game initGame(){
 
     glClearColor(0.2f, 0.f, 0.f, 0.f);
     return createGame(window);
+}
+
+Game* getGame() {
+    GLFWwindow* window = glfwGetCurrentContext();
+    if (!window) {
+        throw std::runtime_error("GetGame : No current OpenGL context found.");
+    }
+
+    Game* game = static_cast<Game*>(glfwGetWindowUserPointer(window));
+    if (!game) {
+        throw std::runtime_error("GetGame : Game object not found via glfwGetWindowUserPointer.");
+    }
+
+    return game;
 }

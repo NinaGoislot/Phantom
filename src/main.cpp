@@ -1,7 +1,6 @@
 #include <iostream>
 #include <array>
 #include <math.h>
-#include "draw_scene.hpp"
 #include "controls/controls.hpp"
 #include "characters/player.hpp"
 #include "managers/game.hpp"
@@ -22,7 +21,8 @@ int main()
         glClear(GL_COLOR_BUFFER_BIT);
 
         // render here
-        renderScene(game);
+        game.sceneManager.getCurrentScene()->update();
+        game.sceneManager.getCurrentScene()->draw();
 
         /* Swap front and back buffers */
         glfwSwapBuffers(game.window);

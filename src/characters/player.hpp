@@ -34,8 +34,8 @@ struct Player
     void draw(glbasimac::GLBI_Engine& engine);
     StandardMesh square;
     
-    void move_top();
-    void move_bottom();
+    void move_up();
+    void move_down();
     void move_left();
     void move_right();
     void move(glm::vec2 direction);

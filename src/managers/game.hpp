@@ -1,16 +1,15 @@
 #pragma once
-#include "glad/glad.h"
+
+//Opengl
 #define GLFW_INCLUDE_NONE
-#include "GLFW/glfw3.h"
+#include <GLFW/glfw3.h>
 #include "glbasimac/glbi_engine.hpp"
-#include "glbasimac/glbi_set_of_points.hpp"
-#include "glbasimac/glbi_convex_2D_shape.hpp"
-#include <iostream>
-#include <array>
-#include <math.h>
-#include "controls/controls.hpp"
+
+using namespace glbasimac;
+
+//External files
+#include "managers/sceneManager.hpp"
 #include "characters/player.hpp"
-#include "time.hpp"
 
 /* Minimal time wanted between two images */
 // static const double FRAMERATE_IN_SECONDS = 1. / 30.;
@@ -19,10 +18,15 @@ static const float GL_VIEW_SIZE = 20.;
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 800;
 
+/* OpenGL Engine */
+extern GLBI_Engine myEngine;
+
 struct Game
 {
-    GLFWwindow *window; 
+    GLFWwindow* window;  
     Player* player;
+    SceneManager sceneManager {};
 };
 
 Game initGame();
+Game* getGame();

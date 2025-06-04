@@ -1,23 +1,26 @@
 //Opengl
+#include "glad/glad.h" // DOIT être le premier include lié à OpenGL
 #define GLFW_INCLUDE_NONE
 #include "GLFW/glfw3.h"
+
 #include <glm/glm.hpp>
 #include "glbasimac/glbi_texture.hpp"
 #include "glbasimac/glbi_set_of_points.hpp"
 #include "glbasimac/glbi_convex_2D_shape.hpp"
 #include "tools/shaders.hpp"
+#include "tools/basic_mesh.hpp"
+#include "tools/stb_image.h"
+#include "glbasimac/glbi_engine.hpp"
+#include "map.hpp"
+using namespace glbasimac;
 
 //External files
 #include "controls/controls.hpp"
-#include "draw_scene.hpp"
+#include "scenes/draw_game.hpp"
 
 //External libs
 #include <vector>
 #include <cmath>
-
-using namespace glbasimac;
-
-#include "map.hpp"
 
 GLBI_Engine myEngine;
 GLBI_Texture textureAtlas;
@@ -158,7 +161,7 @@ void initTextures() {
     wallTile.createVAO();
 }
 
-void initScene()
+void DrawGame::init()
 {
     Texturing::initTexture(textureAtlas, "Map", "png");
 
@@ -168,7 +171,7 @@ void initScene()
     playerSpawner(5);
 }
 
-void renderScene(const Game& game)
+void DrawGame::render(const Game& game)
 {
     drawMap();
 
