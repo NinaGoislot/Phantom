@@ -19,8 +19,8 @@ item createItems(int id, int positionX, int positionY, bool collected = false);
 
 void displayItems(std::vector<item> &items);
 
-std::vector<item> items();
+std::vector<item>& items();
 
-void getItem(std::vector<item> &items);
+std::vector<item> getItem(std::vector<item> &items);
 
 int countItemsCollected(std::vector<item> &items);

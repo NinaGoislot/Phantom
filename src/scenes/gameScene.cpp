@@ -38,16 +38,23 @@ void GameScene::update()
     {
         glm::vec2 playerPos = game->player->getPosition();
         // TO FIX TO WHEN WE'D HAVE COLLISIONS
-        digTile(round(playerPos.x+50), round(playerPos.y+50));  // add 50 because the map coords don't have negatives
+        digTile(round(playerPos.x + 50), round(playerPos.y + 50)); // add 50 because the map coords don't have negatives
+    }
+    if (controls.isKeyPressed('e'))
+    {
+        getItem(items());
+    }
+    if (controls.isKeyPressed('a'))
+    {
+        displayItems(items());
     }
 }
 
 void GameScene::draw()
 {
     DrawGame::render(*getGame());
-
-    std::vector<item> AllItems = items();
-    displayMenu(countItemsCollected(AllItems));
+    
+    displayMenu(countItemsCollected(items()));
 }
 void GameScene::destroy()
 {

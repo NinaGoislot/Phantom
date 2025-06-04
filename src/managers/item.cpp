@@ -3,26 +3,27 @@
 #include "characters/player.hpp"
 #include "managers/gameManager.hpp"
 
-
 item createItems(int id, int positionX, int positionY, bool collected)
 {
     return item{id, positionX, positionY, collected};
 }
 
-std::vector<item> items()
+std::vector<item>& items()
 {
     static std::vector<item> itemList; // Initialized only once
 
-    if (itemList.empty()) {
+    if (itemList.empty())
+    {
         std::srand(std::time(nullptr));
-        for (int i = 0; i < 1; ++i)
+        for (int i = 0; i < 5; ++i)
         {
             int posX, posY;
-            do {
-                posX = std::rand() % 5;
-                posY = std::rand() % 5;
+            do
+            {
+                posX = std::rand() % MAP_WIDTH;
+                posY = std::rand() % MAP_HEIGHT;
             } while (!isAlive(posX, posY));
-            
+
             itemList.push_back(createItems(i, posX, posY, false));
         }
         displayItems(itemList); // Debug info
@@ -42,22 +43,34 @@ void displayItems(std::vector<item> &items)
     }
 }
 
-void getItem(std::vector<item> &items) {
-    Player* player = getGame()->player;
+std::vector<item> getItem(std::vector<item> &items)
+{
+    Player *player = getGame()->player;
+    int playerZone = 3;
+    int playerX = static_cast<int>(player->getPosition().x) + MAP_WIDTH / 2;
+    int playerY = static_cast<int>(player->getPosition().y) + MAP_HEIGHT / 2;
     for (auto &oneItem : items)
     {
-        if (!oneItem.collected && player->getPosition().x == oneItem.positionX && player->getPosition().y == oneItem.positionY)
+        if (!oneItem.collected)
         {
-            oneItem.collected = true;
-            std::cout << "Item ID: " << oneItem.id << " collected!" << std::endl;
+            if (!oneItem.collected &&
+                std::abs(playerX - oneItem.positionX) <= playerZone &&
+                std::abs(playerY - oneItem.positionY) <= playerZone)
+            {
+                oneItem.collected = true;
+                std::cout << "Item " << oneItem.id << " collected!" << std::endl;
+                return items;
+            }
         }
     }
-    std::cout << "No item collected." << std::endl;
+    std::cout << "There are no item to collect here" << std::endl;
+    return items;
 }
 
-int count {0};
 
-int countItemsCollected(std::vector<item> &items) {
+int countItemsCollected(std::vector<item> &items)
+{
+    int count{0};
     for (const auto &oneItem : items)
     {
         if (oneItem.collected)
