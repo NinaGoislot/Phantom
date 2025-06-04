@@ -11,24 +11,24 @@ item createItems(int id, int positionX, int positionY, bool collected)
 
 std::vector<item> items()
 {
+    static std::vector<item> itemList; // Initialized only once
 
-    // std::srand(std::time({}));
-    // for (int i{0}; i < 5; i++)
-    // {
-    //     int posX, posY;
+    if (itemList.empty()) {
+        std::srand(std::time(nullptr));
+        for (int i = 0; i < 5; ++i)
+        {
+            int posX, posY;
+            do {
+                posX = std::rand() % MAP_WIDTH;
+                posY = std::rand() % MAP_HEIGHT;
+            } while (!isAlive(posX, posY));
+            
+            itemList.push_back(createItems(i, posX, posY, false));
+        }
+        displayItems(itemList); // Debug info
+    }
 
-    //     do
-    //     {
-    //         posX = std::rand() % MAP_WIDTH;
-    //         posY = std::rand() % MAP_HEIGHT;
-    //     } while (isAlive(posX, posY));
-
-    //     items.push_back(createItems(i, posX, posY, false));
-    // }
-    std::vector<item> items;
-    items.push_back(createItems(0, MAP_WIDTH/2, MAP_HEIGHT/2, false));
-    displayItems(items);
-    return items;
+    return itemList;
 }
 
 void displayItems(std::vector<item> &items)
