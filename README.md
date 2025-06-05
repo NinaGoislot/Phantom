@@ -14,7 +14,7 @@ Pour récupérer un item, c'est la touche <kbd>E</kbd>.
 
 ## Coup d'oeil sur le lore
 
-Phantom est un jeu où nous incarnons une petite flamme partant dans une quête risquée. Un vieux sage à la tête triangle lui annonce qu’il a perdu sa vieille canne magique dans la cave du méchant vivant dans le grand manoir de la colline. Celle ci s'st cassée en plusieurs morceaux la dernière fois qu'il s'y ai aventuré et il aimerait la récupérer.
+Phantom est un jeu où nous incarnons une petite flamme partant dans une quête risquée. Un vieux sage à la tête triangle lui annonce qu’il a perdu sa vieille canne magique dans la cave du méchant vivant dans le grand manoir de la colline. Celle ci s'est cassée en plusieurs morceaux la dernière fois qu'il s'y ai aventuré et il aimerait la récupérer.
 
 Le joueur se lance donc la recherche des morceaux perdus pour reconstruire la canne de M. PépéNG tout en se faisant pourchasser par l'hôte du manoir et plusieurs fantômes semblant hanter les lieux.
 
@@ -42,16 +42,16 @@ Le projet est décomposé en 5 parties de code :
 
 **1 - Les managers**
 
-    Regroupent les fichiers en charge de toute une partie du code. Un gestionnaire de scene, du jeu, des textures, ect. 
+    Regroupent les fichiers en charge de toute une partie du code. Un gestionnaire de scène, du jeu, des textures, ect. 
 ## Génération de carte 
 
 ### Cases incassables
 
-Les cases incassables sont générées aléatoirement et sont placés sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
+Les cases incassables sont générées aléatoirement et sont placées sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
 
 ### Pièges
 
-Comme les roches et les items, les pièges sont placés de manière aléatoire sur les cases libres. Si le joueur entre en collision avec ceux-ci 
+Comme les roches et les items, les pièges sont placés de manière aléatoire sur les cases libres. Si le joueur entre en collision avec ceux-ci alors il perdra une vie. 
 
 ## Flow Field 
 
@@ -75,11 +75,11 @@ Notre joueur possède plusieurs vies, au nombre de 3, si le joueur tombe dans un
 
 ### Autotiling
 
-Pour obtenir un autotiling autour des murs de la map, nous avons utilisé une fonction de bitmasking qui permet de stocker si les voisins de la tuile en question sont en vie ou non, respectivement si le north, west,east et south sont vivants ou non. Avec ceci nous appliquons un changement d'uv pour chaque cas sur la même texture pour détourer les murs. En ce qui concerne les améliorations possibles, nous avons remarqué que l'autotiling pouvait provoquer une chute des performances, il serait bon de passer plus de temps là dessus pour optimiser l'ensemble. Une autre amélioration pourrait être le fait d'ajouter de l'aléatoire pour que l'on reconnaisse moins de motif au sol notamment. 
+Pour obtenir un autotiling autour des murs de la map, nous avons utilisé une fonction de bitmasking qui permet de stocker si les voisins de la tuile en question sont en vie ou non, respectivement si le north, west, east et south sont vivants ou non. Avec ceci nous appliquons un changement d'uv pour chaque cas sur la même texture pour détourer les murs. En ce qui concerne les améliorations possibles, nous avons remarqué que l'autotiling pouvait provoquer une chute des performances, il serait bon de passer plus de temps là dessus pour optimiser l'ensemble.
 
 ### Animation
 
-Notre joueur possède également une petite animation à l'aide d'un spritesheet avec une animation pour chaque direction. Si la flèche du haut est appuyée par exemple l'animation pour aller vers le haut est déclenchée et la frame change en fonction d'un certain temps donné que l'on compare au deltatime de la dernière frame et qui cycle pour ne correspondre uniquement à la direction donnée. Pour réaliser cela nous avons implémenter une petite fonction qui permet de mettre à jour les UVs d'une texture pour qu'il puisse passer d'une frame à une autre. Une petite amélioration à trouver à ceci serait le fait de garder la direction précédente du joueur en mémoire pour que s'il s'arrête d'avancer, la première frame du cycle soit sélectionnée. Nous pourrions également ajouter une animation d'idle.
+Notre joueur possède également une petite animation à l'aide d'un spritesheet avec une animation pour chaque direction. Si la flèche du haut est appuyée par exemple l'animation pour aller vers le haut est déclenchée et la frame change en fonction d'un certain temps donné que l'on compare au deltatime de la dernière frame et qui cycle pour ne correspondre uniquement à la direction donnée. Pour réaliser cela nous avons implémenté une petite fonction qui permet de mettre à jour les UVs d'une texture pour qu'il puisse passer d'une frame à une autre. Une petite amélioration à ajouter à ceci serait le fait de garder la direction précédente du joueur en mémoire pour que s'il s'arrête d'avancer, la première frame du cycle soit sélectionnée. Nous pourrions également ajouter une animation d'idle.
 
 | SpriteSheet du player  |
 | :---------------: |
@@ -99,9 +99,9 @@ Une autre amélioration envisagée a été celle de la génération aléatoire d
 
 ## Difficultés 
 
-En ce qui concerne les difficultés il y en a eu un certain nombre en effet, les principales difficultés se sont concentrées autour de l'architecture du code, de la gestion des textures et de la fiabilité du programme.
+En ce qui concerne les difficultés il y en a eu un certain nombre, en effet, les principales difficultés se sont concentrées autour de l'architecture du code, de la gestion des textures et de la fiabilité du programme.
 
-Il a été notamment très difficile de faire apparaître des textures sur les différents meshes au départ et une bonne partie du déboguage a été porté là dessus. Particulièrement en ce qui concerne les UVs et le découpage des tilesets. L'aide du renderDoc ainsi que de nos professeurs a été particulièrement utile.
+Il a été notamment très difficile de faire apparaître des textures sur les différents meshes au départ et une bonne partie du déboguage a été porté là dessus. Particulièrement en ce qui concerne les UVs et le découpage des tilesets. L'aide de renderDoc ainsi que de nos professeurs a été particulièrement utile.
 
 ### Problème de compilateur
 
