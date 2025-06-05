@@ -199,7 +199,7 @@ void launchVictoryScene()
     Game *game = getGame();
     game->sceneManager.setCurrentScene(std::make_shared<VictoryScene>());
 }
-void launchLoseScene()
+void launchLooseScene()
 {
     Game *game = getGame();
     game->sceneManager.setCurrentScene(std::make_shared<LooseScene>());

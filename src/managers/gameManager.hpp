@@ -46,6 +46,6 @@ std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &getGrid();
 
 // Setters
 void launchVictoryScene();
-void launchLoseScene();
+void launchLooseScene();
 void launchGameScene();
 void launchHomeScene();
