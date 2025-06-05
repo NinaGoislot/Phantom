@@ -13,6 +13,7 @@
 #include "time.hpp"
 #include "scenes/gameScene.hpp"
 #include "scenes/homeScene.hpp"
+#include "scenes/endScene.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
 #include "characters/villain.hpp"

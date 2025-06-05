@@ -72,9 +72,6 @@ void drawOneTile(int &x, int &y, StandardMesh &textureTile)
     myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
     myEngine.updateMvMatrix();
     textureTile.draw();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
-    myEngine.updateMvMatrix();
-    textureTile.draw();
     myEngine.mvMatrixStack.popMatrix();
 }
 
@@ -212,7 +209,7 @@ void drawMap()
     textureAtlas.detachTexture();
 }
 
-void drawPlayerLife(const Game &game)
+void drawPlayerLife(const Game &game, int &windowX, int &windowY)
 {
     for (int i{0}; i < game.player->getLife(); i++)
     {
@@ -221,9 +218,16 @@ void drawPlayerLife(const Game &game)
         myEngine.mvMatrixStack.pushMatrix();
         myEngine.updateMvMatrix();
 
-        int x = 0 + i * 20; // Positioning the life tiles at the right side of the screen
-        int y = 0; // Positioning the life tiles at the top of the screen
-        drawOneTile(x, y, lifeTile);
+        float x = static_cast<float>(windowX / 100 + i * 0.5f - 2);
+        float y = static_cast<float>(windowY / 100) - 0.25f;
+
+        myEngine.setFlatColor(1.0, 1.0, 1.0);
+
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(x, y, 0.0));
+        myEngine.updateMvMatrix();
+        lifeTile.draw();
+        myEngine.mvMatrixStack.popMatrix();
 
         myEngine.mvMatrixStack.popMatrix();
         myEngine.activateTexturing(false);
@@ -305,23 +309,24 @@ void DrawGame::render(const Game &game)
     }
     game.player->draw(myEngine);
 
-    drawPlayerLife(game);
-
     playerCloseToItem(items());
 
     myEngine.mvMatrixStack.loadIdentity();
+
+    int windowX{0};
+    int windowY{0};
+
+    glfwGetWindowSize(getGame()->window, &windowX, &windowY);
+
+    drawPlayerLife(game, windowX, windowY);
 
     myEngine.setViewMatrix(camera.viewMatrix);
 
     // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
     // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
-    int windowX{0};
-    int windowY{0};
 
     int playerX = static_cast<int>(game.player->getPosition().x) + MAP_WIDTH / 2;
     int playerY = static_cast<int>(game.player->getPosition().y) + MAP_HEIGHT / 2;
-
-    glfwGetWindowSize(getGame()->window, &windowX, &windowY);
 
     // int halfView = GL_VIEW_SIZE / 2;
     float aspectRatio = static_cast<float>(windowX) / static_cast<float>(windowY);
