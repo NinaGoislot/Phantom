@@ -1,14 +1,10 @@
 #pragma once
 
 #include <vector>
+#define GLFW_INCLUDE_NONE
+#include "GLFW/glfw3.h"
 #include <glm/glm.hpp>
 
-// struct Cell {
-//     glm::ivec2 direction {0, 0};
-//     bool walkable {false};
-// };
 
-// std::vector<std::vector<Cell>> grid; // vecteur de vecteur, grille colonne par ligne
-
-void generateFlowField(glm::ivec2 targetPos);
-
+void generateFlowField();
+bool isInsideGrid(const glm::ivec2 &pos);

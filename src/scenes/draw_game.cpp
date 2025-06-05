@@ -206,8 +206,7 @@ void DrawGame::render(const Game &game)
     {
         std::cerr << "[DrawGame::render] Erreur dans drawMap : " << e.what() << std::endl;
     }
-
-    try
+       try
     {
         drawItems();
     }
@@ -225,14 +224,13 @@ void DrawGame::render(const Game &game)
         std::cerr << "[DrawGame::render] Erreur dans drawTraps : " << e.what() << std::endl;
     }
 
-    try
+    game.player->draw(myEngine);
+    for (const auto &phantom : game.phantomsList)
     {
-
-        game.player->draw(myEngine);
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "[DrawGame::render] Erreur lors du draw du joueur : " << e.what() << std::endl;
+        if (phantom)
+        {
+            phantom->draw(myEngine);
+        }
     }
 
     playerCloseToItem(items());

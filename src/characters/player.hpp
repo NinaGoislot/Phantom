@@ -17,12 +17,36 @@
 
 struct Player
 {
-    glm::vec2 position {};
+    //------------------------------------
+    //-------------- PARAMS --------------
+    //------------------------------------
+    glm::vec2 position{};
     float scale = 1.;
-    glm::vec2 size {1,1.};
+    glm::vec2 size{1, 1.};
 
     float speed = 5.0f;
+    bool isMoving = false;
 
+    int life {3};
+
+    //------------------------------------
+    //------------- FUNCTION -------------
+    //------------------------------------
+
+    void init();
+    void draw(glbasimac::GLBI_Engine &engine);
+    void takeDamage(int damage = 1);
+
+    //------------------------------------
+    //-------------- GETTERS -------------
+    //------------------------------------
+
+    glm::vec2 getPosition();
+
+    //------------------------------------
+    //------------- ANIMATION ------------
+    //------------------------------------
+    StandardMesh square;
     glbasimac::GLBI_Texture playerAtlas;
     int currentFrame = 0;
     int frameDirection = 0;
@@ -30,12 +54,7 @@ struct Player
     float frameDuration = 0.2f; // seconds per animation frame
     float animationTimer = 0.0f;
     int lastFrameDirection = -1;
-    bool isMoving = false;
 
-    void init();
-    void draw(glbasimac::GLBI_Engine& engine);
-    StandardMesh square;
-    
     void anim_up();
     void anim_down();
     void anim_left();
@@ -48,6 +67,4 @@ struct Player
     void move(glm::vec2 direction);
     void setFrame(int frameIndex);
     void updateAnimatedFrame();
-    glm::vec2 getPosition();
 };
-
