@@ -136,3 +136,8 @@ void Player::takeDamage(int damage)
         getGame()->sceneManager.setCurrentScene(std::make_shared<EndScene>());
     }
 }
+
+int Player::getLife()
+{
+    return life;
+}

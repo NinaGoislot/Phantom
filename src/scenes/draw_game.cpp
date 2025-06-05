@@ -38,6 +38,7 @@ StandardMesh wallTile;
 StandardMesh itemTile;
 StandardMesh trapTile;
 StandardMesh obstTile;
+StandardMesh lifeTile;
 
 int computeBitmask(bool north, bool east, bool south, bool west)
 {
@@ -211,6 +212,25 @@ void drawMap()
     textureAtlas.detachTexture();
 }
 
+void drawPlayerLife(const Game &game)
+{
+    for (int i{0}; i < game.player->getLife(); i++)
+    {
+        myEngine.activateTexturing(true);
+        textureAtlas.attachTexture();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.updateMvMatrix();
+
+        int x = 0 + i * 20; // Positioning the life tiles at the right side of the screen
+        int y = 0; // Positioning the life tiles at the top of the screen
+        drawOneTile(x, y, lifeTile);
+
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.activateTexturing(false);
+        textureAtlas.detachTexture();
+    }
+}
+
 void initTextures()
 {
     floorTile = Texturing::createMapTileMesh(0, 0);
@@ -223,6 +243,8 @@ void initTextures()
     trapTile.createVAO();
     obstTile = Texturing::createMapTileMesh(1, 5);
     obstTile.createVAO();
+    lifeTile = Texturing::createMapTileMesh(0, 7);
+    lifeTile.createVAO();
 }
 
 void DrawGame::init()
@@ -283,6 +305,8 @@ void DrawGame::render(const Game &game)
         }
     }
 
+    drawPlayerLife(game);
+
     playerCloseToItem(items());
 
     myEngine.mvMatrixStack.loadIdentity();
@@ -291,8 +315,8 @@ void DrawGame::render(const Game &game)
 
     // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
     // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
-    int windowX {0};
-    int windowY {0};
+    int windowX{0};
+    int windowY{0};
 
     int playerX = static_cast<int>(game.player->getPosition().x) + MAP_WIDTH / 2;
     int playerY = static_cast<int>(game.player->getPosition().y) + MAP_HEIGHT / 2;
@@ -304,20 +328,29 @@ void DrawGame::render(const Game &game)
     float halfViewX = GL_VIEW_SIZE * aspectRatio / 2;
     float halfViewY = GL_VIEW_SIZE / 2;
 
-
-    if (playerX <= halfViewX) {
+    if (playerX <= halfViewX)
+    {
         camera.position_cam.x = halfViewX - MAP_WIDTH / 2;
-    } else if (playerX >= MAP_WIDTH - halfViewX - 5) {
+    }
+    else if (playerX >= MAP_WIDTH - halfViewX - 5)
+    {
         camera.position_cam.x = MAP_WIDTH - halfViewX - MAP_WIDTH / 2 - 5;
-    } else {
+    }
+    else
+    {
         camera.position_cam.x = game.player->getPosition().x;
     }
 
-    if (playerY <= halfViewY) {
+    if (playerY <= halfViewY)
+    {
         camera.position_cam.y = halfViewY - MAP_HEIGHT / 2;
-    } else if (playerY >= MAP_HEIGHT - halfViewY) {
+    }
+    else if (playerY >= MAP_HEIGHT - halfViewY)
+    {
         camera.position_cam.y = MAP_HEIGHT - halfViewY - MAP_HEIGHT / 2;
-    } else {
+    }
+    else
+    {
         camera.position_cam.y = game.player->getPosition().y;
     }
 
