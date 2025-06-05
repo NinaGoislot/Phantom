@@ -4,6 +4,7 @@
 void Villain::init()
 {
 position = glm::vec2(10.0f, 10.0f);
+speed = 1.0f;
 
 try
     {
@@ -23,6 +24,8 @@ try
     }
 
     std::cout << "[Villain::init] Villain initialized" << std::endl;
+    position = glm::vec2(10.0f, 10.0f);
+    speed = 1.0f;
 }
 
 void Villain::setFrame(int frameIndex)
@@ -54,7 +57,7 @@ void Villain::updateAnimatedFrame()
 
 void Villain::move(glm::vec2 direction)
 {
-    std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
+    // std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
 }
 
@@ -100,10 +103,7 @@ void Villain::update()
 
     glm::vec2 dir = getGrid()[gridPos.y][gridPos.x].direction;
 
-    if (dir != glm::vec2(0))
-    {
-        // move(dir);
-    }
+    move(dir);
 }
 
 void Villain::draw(glbasimac::GLBI_Engine& engine) {

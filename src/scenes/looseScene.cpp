@@ -1,4 +1,4 @@
-#include "endScene.hpp"
+#include "looseScene.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/menu.hpp"
 #include "map/pathfinding.hpp"
@@ -10,7 +10,7 @@ GLBI_Texture endButtonTexture;
 StandardMesh endTile;
 StandardMesh endButtonTile;
 
-void EndScene::init()
+void LooseScene::init()
 {
     Texturing::initTexture(endTexture, "END_SCENE_RECT", "png");
     endTile = Texturing::createImageMesh(0,0,1920,1080,1920,1080);
@@ -21,7 +21,7 @@ void EndScene::init()
     endButtonTile.createVAO();
 }
 
-void EndScene::update()
+void LooseScene::update()
 {
 }
 
@@ -60,14 +60,18 @@ void drawButtonEnd(GLBI_Texture &Texture, StandardMesh &Tile)
     myEngine.activateTexturing(false);
 }
 
-void EndScene::draw()
+void LooseScene::draw()
 {
     // myEngine.switchToFlatShading();
     drawBackgroundEnd(endTexture, endTile);
     drawButtonEnd(endButtonTexture, endButtonTile);
 }
+<<<<<<< HEAD:src/scenes/endScene.cpp
 
 void EndScene::destroy()
+=======
+void LooseScene::destroy()
+>>>>>>> main:src/scenes/looseScene.cpp
 {
     // glDeleteTextures
 }

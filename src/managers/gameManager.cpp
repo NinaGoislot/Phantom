@@ -17,7 +17,10 @@
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
 #include "characters/villain.hpp"
-
+#include "scenes/gameScene.hpp"
+#include "scenes/victoryScene.hpp"
+#include "scenes/looseScene.hpp"
+#include "scenes/homeScene.hpp"
 #include "map/grid.hpp"
 #include "map/item.hpp"
 
@@ -80,6 +83,7 @@ void createGame(GLFWwindow *window)
     {
         phantom->init();
     }
+    game->sceneManager.setCurrentScene(std::make_shared<GameScene>()); // Initialisation de la première scène
     game->sceneManager.setCurrentScene(std::make_shared<GameScene>()); // Initialisation de la première scène
 
     
@@ -189,3 +193,24 @@ std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &getGrid()
     }
     return game->grid;
 }
+
+void lunchVictoryScene()
+{
+    Game *game = getGame();
+    game->sceneManager.setCurrentScene(std::make_shared<VictoryScene>());
+}
+void lunchLoseScene()
+{
+    Game *game = getGame();
+    game->sceneManager.setCurrentScene(std::make_shared<LooseScene>());
+};
+void lunchGameScene()
+{
+    Game *game = getGame();
+    game->sceneManager.setCurrentScene(std::make_shared<GameScene>());
+};
+void lunchHomeScene()
+{
+    Game *game = getGame();
+    game->sceneManager.setCurrentScene(std::make_shared<HomeScene>());
+};

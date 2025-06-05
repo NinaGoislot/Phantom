@@ -8,3 +8,4 @@
 
 void generateFlowField();
 bool isInsideGrid(const glm::ivec2 &pos);
+void drawFlowField();

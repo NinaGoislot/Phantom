@@ -22,6 +22,8 @@
 struct Cell {
     glm::ivec2 direction {0, 0};
     bool walkable {false};
+    bool visited{false};
+    int distance{0}; // Distance from the player
 };
 
 
