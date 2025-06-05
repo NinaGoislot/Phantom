@@ -3,9 +3,15 @@
 
 Bienvenue sur notre readme de notre jeu vidéo Phantom !
 
+
+## Instructions
+
+- Lancez le jeu avec le compilateur GCC
+- Lancer le jeu depuis "dossier parent > bin\debug" dans le terminal
+
 ## Contrôles 
 
-Phantom peut se joueur soit avec les touches <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> ou avec les flèches directionnelles <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>. Utilisez les flèches directionnelles pour une experience focalisée : pas de déplacement en diagonal possible. Utilisez <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> pour explorer le jeu plus rapidement.
+Phantom peut se joueur soit avec les flèches directionnelles <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd> : pas de déplacement en diagonal possible. Utilisez <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> pour explorer le jeu plus rapidement, comme un mode debug (attention le méchant ne poursuit pas le joueur avec ce type de déplacement)
 
 
 Pour miner les blocs, la touche est <kbd>A</kbd>.
@@ -43,15 +49,39 @@ Le projet est décomposé en 5 parties de code :
 **1 - Les managers**
 
     Regroupent les fichiers en charge de toute une partie du code. Un gestionnaire de scene, du jeu, des textures, ect. 
+
+**2 - Characters / Entities**
+
+    Les entités du jeu, aussi bien le player que les ennemis. 
+
+**3 - Controls**
+
+    Les gestionnaires des touches. 
+
+**4 - Map**
+
+    Les fichiers en lien avec le chargement de la map. 
+
+**5 - Scenes**
+
+    Les différentes scenes appelées au cours du jeu.
+
+### Structure POO
+
+Le projet est conçu en programmation orienté objet principalement. Dans le cas des scènes et des ennemies, entités multiples, il existe une classe mère qui permet aux fichiers enfants d'hériter des charactéristiques communes et de les gérer plus facilement dans les managers.
 ## Génération de carte 
 
 ### Cases incassables
 
+<<<<<<< HEAD
+Les cases incassables sont générés aléatoirement et sont placées sur la carte sur les cases libres. Représentés par des rochers, ils suivent le même système de collision que pour les murs, cependant ils ne peuvent être creusés.
+=======
 Les cases incassables sont générées aléatoirement et sont placés sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
+>>>>>>> 35c415a48313ccd4f53e8f1505db5ee132bc7f4c
 
 ### Pièges
 
-Comme les roches et les items, les pièges sont placés de manière aléatoire sur les cases libres. Si le joueur entre en collision avec ceux-ci 
+Comme les roches et les items, les pièges sont placés de manière aléatoire sur les cases libres. Si le joueur entre en collision avec ceux-ci, il perd de la vie.
 
 ## Flow Field 
 
@@ -71,7 +101,7 @@ Notre jeu vidéo possède un écran d'accueil ainsi qu'un écran de victoire ou 
 
 ### Vies
 
-Notre joueur possède plusieurs vies, au nombre de 3, si le joueur tombe dans un piège il perd une vie, s'il perd toutes ses vies, le joueur a perdu et est conduit à la scène de fin du jeu. Après une perte d'une vie, le joueur possède un temps d'invisibilité avant le prochain coup de dégât.
+Notre joueur possède plusieurs vies, au nombre de 3, si le joueur tombe dans un piège il perd une vie, s'il perd toutes ses vies, le joueur a perdu et est conduit à la scène de fin du jeu. Après une perte d'une vie, le joueur possède un temps d'invincibilité avant le prochain coup de dégât.
 
 ### Autotiling
 
@@ -79,7 +109,7 @@ Pour obtenir un autotiling autour des murs de la map, nous avons utilisé une fo
 
 ### Animation
 
-Notre joueur possède également une petite animation à l'aide d'un spritesheet avec une animation pour chaque direction. Si la flèche du haut est appuyée par exemple l'animation pour aller vers le haut est déclenchée et la frame change en fonction d'un certain temps donné que l'on compare au deltatime de la dernière frame et qui cycle pour ne correspondre uniquement à la direction donnée. Pour réaliser cela nous avons implémenter une petite fonction qui permet de mettre à jour les UVs d'une texture pour qu'il puisse passer d'une frame à une autre. Une petite amélioration à trouver à ceci serait le fait de garder la direction précédente du joueur en mémoire pour que s'il s'arrête d'avancer, la première frame du cycle soit sélectionnée. Nous pourrions également ajouter une animation d'idle.
+Notre joueur possède également une petite animation à l'aide d'un spritesheet avec une animation pour chaque direction. Pour réaliser cela, nous avons implémenté une petite fonction qui permet de mettre à jour les UVs d'une texture pour passer d'une frame à une autre. Une petite amélioration serait de garder la direction précédente du joueur en mémoire pour que s'il s'arrête d'avancer, la première frame du cycle soit sélectionnée. Nous pourrions également ajouter une animation d'idle.
 
 | SpriteSheet du player  |
 | :---------------: |
@@ -89,17 +119,35 @@ Notre joueur possède également une petite animation à l'aide d'un spritesheet
 | :---------------: |
 | ![SpriteSheet du villain](./assets/images/villain.png) |
 
-### Améliorations abandonnées 
+## Améliorations abandonnées 
 
-Une autre amélioration envisagée a été celle de la génération aléatoire de tuiles de sol. Cependant comme pour cela nous avions prévu de stocker un id aléatoire pour chaque tuile de la carte que nous utilisons pour définir la tuile de sol à  affecter. Le problème étant que dans ce cas nous vérifions l'id de chaque tuile dans une carte de 100x100 et donc de 10000 vérifications au minimum, l'execution du programme était donc très ralentie. Nous avons pas trouvé de solutions dans les temps donnés, nous avons donc préféré enlever cette fonctionnalité.
+### Tuiles aléatoires
 
-| SpriteSheet du player  |
+Une autre amélioration envisagée a été celle de la génération aléatoire de tuiles de sol. Cependant comme nous avions prévu de stocker un id aléatoire pour chaque tuile de la carte que nous utilisons pour définir la tuile de sol à affecter. Le problème étant que dans ce cas nous vérifions l'id de chaque tuile dans une carte de 100x100 et donc de 10000 vérifications au minimum. L'execution du programme était donc très ralenti. Nous avons pas trouvé de solutions dans les temps donnés, nous avons donc préféré enlever cette fonctionnalité.Si vous voulez y jeter un oeil, elle est toujours présente (dans drawGame.cpp, ligne 88) mais mis en commentaire pour profiter des meilleures performances du jeu.
+
+| Tuile aléatoire  |
 | :---------------: |
 | ![L'image de base'](./assets/images/screenshots/screen1.png) |
 
+### Éléments sonores
+
+Nous avions commencé à regarder l'implémentation de son au sein du code (visible au dans la branche "sounds"). Faute de temps, cette implémentation à été mise de coté et n'a pas été reprise.  
+
+### Ennemis multiples
+
+Nous avions prévus 5 types d'ennemis au total. Chacun étant des fantomes (famille défunte du méchant qui protège les lieux) avait un nom commencant par un 'P'. Chaque méchant avait un comportement différent (l'un se repère aux sons, l'autre à la vue, l'un ne peut pas passer les murs, ect). Nous avions même commencés les sprites. Avec une journée supplémentaire, ces petits fantômes auraient pu voir le jour. 
+
+### Tuto
+
+En lien avec notre lore, nous voulions mettre au point une petite scene de tutoriel qui se déroulerait au sein même du manoir du faux méchant, le jeu principal se déroulant dans sa cave. Ce tuto introduisait le comportement des différents fantômes. c'est dans ce petit tuto qu'on recevait la quête de PépéNG. 
+
 ## Difficultés 
 
-En ce qui concerne les difficultés il y en a eu un certain nombre en effet, les principales difficultés se sont concentrées autour de l'architecture du code, de la gestion des textures et de la fiabilité du programme.
+En ce qui concerne les difficultés il y en a eu un certain nombre en effet . Les principales se sont concentrées autour de l'architecture du code, de la gestion des textures et de la fiabilité du programme.
+
+### Architecture de code
+
+Nous voulions un code le plus clean possible, avec une architecture qui se rapproche des véritables jeux standards. Cela à pris un peu de temps au début, mais nous avons évitons un grand nombre de conflits au sein de nos avancées respectives grâce à ça !
 
 Il a été notamment très difficile de faire apparaître des textures sur les différents meshes au départ et une bonne partie du déboguage a été porté là dessus. Particulièrement en ce qui concerne les UVs et le découpage des tilesets. L'aide du renderDoc ainsi que de nos professeurs a été particulièrement utile.
 
@@ -107,4 +155,10 @@ Il a été notamment très difficile de faire apparaître des textures sur les d
 
 Un problème assez étrange qui s'est produit également est le fait que pendant un certain temps il a été impossible de charger une texture avec stbi_load, en effet avec le compilateur Clang cette fonction nécessaire pour afficher des textures faisait planter l'application. Après un certain temps de déboguage nous avons réalisé qu'en changeant de compilateur pour GCC par exemple tout fonctionnait comme prévu.
 
-> Tous les éléments graphiques utilisés dans ce projet ont été soit réalisés par nos soins ou sont libre de droit.
+### Problème OpenGl
+
+Nous avions difficilement la main mise sur la structure derrière l'implémentation d'openGL. En conséquence, nous nous sommes retrouvés avec de nooooombreux conflits sur la faisabilité de certaines actions ou sur le manque de compatibilité entre la template et les objectifs du code. Encore maintenant, il faut parfois relancer plusieurs fois le jeu au début car une exeption inconnue (et non visible) provoque un crash. 
+
+## Notes de fin  
+
+> Tous les éléments graphiques utilisés dans ce projet ont été soit réalisés par nos soins ou sont libres de droit. Notez la qualité de nos sprites fait main :)

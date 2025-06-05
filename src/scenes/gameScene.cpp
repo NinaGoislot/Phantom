@@ -164,7 +164,7 @@ void GameScene::update()
 
         if (game->player->isMoving)
         {
-            std::cout << "[GameScene::update] Player is moving, generating new flow field." << std::endl;
+            // std::cout << "[GameScene::update] Player is moving, generating new flow field." << std::endl;
             generateFlowField();
             // drawFlowField();
         }
