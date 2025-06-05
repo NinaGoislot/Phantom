@@ -21,28 +21,9 @@ void drawOneImage(int &x, int &y, StandardMesh &textureTile)
 
 void HomeScene::init()
 {
-    // // homeTile = Texturing::createMeshImage(800);
-    // homeTile = Texturing::createMapTileMesh(0, 0);
-    // homeTile.createVAO();
-
-    try
-    {
-        Texturing::initTexture(homeTexture, "FIRST_SCENE", "png");
-    }
-    catch (const std::exception &e)
-    {
-        std::cerr << "[Player::init] Erreur lors de l'initialisation de la texture : " << e.what() << std::endl;
-        return;
-    }
-
-    homeTile = Texturing::createPlayerTileMesh(0);
-    if (!homeTile.createVAO())
-    {
-        std::cerr << "[Player::init] Echec de la création du VAO pour le joueur." << std::endl;
-        return;
-    }
-
-    std::cout << "[Player::init] HomeScene initialized" << std::endl;
+    Texturing::initTexture(homeTexture, "FIRST_SCENE", "png");
+    homeTile = Texturing::createMapTileMesh(0,0,800,800);
+    homeTile.createVAO();
 
 }
 
@@ -53,13 +34,13 @@ void HomeScene::update()
 
 void  HomeScene::draw()
 {
-    homeTile.createVAO();
-    myEngine.switchToFlatShading();
+    // myEngine.switchToFlatShading();
     myEngine.activateTexturing(true);
     homeTexture.attachTexture();
 
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(50, 50, 0));
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 0, 0));
+    myEngine.mvMatrixStack.addHomothety(10.0);
     // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));
     myEngine.setFlatColor(1.0f, 0.0f, 0.0f); // carré rouge
     myEngine.updateMvMatrix();
