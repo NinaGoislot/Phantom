@@ -31,7 +31,7 @@ Pour pouvoir gagner le jeu il est nécessaire de récupérer 5 items, qui sont d
 
 ### Cases incassables
 
-Les cases incassables sont générés aléatoirement et sont placés sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
+Les cases incassables sont générées aléatoirement et sont placés sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
 
 ### Pièges
 
@@ -84,6 +84,8 @@ Une autre amélioration envisagée a été celle de la génération aléatoire d
 ## Difficultés 
 
 En ce qui concerne les difficultés il y en a eu un certain nombre en effet, les principales difficultés se sont concentrées autour de l'architecture du code, de la gestion des textures et de la fiabilité du programme.
+
+Il a été notamment très difficile de faire apparaître des textures sur les différents meshes au départ et une bonne partie du déboguage a été porté là dessus. Particulièrement en ce qui concerne les UVs et le découpage des tilesets. L'aide du renderDoc ainsi que de nos professeurs a été particulièrement utile.
 
 ### Problème de compilateur
 
