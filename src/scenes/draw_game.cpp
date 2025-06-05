@@ -18,10 +18,13 @@ using namespace glbasimac;
 #include "scenes/draw_game.hpp"
 #include "map/item.hpp"
 #include "map/trap.hpp"
+#include "map/floor.hpp"
+#include "map/obstacle.hpp"
 
 // External libs
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 STP3D::FPSCamera camera;
 
@@ -92,7 +95,7 @@ void drawItems()
             int x = oneItem.positionX;
             int y = oneItem.positionY;
             // we loop through the oneItems to change their textures
-            int itemId = oneItem.id % 5; 
+            int itemId = oneItem.id % 5;
             Texturing::updateUVs(itemTile, 6, itemId, 16, 16, 128, 128);
             drawOneTile(x, y, itemTile);
 
@@ -131,6 +134,33 @@ void drawTraps()
     }
 }
 
+void drawObstacles()
+{
+    std::vector<obstacle> obstList = obstacles();
+    // std::cout << "Drawing items..." << std::endl;
+    // displayItems(itemList); // Assuming this function is defined to display items
+    // std::cout << "items.size() = " << itemList.size() << std::endl;
+    for (const auto &oneObst : obstList)
+    {
+        // std::cout << " dans la boucle drawItems" << std::endl;
+        myEngine.activateTexturing(true);
+        textureAtlas.attachTexture();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.updateMvMatrix();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+        myEngine.updateMvMatrix();
+
+        int x = oneObst.positionX;
+        int y = oneObst.positionY;
+        drawOneTile(x, y, obstTile);
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.activateTexturing(false);
+        textureAtlas.detachTexture();
+    }
+}
+
 void drawMap()
 {
     myEngine.activateTexturing(true);
@@ -140,12 +170,20 @@ void drawMap()
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
     myEngine.updateMvMatrix();
+    const auto &tileMap = getTileIdMap();
     for (int h{0}; h < MAP_WIDTH; h++)
     {
         for (int w{0}; w < MAP_HEIGHT; w++)
         {
             if (isAlive(w, h))
             {
+                // int tileId = tileMap[w][h];
+                // int tileCol = tileId % 3;
+                // int tileRow = tileId / 3;
+
+                // Texturing::updateUVs(floorTile, tileCol, tileRow, 16, 16, 128, 128);
+
+                // RANDOM FLOOR TILING FEATURE // MAKE IT LAG
                 drawOneTile(w, h, floorTile);
             }
             else
@@ -179,7 +217,7 @@ void initTextures()
     itemTile.createVAO();
     trapTile = Texturing::createMapTileMesh(0, 5);
     trapTile.createVAO();
-    obstTile = Texturing::createMapTileMesh(4, 2);
+    obstTile = Texturing::createMapTileMesh(1, 5);
     obstTile.createVAO();
 }
 
@@ -205,7 +243,7 @@ void DrawGame::render(const Game &game)
     {
         std::cerr << "[DrawGame::render] Erreur dans drawMap : " << e.what() << std::endl;
     }
-       try
+    try
     {
         drawItems();
     }
@@ -221,6 +259,15 @@ void DrawGame::render(const Game &game)
     catch (const std::exception &e)
     {
         std::cerr << "[DrawGame::render] Erreur dans drawTraps : " << e.what() << std::endl;
+    }
+
+    try
+    {
+        drawObstacles();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur dans drawObstacles : " << e.what() << std::endl;
     }
 
     game.player->draw(myEngine);

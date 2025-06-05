@@ -5,6 +5,7 @@
 #include "map/pathfinding.hpp"
 #include "map/item.hpp"
 #include "map/trap.hpp"
+#include "map/obstacle.hpp"
 
 void GameScene::init()
 {
@@ -61,28 +62,36 @@ void GameScene::update()
         {
             if (controls.isKeyPressed(GLFW_KEY_LEFT) || controls.isKeyPressed('q'))
             {
-                if (isAlive(ceil(playerTile.x - 1), floor(playerTile.y)))
+                int targetX = ceil(playerTile.x - 1);
+                int targetY = floor(playerTile.y);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_left();
                 }
             }
             if (controls.isKeyPressed(GLFW_KEY_RIGHT) || controls.isKeyPressed('d'))
             {
-                if (isAlive(floor(playerTile.x + 1), floor(playerTile.y)))
+                int targetX = floor(playerTile.x + 1);
+                int targetY = floor(playerTile.y);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_right();
                 }
             }
             if (controls.isKeyPressed(GLFW_KEY_DOWN) || controls.isKeyPressed('s'))
             {
-                if (isAlive(round(playerTile.x), round(playerTile.y - 1)))
+                int targetX = round(playerTile.x);
+                int targetY = round(playerTile.y - 1);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_down();
                 }
             }
             if (controls.isKeyPressed(GLFW_KEY_UP) || controls.isKeyPressed('z'))
             {
-                if (isAlive(round(playerTile.x), floor(playerTile.y + 1)))
+                int targetX = round(playerTile.x);
+                int targetY = floor(playerTile.y + 1);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_up();
                 }

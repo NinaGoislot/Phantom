@@ -16,14 +16,14 @@ std::vector<obstacle>& obstacles()
     if (obstList.empty())
     {
         std::srand(std::time(nullptr) + 100); // rand seed different than item or trap
-        for (int i = 0; i < 30; ++i)
+        for (int i = 0; i < 100; ++i)
         {
             int posX, posY;
             do
             {
                 posX = std::rand() % MAP_WIDTH;
                 posY = std::rand() % MAP_HEIGHT;
-            } while (isAlive(posX, posY));
+            } while (!isAlive(posX, posY) || (posX == 50 && posY == 50));
 
             obstList.push_back(createObstacles(i, posX, posY));
         }
@@ -41,4 +41,14 @@ void displayObstacles(std::vector<obstacle> &obstacles)
         std::cout << "Obst ID: " << oneObst.id
                   << ", Position: (" << oneObst.positionX << ", " << oneObst.positionY << ")" << std::endl;
     }
+}
+
+bool isObstacleAt(int x, int y)
+{
+    for (const auto& obst : obstacles())
+    {
+        if (obst.positionX == x && obst.positionY == y)
+            return true;
+    }
+    return false;
 }

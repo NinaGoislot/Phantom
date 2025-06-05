@@ -20,3 +20,5 @@ void displayObstacles(std::vector<obstacle> &obstacles);
 std::vector<obstacle>& obstacles();
 
 void playerCollidesWithObstacle(std::vector<obstacle> &obstacles);
+
+bool isObstacleAt(int x, int y);
