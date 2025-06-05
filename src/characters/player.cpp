@@ -1,6 +1,5 @@
 #include "player.hpp"
 #include "managers/gameManager.hpp"
-#include "scenes/endScene.hpp"
 
 void Player::init()
 {
@@ -129,10 +128,21 @@ glm::vec2 Player::getPosition()
 
 void Player::takeDamage(int damage)
 {
-    life -= damage;
-    if (life <= 0)
+    if (!godMode)
     {
-        std::cout << "[Player] You died!" << std::endl;
-        getGame()->sceneManager.setCurrentScene(std::make_shared<EndScene>());
+        life -= damage;
+        if (life <= 0)
+        {
+            std::cout << "[Player] You died!" << std::endl;
+            lunchLoseScene();
+        }
+        godMode = true;
+        damageCooldownTimer = DAMAGE_COOLDOWN;
+
+        std::cout << "[Player::takeDamage] "<< damage<<" damage(s) to player" << std::endl;
+    } else {
+        std::cout << "[Player::takeDamage] Player is in god mode, no damage taken." << std::endl;
+        std::cout << "[Player::takeDamage] Cooldown restant : " << damageCooldownTimer << std::endl;
+
     }
 }

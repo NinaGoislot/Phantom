@@ -13,6 +13,7 @@ using namespace glbasimac;
 #include "characters/phantom.hpp"
 #include "map/grid.hpp"
 
+
 /* Minimal time wanted between two images */
 // static const double FRAMERATE_IN_SECONDS = 1. / 30.;
 static float aspectRatio = 1.0f;
@@ -41,3 +42,7 @@ Player* getPlayer();
 std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& getGrid();
 
 // Setters
+void lunchVictoryScene();
+void lunchLoseScene();
+void lunchGameScene();
+void lunchHomeScene();

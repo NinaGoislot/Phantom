@@ -9,6 +9,16 @@ item createItems(int id, int positionX, int positionY, bool collected)
     return item{id, positionX, positionY, collected};
 }
 
+void checkIfVictory(std::vector<item> &items)
+{
+    const int count = countItemsCollected(items);
+    if (count >= NB_ITEM_TO_FIND)
+    {
+        lunchVictoryScene();
+    }
+} 
+
+
 std::vector<item>& items()
 {
     static std::vector<item> itemList; // Initialized only once
@@ -16,7 +26,7 @@ std::vector<item>& items()
     if (itemList.empty())
     {
         std::srand(std::time(nullptr));
-        for (int i = 0; i < 30; ++i)
+        for (int i = 0; i < NB_ITEM_TO_GENERATE; ++i)
         {
             int posX, posY;
             do
@@ -46,7 +56,7 @@ void displayItems(std::vector<item> &items)
 
 
 
-std::vector<item> getItem(std::vector<item> &items)
+void getItem(std::vector<item> &items)
 {
     Player *player = getGame()->player;
     int playerZone = 1;
@@ -62,12 +72,10 @@ std::vector<item> getItem(std::vector<item> &items)
             {
                 oneItem.collected = true;
                 std::cout << "Item " << oneItem.id << " collected!" << std::endl;
-                return items;
             }
         }
     }
-    std::cout << "There are no item to collect here" << std::endl;
-    return items;
+    checkIfVictory(items);
 }
 
 void playerCloseToItem(std::vector<item> &items)

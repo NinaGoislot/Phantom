@@ -3,6 +3,8 @@
 #include "map/grid.hpp"
 #include <queue>
 
+const int MAX_DISTANCE = GL_VIEW_SIZE / 2;
+
 bool isInsideGrid(const glm::ivec2 &pos)
 {
     return pos.x >= 0 && pos.x < MAP_WIDTH && pos.y >= 0 && pos.y < MAP_HEIGHT;
@@ -12,13 +14,12 @@ void generateFlowField()
 {
     // params
     glm::vec2 rawPos = getPlayer()->getPosition();
-    rawPos.x = MAP_WIDTH/2;
-    rawPos.y = MAP_HEIGHT/2;
+    rawPos.x = MAP_WIDTH / 2;  // Conversion cordonnées joueur -> coordonnées grille
+    rawPos.y = MAP_HEIGHT / 2; // Conversion cordonnées joueur -> coordonnées grille
     glm::ivec2 playerPos = glm::ivec2(glm::round(rawPos));
 
-
     std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid = getGrid();
-    const int maxDistance = GL_VIEW_SIZE;                                                                              // distance max pour le calcul du flow field = la taille de la vue
+    // distance max pour le calcul du flow field = la taille de la vue
     std::array<glm::ivec2, 4> directions = {glm::ivec2{0, 1}, glm::ivec2{1, 0}, glm::ivec2{0, -1}, glm::ivec2{-1, 0}}; // Directions possibles
 
     // Initialisation du centre du flow field
@@ -31,8 +32,12 @@ void generateFlowField()
         {
             grid[y][x].direction = {0, 0};
             grid[y][x].visited = false;
+            grid[y][x].distance = MAX_DISTANCE; // Initialiser la distance à la distance maximale
         }
     }
+
+    grid[playerPos.y][playerPos.x].visited = true;
+    grid[playerPos.y][playerPos.x].distance = 0;
     std::queue<glm::ivec2> cellQueue;
     cellQueue.push(playerPos);
 
@@ -40,6 +45,8 @@ void generateFlowField()
     {
         glm::ivec2 currentCell = cellQueue.front();
         cellQueue.pop();
+
+        int current_distance = grid[currentCell.y][currentCell.x].distance;
 
         for (const glm::ivec2 &dir : directions)
         {
@@ -52,6 +59,7 @@ void generateFlowField()
                 { // Si la cellule voisine n'a pas encore de direction (on compare à un vecteur {0;0}, l'initialisation par défaut)
                     // Calculer la distance entre la cellule actuelle et le joueur
                     grid[neighborCell.y][neighborCell.x].visited = true;
+                    grid[neighborCell.y][neighborCell.x].distance = current_distance + 1;
                     grid[neighborCell.y][neighborCell.x].direction = currentCell - neighborCell;
                     cellQueue.push(neighborCell);
                 }

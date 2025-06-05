@@ -13,6 +13,9 @@ struct item
     bool collected;
 };
 
+const int NB_ITEM_TO_GENERATE = 30;
+const int NB_ITEM_TO_FIND = 5;
+
 // static std::vector<item> items;
 
 item createItems(int id, int positionX, int positionY, bool collected = false);
@@ -21,7 +24,7 @@ void displayItems(std::vector<item> &items);
 
 std::vector<item>& items();
 
-std::vector<item> getItem(std::vector<item> &items);
+void getItem(std::vector<item> &items);
 
 void playerCloseToItem(std::vector<item> &items);
 
