@@ -60,7 +60,9 @@ void createGame(GLFWwindow *window)
     if (getGame())
     {
         std::cout << "[gameManager] Game created" << std::endl;
-    } else {
+    }
+    else
+    {
         std::cerr << "[gameManager] Failed to create game object" << std::endl;
         exit(EXIT_FAILURE);
     }
@@ -146,16 +148,29 @@ Game *getGame()
 std::shared_ptr<Scene> getCurrentScene()
 {
     Game *game = getGame();
+    auto scene = game->sceneManager.getCurrentScene();
+    if (!scene)
+    {
+        throw std::runtime_error("[GameManager: getCurrentScene] No active scene found in SceneManager.");
+    }
     return game->sceneManager.getCurrentScene();
 }
 Player *getPlayer()
 {
     Game *game = getGame();
+    if (!game->player)
+    {
+        throw std::runtime_error("[GameManager: getPlayer] Player pointer is null.");
+    }
     return game->player;
 }
 
 std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &getGrid()
 {
     Game *game = getGame();
+    if (game->grid.empty())
+    {
+        throw std::runtime_error("[GameManager: getGrid] Grid is empty.");
+    }
     return game->grid;
 }

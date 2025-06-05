@@ -1,4 +1,4 @@
-//Opengl
+// Opengl
 #include "glad/glad.h"
 #define GLFW_INCLUDE_NONE // DOIT être le premier include lié à OpenGL
 #include "GLFW/glfw3.h"
@@ -58,9 +58,9 @@ void drawOneTile(int &x, int &y, StandardMesh &textureTile)
     myEngine.setFlatColor(1.0, 1.0, 1.0);
 
     myEngine.mvMatrixStack.pushMatrix();
-        myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
-        myEngine.updateMvMatrix();
-        textureTile.draw();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
+    myEngine.updateMvMatrix();
+    textureTile.draw();
     myEngine.mvMatrixStack.popMatrix();
 }
 
@@ -69,34 +69,34 @@ void drawMap()
     myEngine.activateTexturing(true);
     textureAtlas.attachTexture();
     myEngine.mvMatrixStack.pushMatrix();
-        myEngine.updateMvMatrix();
-        myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
-            myEngine.updateMvMatrix();
-            for (int h{0}; h < MAP_WIDTH; h++)
-                {
-            for (int w{0}; w < MAP_HEIGHT; w++)
-                {
-                if (isAlive(w, h))
-                {
-                    drawOneTile(w, h, floorTile);
-                }
-                else
-                {
-                    bool hasWest = isAlive(w - 1, h);
-                    bool hasEast = isAlive(w + 1, h);
-                    bool hasNorth = isAlive(w, h + 1);
-                    bool hasSouth = isAlive(w, h - 1);
+    myEngine.updateMvMatrix();
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+    myEngine.updateMvMatrix();
+    for (int h{0}; h < MAP_WIDTH; h++)
+    {
+        for (int w{0}; w < MAP_HEIGHT; w++)
+        {
+            if (isAlive(w, h))
+            {
+                drawOneTile(w, h, floorTile);
+            }
+            else
+            {
+                bool hasWest = isAlive(w - 1, h);
+                bool hasEast = isAlive(w + 1, h);
+                bool hasNorth = isAlive(w, h + 1);
+                bool hasSouth = isAlive(w, h - 1);
 
-                    int bitmask = computeBitmask(hasNorth, hasEast, hasSouth, hasWest); // we calculate the bistmask id of each walltile based on their neighbours                
-                    auto [col, row] = bitmaskUVs[bitmask]; // we retrieve the uv of the texture we wanna apply
+                int bitmask = computeBitmask(hasNorth, hasEast, hasSouth, hasWest); // we calculate the bistmask id of each walltile based on their neighbours
+                auto [col, row] = bitmaskUVs[bitmask];                              // we retrieve the uv of the texture we wanna apply
 
-                    Texturing::updateUVs(wallTile, col, row, 16, 16, 128, 128);
-                    drawOneTile(w, h, wallTile);
-                }
+                Texturing::updateUVs(wallTile, col, row, 16, 16, 128, 128);
+                drawOneTile(w, h, wallTile);
             }
         }
-        myEngine.mvMatrixStack.popMatrix();
+    }
+    myEngine.mvMatrixStack.popMatrix();
     myEngine.mvMatrixStack.popMatrix();
     myEngine.activateTexturing(false);
     textureAtlas.detachTexture();
@@ -104,21 +104,10 @@ void drawMap()
 
 void initTextures()
 {
-    try {
-        floorTile = Texturing::createMapTileMesh(0, 0);
-        if (!floorTile.createVAO()) {
-            throw std::runtime_error("Echec createVAO() pour floorTile.");
-        }
-
-        wallTile = Texturing::createMapTileMesh(3, 0);
-        if (!wallTile.createVAO()) {
-            throw std::runtime_error("Echec createVAO() pour wallTile.");
-        }
-
-        std::cout << "[Draw_game] wall and floor tiles initialized." << std::endl;
-    } catch (const std::exception& e) {
-        std::cerr << "[Draw_game] Error : " << e.what() << std::endl;
-    }
+    floorTile = Texturing::createMapTileMesh(0, 0);
+    floorTile.createVAO();
+    wallTile = Texturing::createMapTileMesh(3, 0);
+    wallTile.createVAO();
 }
 
 void DrawGame::init()
@@ -133,14 +122,26 @@ void DrawGame::render(const Game &game)
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
+    try
+    {
+        drawMap();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur dans drawMap : " << e.what() << std::endl;
+    }
 
-    drawMap();
-
-    game.player->draw(myEngine);
+    try
+    {
+        game.player->draw(myEngine);
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur lors du draw du joueur : " << e.what() << std::endl;
+    }
 }
 
-
-//voilà comment j'ai appelé mes fonctions tah l'époque
+// voilà comment j'ai appelé mes fonctions tah l'époque
 
 // void drawOneTile(int &x, int &y, float color)
 // {
