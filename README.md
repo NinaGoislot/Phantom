@@ -73,11 +73,7 @@ Le projet est conçu en programmation orienté objet principalement. Dans le cas
 
 ### Cases incassables
 
-<<<<<<< HEAD
-Les cases incassables sont générés aléatoirement et sont placées sur la carte sur les cases libres. Représentés par des rochers, ils suivent le même système de collision que pour les murs, cependant ils ne peuvent être creusés.
-=======
 Les cases incassables sont générées aléatoirement et sont placés sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
->>>>>>> 35c415a48313ccd4f53e8f1505db5ee132bc7f4c
 
 ### Pièges
 
@@ -118,6 +114,16 @@ Notre joueur possède également une petite animation à l'aide d'un spritesheet
 | SpriteSheet du villain  |
 | :---------------: |
 | ![SpriteSheet du villain](./assets/images/villain.png) |
+
+Deux spritesheets de plus on été créé pour les fantômes qui poursuivent le joueur. Ils sont animés de la même manière que le joueur, avec une animation pour chaque direction. Ces spritesheets n'ont pas été implémentés dans le jeu, car les fantômes ne sont pas encore présents, mais sont disponibles dans le dossier assets/images.
+
+| SpriteSheet d'un fantome (Patrick)  |
+| :---------------: |
+| ![SpriteSheet du patrick](./assets/images/patrick.png) |
+
+| SpriteSheet d'un fantome (Patricia)  |
+| :---------------: |
+| ![SpriteSheet du patricia](./assets/images/patricia.png) |
 
 ## Améliorations abandonnées 
 
