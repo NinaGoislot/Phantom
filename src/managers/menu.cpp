@@ -1,6 +1,6 @@
 #include "menu.hpp"
 
-std::string playerName = "L'Islandaise";
+std::string playerName = "Phantom";
 
 void displayMenu(int item)
 {
