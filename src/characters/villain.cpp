@@ -3,6 +3,27 @@
 
 void Villain::init()
 {
+position = glm::vec2(10.0f, 10.0f);
+speed = 1.0f;
+
+try
+    {
+        Texturing::initTexture(villainAtlas, "villain", "png");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[Villain::init] Erreur lors de l'initialisation de la texture : " << e.what() << std::endl;
+        return;
+    }
+
+    square = Texturing::createPlayerTileMesh(0);
+    if (!square.createVAO())
+    {
+        std::cerr << "[Villain::init] Echec de la création du VAO pour le villain." << std::endl;
+        return;
+    }
+
+    std::cout << "[Villain::init] Villain initialized" << std::endl;
     position = glm::vec2(10.0f, 10.0f);
     speed = 1.0f;
 }
@@ -34,7 +55,18 @@ void Villain::update()
     move(dir);
 }
 
-void Villain::draw(glbasimac::GLBI_Engine &engine)
-{
+void Villain::draw(glbasimac::GLBI_Engine& engine) {
+    engine.activateTexturing(true);
+    villainAtlas.attachTexture();
 
-}
+    engine.mvMatrixStack.pushMatrix();
+    engine.mvMatrixStack.addTranslation(Vector3D(position.x, position.y, 0));
+    // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));
+    engine.setFlatColor(1.0f, 0.0f, 0.0f); // carré rouge
+    engine.updateMvMatrix();
+    square.draw();
+    engine.mvMatrixStack.popMatrix();
+
+    villainAtlas.detachTexture();
+    engine.activateTexturing(false);
+    }

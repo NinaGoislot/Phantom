@@ -23,7 +23,7 @@ std::vector<trap>& traps()
             {
                 posX = std::rand() % MAP_WIDTH;
                 posY = std::rand() % MAP_HEIGHT;
-            } while (!isAlive(posX, posY));
+            } while (!isAlive(posX, posY) || (posX == 50 && posY == 50));
 
             trapList.push_back(createTraps(i, posX, posY));
         }

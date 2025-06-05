@@ -5,6 +5,7 @@
 #include "map/pathfinding.hpp"
 #include "map/item.hpp"
 #include "map/trap.hpp"
+#include "map/obstacle.hpp"
 
 void GameScene::init()
 {
@@ -59,30 +60,38 @@ void GameScene::update()
 
         if (controls.nbMoveControlsActive() < 2)
         {
-            if (controls.isKeyPressed(GLFW_KEY_LEFT))
+            if (controls.isKeyPressed(GLFW_KEY_LEFT) || controls.isKeyPressed('q'))
             {
-                if (isAlive(ceil(playerTile.x - 1), floor(playerTile.y)))
+                int targetX = ceil(playerTile.x - 1);
+                int targetY = floor(playerTile.y);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_left();
                 }
             }
-            if (controls.isKeyPressed(GLFW_KEY_RIGHT))
+            if (controls.isKeyPressed(GLFW_KEY_RIGHT) || controls.isKeyPressed('d'))
             {
-                if (isAlive(floor(playerTile.x + 1), floor(playerTile.y)))
+                int targetX = floor(playerTile.x + 1);
+                int targetY = floor(playerTile.y);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_right();
                 }
             }
-            if (controls.isKeyPressed(GLFW_KEY_DOWN))
+            if (controls.isKeyPressed(GLFW_KEY_DOWN) || controls.isKeyPressed('s'))
             {
-                if (isAlive(round(playerTile.x), round(playerTile.y - 1)))
+                int targetX = round(playerTile.x);
+                int targetY = round(playerTile.y - 1);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_down();
                 }
             }
-            if (controls.isKeyPressed(GLFW_KEY_UP))
+            if (controls.isKeyPressed(GLFW_KEY_UP) || controls.isKeyPressed('z'))
             {
-                if (isAlive(round(playerTile.x), floor(playerTile.y + 1)))
+                int targetX = round(playerTile.x);
+                int targetY = floor(playerTile.y + 1);
+                if (isAlive(targetX, targetY) && !isObstacleAt(targetX, targetY))
                 {
                     game->player->move_up();
                 }
@@ -93,7 +102,7 @@ void GameScene::update()
         {
             getItem(items());
         }
-        if (controls.isKeyPressed('a'))
+        if (controls.isKeyPressed('f'))
         {
             displayItems(items());
         }
@@ -103,10 +112,52 @@ void GameScene::update()
         if (game->player->isMoving)
         {
             generateFlowField();
-            // drawFlowField(); 
+
+            // Afficher le flow field dans la console
+            for (int y = 0; y < MAP_HEIGHT; ++y)
+            {
+                for (int x = 0; x < MAP_WIDTH; ++x)
+                {
+                    const Cell &cell = game->grid[y][x];
+                    if (cell.direction == glm::ivec2{0, 0})
+                    {
+                        std::cout << ". "; // Cellule sans direction
+                    }
+                    else
+                    {
+                        std::cout << "(" << cell.direction.x << "," << cell.direction.y << ") ";
+                    }
+                }
+                std::cout << std::endl;
+            }
         }
 
-        if (controls.isKeyPressed('s'))
+        game->player->isMoving = controls.nbMoveControlsActive() > 0;
+
+        if (game->player->isMoving)
+        {
+            // generateFlowField();
+
+            // Afficher le flow field dans la console
+            // for (int y = 0; y < MAP_HEIGHT; ++y)
+            // {
+            //     for (int x = 0; x < MAP_WIDTH; ++x)
+            //     {
+            //         const Cell &cell = game->grid[y][x];
+            //         if (cell.direction == glm::ivec2{0, 0})
+            //         {
+            //             std::cout << ". "; // Cellule sans direction
+            //         }
+            //         else
+            //         {
+            //             std::cout << "(" << cell.direction.x << "," << cell.direction.y << ") ";
+            //         }
+            //     }
+            //     std::cout << std::endl;
+            // }
+        }
+
+        if (controls.isKeyPressed('a'))
         {
             try
             {
