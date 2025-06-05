@@ -112,23 +112,22 @@ void drawTraps()
     for (const auto &oneTrap : trapList)
     {
         // std::cout << " dans la boucle drawItems" << std::endl;
-            myEngine.activateTexturing(true);
-            textureAtlas.attachTexture();
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.updateMvMatrix();
-            myEngine.mvMatrixStack.pushMatrix();
-            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
-            myEngine.updateMvMatrix();
+        myEngine.activateTexturing(true);
+        textureAtlas.attachTexture();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.updateMvMatrix();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+        myEngine.updateMvMatrix();
 
-            int x = oneTrap.positionX;
-            int y = oneTrap.positionY;
-            drawOneTile(x, y, trapTile);
-            myEngine.mvMatrixStack.popMatrix();
-            myEngine.mvMatrixStack.popMatrix();
-            myEngine.activateTexturing(false);
-            textureAtlas.detachTexture();
+        int x = oneTrap.positionX;
+        int y = oneTrap.positionY;
+        drawOneTile(x, y, trapTile);
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.activateTexturing(false);
+        textureAtlas.detachTexture();
     }
-    
 }
 
 void drawMap()
@@ -175,8 +174,12 @@ void initTextures()
     floorTile.createVAO();
     wallTile = Texturing::createMapTileMesh(3, 0);
     wallTile.createVAO();
-    itemTile = Texturing::createMapTileMesh(0, 7);
-    itemTile.createVAO();
+    for (const auto &oneItem : items())
+    {
+        int itemId = oneItem.id % 5; 
+        itemTile = Texturing::createMapTileMesh(itemId, 6);
+        itemTile.createVAO();
+    }
     trapTile = Texturing::createMapTileMesh(3, 3);
     trapTile.createVAO();
 }
@@ -191,7 +194,7 @@ void DrawGame::init()
 
 void DrawGame::render(const Game &game)
 {
-    
+
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
@@ -224,7 +227,7 @@ void DrawGame::render(const Game &game)
 
     try
     {
-        
+
         game.player->draw(myEngine);
     }
     catch (const std::exception &e)
