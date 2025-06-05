@@ -15,6 +15,11 @@
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
 
+#include "map/grid.hpp"
+#include "map/item.hpp"
+
+#include "tools/camera.hpp"
+
 // External libs
 #include <iostream>
 #include <array>

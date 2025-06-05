@@ -2,6 +2,8 @@
 #include "managers/gameManager.hpp"
 #include "scenes/draw_game.hpp"
 #include "managers/menu.hpp"
+#include "map/item.hpp"
+#include "map/trap.hpp"
 
 void GameScene::init()
 {
@@ -12,6 +14,26 @@ void GameScene::update()
 {
     Game *game = getGame();
     auto currentScene = game->sceneManager.getCurrentScene();
+
+    glm::vec2 pos = game->player->getPosition();
+
+    try
+    {
+        for (auto &oneTrap : traps())
+        {
+            if (oneTrap.positionX == round(pos.x + 50) &&
+                oneTrap.positionY == floor(pos.y + 50))
+            {
+
+                std::cout << "Player stepped on trap ID: " << oneTrap.id << std::endl;
+            }
+        }
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[GameScene::update] Erreur durant la détection de collision avec un piège : " << e.what() << std::endl;
+        throw;
+    }
 
     try
     {
@@ -64,6 +86,15 @@ void GameScene::update()
                     game->player->move_up();
                 }
             }
+        }
+
+        if (controls.isKeyPressed('e'))
+        {
+            getItem(items());
+        }
+        if (controls.isKeyPressed('a'))
+        {
+            displayItems(items());
         }
 
         if (controls.isKeyPressed('s'))
@@ -123,6 +154,7 @@ void GameScene::draw()
 {
     DrawGame::render(*getGame());
 
+    displayMenu(countItemsCollected(items()));
     // try
     // {
     //     displayMenu(0);

@@ -10,15 +10,20 @@
 #include "tools/shaders.hpp"
 #include "tools/basic_mesh.hpp"
 #include "glbasimac/glbi_engine.hpp"
+#include "tools/camera.hpp"
 using namespace glbasimac;
 
 // External files
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
+#include "map/item.hpp"
+#include "map/trap.hpp"
 
 // External libs
 #include <vector>
 #include <cmath>
+
+STP3D::FPSCamera camera;
 
 // textures
 GLBI_Engine myEngine;
@@ -27,6 +32,8 @@ GLBI_Texture textureAtlas;
 // OpenGL Shapes
 StandardMesh floorTile;
 StandardMesh wallTile;
+StandardMesh itemTile;
+StandardMesh trapTile;
 
 int computeBitmask(bool north, bool east, bool south, bool west)
 {
@@ -60,7 +67,67 @@ void drawOneTile(int &x, int &y, StandardMesh &textureTile)
     myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
     myEngine.updateMvMatrix();
     textureTile.draw();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
+    myEngine.updateMvMatrix();
+    textureTile.draw();
     myEngine.mvMatrixStack.popMatrix();
+}
+
+void drawItems()
+{
+    std::vector<item> itemList = items();
+    // std::cout << "Drawing items..." << std::endl;
+    // displayItems(itemList); // Assuming this function is defined to display items
+    // std::cout << "items.size() = " << itemList.size() << std::endl;
+    for (const auto &oneItem : itemList)
+    {
+        // std::cout << " dans la boucle drawItems" << std::endl;
+        if (!oneItem.collected)
+        {
+            myEngine.activateTexturing(true);
+            textureAtlas.attachTexture();
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.updateMvMatrix();
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+            myEngine.updateMvMatrix();
+
+            int x = oneItem.positionX;
+            int y = oneItem.positionY;
+            drawOneTile(x, y, itemTile);
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.activateTexturing(false);
+            textureAtlas.detachTexture();
+        }
+    }
+}
+
+void drawTraps()
+{
+    std::vector<trap> trapList = traps();
+    // std::cout << "Drawing items..." << std::endl;
+    // displayItems(itemList); // Assuming this function is defined to display items
+    // std::cout << "items.size() = " << itemList.size() << std::endl;
+    for (const auto &oneTrap : trapList)
+    {
+        // std::cout << " dans la boucle drawItems" << std::endl;
+        myEngine.activateTexturing(true);
+        textureAtlas.attachTexture();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.updateMvMatrix();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+        myEngine.updateMvMatrix();
+
+        int x = oneTrap.positionX;
+        int y = oneTrap.positionY;
+        drawOneTile(x, y, trapTile);
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.activateTexturing(false);
+        textureAtlas.detachTexture();
+    }
 }
 
 void drawMap()
@@ -107,10 +174,19 @@ void initTextures()
     floorTile.createVAO();
     wallTile = Texturing::createMapTileMesh(3, 0);
     wallTile.createVAO();
+    for (const auto &oneItem : items())
+    {
+        int itemId = oneItem.id % 5; 
+        itemTile = Texturing::createMapTileMesh(itemId, 6);
+        itemTile.createVAO();
+    }
+    trapTile = Texturing::createMapTileMesh(3, 3);
+    trapTile.createVAO();
 }
 
 void DrawGame::init()
 {
+
     Texturing::initTexture(textureAtlas, "Map", "png");
 
     initTextures();
@@ -118,6 +194,7 @@ void DrawGame::init()
 
 void DrawGame::render(const Game &game)
 {
+
     // switch to opengl shaders
     myEngine.switchToFlatShading();
 
@@ -132,12 +209,45 @@ void DrawGame::render(const Game &game)
 
     try
     {
+        drawItems();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur dans drawItems : " << e.what() << std::endl;
+    }
+
+    try
+    {
+        drawTraps();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur dans drawTraps : " << e.what() << std::endl;
+    }
+
+    try
+    {
+
         game.player->draw(myEngine);
     }
     catch (const std::exception &e)
     {
         std::cerr << "[DrawGame::render] Erreur lors du draw du joueur : " << e.what() << std::endl;
     }
+
+    playerCloseToItem(items());
+
+    myEngine.mvMatrixStack.loadIdentity();
+
+    myEngine.setViewMatrix(camera.viewMatrix);
+
+    // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
+    // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
+    camera.position_cam.x = game.player->getPosition().x;
+    // Set camera height to 1.0f
+    camera.position_cam.y = game.player->getPosition().y;
+    // std::cout << "Camera position updated to: " << camera.position_cam.x << ", " << camera.position_cam.y << std::endl;
+    camera.updateViewMatrix();
 }
 
 // voilà comment j'ai appelé mes fonctions tah l'époque
