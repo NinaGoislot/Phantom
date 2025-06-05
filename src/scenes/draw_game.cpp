@@ -254,6 +254,9 @@ void DrawGame::render(const Game &game)
 
     // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
     // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
+    int positionX {0};
+    int positionY {0};
+
     camera.position_cam.x = game.player->getPosition().x;
     // Set camera height to 1.0f
     camera.position_cam.y = game.player->getPosition().y;
