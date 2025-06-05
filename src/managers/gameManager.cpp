@@ -12,6 +12,7 @@
 #include "controls/controls.hpp"
 #include "time.hpp"
 #include "scenes/gameScene.hpp"
+#include "scenes/homeScene.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
 #include "characters/villain.hpp"
@@ -78,7 +79,7 @@ void createGame(GLFWwindow *window)
     {
         phantom->init();
     }
-    game->sceneManager.setCurrentScene(std::make_shared<GameScene>()); // Initialisation de la première scène
+    game->sceneManager.setCurrentScene(std::make_shared<HomeScene>()); // Initialisation de la première scène
 
     
 }

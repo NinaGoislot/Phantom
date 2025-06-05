@@ -59,28 +59,28 @@ void GameScene::update()
 
         if (controls.nbMoveControlsActive() < 2)
         {
-            if (controls.isKeyPressed(GLFW_KEY_LEFT))
+            if (controls.isKeyPressed(GLFW_KEY_LEFT) || controls.isKeyPressed('q'))
             {
                 if (isAlive(ceil(playerTile.x - 1), floor(playerTile.y)))
                 {
                     game->player->move_left();
                 }
             }
-            if (controls.isKeyPressed(GLFW_KEY_RIGHT))
+            if (controls.isKeyPressed(GLFW_KEY_RIGHT) || controls.isKeyPressed('d'))
             {
                 if (isAlive(floor(playerTile.x + 1), floor(playerTile.y)))
                 {
                     game->player->move_right();
                 }
             }
-            if (controls.isKeyPressed(GLFW_KEY_DOWN))
+            if (controls.isKeyPressed(GLFW_KEY_DOWN) || controls.isKeyPressed('s'))
             {
                 if (isAlive(round(playerTile.x), round(playerTile.y - 1)))
                 {
                     game->player->move_down();
                 }
             }
-            if (controls.isKeyPressed(GLFW_KEY_UP))
+            if (controls.isKeyPressed(GLFW_KEY_UP) || controls.isKeyPressed('z'))
             {
                 if (isAlive(round(playerTile.x), floor(playerTile.y + 1)))
                 {
@@ -93,7 +93,7 @@ void GameScene::update()
         {
             getItem(items());
         }
-        if (controls.isKeyPressed('a'))
+        if (controls.isKeyPressed('f'))
         {
             displayItems(items());
         }
@@ -148,7 +148,7 @@ void GameScene::update()
             // }
         }
 
-        if (controls.isKeyPressed('s'))
+        if (controls.isKeyPressed('a'))
         {
             try
             {

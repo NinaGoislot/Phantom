@@ -63,11 +63,7 @@ std::pair<int, int> bitmaskUVs[16] = {
 void drawOneTile(int &x, int &y, StandardMesh &textureTile)
 {
     myEngine.setFlatColor(1.0, 1.0, 1.0);
-
     myEngine.mvMatrixStack.pushMatrix();
-    myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
-    myEngine.updateMvMatrix();
-    textureTile.draw();
     myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
     myEngine.updateMvMatrix();
     textureTile.draw();

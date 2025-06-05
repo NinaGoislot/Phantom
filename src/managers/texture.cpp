@@ -89,6 +89,27 @@ namespace Texturing
         return mesh;
     }
 
+    StandardMesh createMeshImage(int atlasSize)
+    {
+        if (atlasSize <= 0)
+        {
+            std::cerr << "[createMapTileMesh] Invalide settings : atlasSize = " << atlasSize << std::endl;
+            throw std::runtime_error("Parametres invalides pour createMapTileMesh.");
+        }
+
+        // Quad vertex positions (can adjust if tile aspect is not 1:1)
+        float positions[] = {
+            -0.5f, -0.5f,
+            0.5f, -0.5f,
+            0.5f, 0.5f,
+            -0.5f, 0.5f};
+
+        StandardMesh mesh(4, GL_TRIANGLE_FAN);
+        mesh.setNbElt(4);
+        mesh.addOneBuffer(0, 2, positions, "position", true);
+        return mesh;
+    }
+
     void updateUVs(StandardMesh &mesh, int col, int row, float tileWidth, float tileHeight, float atlasWidth, float atlasHeight)
     {
         float u0 = (col * tileWidth) / atlasWidth;
