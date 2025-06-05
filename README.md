@@ -31,6 +31,8 @@ Pour pouvoir gagner le jeu il est nécessaire de récupérer 5 items, qui sont d
 
 ### Cases incassables
 
+Les cases incassables sont générés aléatoirement et sont placés sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
+
 ### Pièges
 
 Comme les roches et les items, les pièges sont placés de manière aléatoire sur les cases libres. Si le joueur entre en collision avec ceux-ci 
@@ -47,7 +49,7 @@ Pour gérer le texturing de tous nos éléments nous avons créé un tileset qui
 
 ## IHM 
 
-Notre jeu vidéo possède un écran d'accueil ainsi qu'un écran de victoire ou de perte du jeu. Durant la phase de jeu
+Notre jeu vidéo possède un écran d'accueil ainsi qu'un écran de victoire ou de perte du jeu. Durant la phase de jeu, le joueur peut consulter le nombre de vies qu'il possède encore ainsi que le nombre d'objets qu'il doit encore obtenir.
 
 ## Améliorations 
 
