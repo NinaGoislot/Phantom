@@ -12,8 +12,8 @@
 #include <glm/glm.hpp>
 #include <array>
 
-#define MAP_WIDTH 10
-#define MAP_HEIGHT 10
+#define MAP_WIDTH 100
+#define MAP_HEIGHT 100
 
 //-----------------------------------------------------------------------------------------
 //---------------------------------------- PARAMS -----------------------------------------
@@ -22,6 +22,7 @@
 struct Cell {
     glm::ivec2 direction {0, 0};
     bool walkable {false};
+    bool visited{false};
 };
 
 

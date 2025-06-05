@@ -11,15 +11,28 @@ bool isInsideGrid(const glm::ivec2 &pos)
 void generateFlowField()
 {
     // params
-    const glm::ivec2 playerPos = getPlayer()->getPosition();
+    glm::vec2 rawPos = getPlayer()->getPosition();
+    rawPos.x = MAP_WIDTH/2;
+    rawPos.y = MAP_HEIGHT/2;
+    glm::ivec2 playerPos = glm::ivec2(glm::round(rawPos));
+
+
     std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid = getGrid();
-    const int maxDistance = GL_VIEW_SIZE; // distance max pour le calcul du flow field = la taille de la vue
+    const int maxDistance = GL_VIEW_SIZE;                                                                              // distance max pour le calcul du flow field = la taille de la vue
     std::array<glm::ivec2, 4> directions = {glm::ivec2{0, 1}, glm::ivec2{1, 0}, glm::ivec2{0, -1}, glm::ivec2{-1, 0}}; // Directions possibles
 
     // Initialisation du centre du flow field
     grid[playerPos.y][playerPos.x].direction = {0, 0}; // le joueur est l'objectif à atteindre, donc pas de direction
 
     // Initialisation de la queue pour BFS
+    for (int y = 0; y < MAP_HEIGHT; ++y)
+    {
+        for (int x = 0; x < MAP_WIDTH; ++x)
+        {
+            grid[y][x].direction = {0, 0};
+            grid[y][x].visited = false;
+        }
+    }
     std::queue<glm::ivec2> cellQueue;
     cellQueue.push(playerPos);
 
@@ -35,20 +48,44 @@ void generateFlowField()
             // Vérifier si la cellule voisine est dans les limites de la grille
             if (isInsideGrid(neighborCell) && grid[neighborCell.y][neighborCell.x].walkable)
             {
-                if (grid[neighborCell.y][neighborCell.x].direction == glm::ivec2{0, 0})
+                if (!grid[neighborCell.y][neighborCell.x].visited)
                 { // Si la cellule voisine n'a pas encore de direction (on compare à un vecteur {0;0}, l'initialisation par défaut)
                     // Calculer la distance entre la cellule actuelle et le joueur
-                    glm::ivec2 distance = currentCell - playerPos;
-
-                    // Si la distance est inférieure à la distance maximale, mettre à jour la direction
-                    if (std::abs(distance.x) < maxDistance && std::abs(distance.y) < maxDistance)
-                    {
-                        grid[neighborCell.y][neighborCell.x].direction = currentCell - neighborCell;
-                        cellQueue.push(neighborCell); 
-                    }
-                    std::cout << (std::abs(distance.x) < maxDistance && std::abs(distance.y) < maxDistance) << std::endl;
+                    grid[neighborCell.y][neighborCell.x].visited = true;
+                    grid[neighborCell.y][neighborCell.x].direction = currentCell - neighborCell;
+                    cellQueue.push(neighborCell);
                 }
             }
         }
+    }
+}
+
+void drawFlowField()
+{
+    auto &grid = getGrid();
+
+    for (int y = MAP_HEIGHT - 1; y >= 0; --y)
+    {
+        for (int x = 0; x < MAP_WIDTH; ++x)
+        {
+            glm::ivec2 dir = grid[y][x].direction;
+            char c = '.';
+            if (dir == glm::ivec2(1, 0))
+                c = '>';
+            else if (dir == glm::ivec2(-1, 0))
+                c = '<';
+            else if (dir == glm::ivec2(0, 1))
+                c = '^';
+            else if (dir == glm::ivec2(0, -1))
+                c = 'v';
+            else if (dir == glm::ivec2(0, 0))
+                c = 'O'; // le joueur
+            else
+            {
+                c = '?';
+            }
+            std::cout << c << ' ';
+        }
+        std::cout << '\n';
     }
 }

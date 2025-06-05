@@ -6,8 +6,8 @@
 //-----------------------------------------------------------------------------------------
 
 // creation d'un objet pour dire si la case est en vie ou pas
-const int ALIVE{1};
-const int DEAD{0};
+const bool ALIVE{true};
+const bool DEAD{false};
 
 //-----------------------------------------------------------------------------------------
 //----------------------------------------- DATAS -----------------------------------------
@@ -21,7 +21,7 @@ const int ALIVE_PROBABILITY = 58;
 //------------------------------------- FUNCTIONS -----------------------------------------
 //-----------------------------------------------------------------------------------------
 
-void initializeMap(std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& grid)
+void initializeMap(std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid)
 {
     // creation d'une seed pour la generation de la map
     int seed = time(NULL);
@@ -39,7 +39,7 @@ void initializeMap(std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& grid)
             }
             else
             {
-                grid[h][w].walkable = ALIVE; 
+                grid[h][w].walkable = ALIVE;
             }
         }
     }
@@ -61,7 +61,7 @@ void playerSpawner(int size, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>
 }
 
 // fonction qui calcule le nombre de voisins vivants d'une case
-int countAliveNeighbors(int x, int y, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& grid)
+int countAliveNeighbors(int x, int y, std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid)
 {
     int count{0};
     // on retire 1 à x et y pour aller dans le coin superieur gauche de la case
@@ -75,7 +75,7 @@ int countAliveNeighbors(int x, int y, std::array<std::array<Cell, MAP_WIDTH>, MA
             {
                 if (h >= 0 && h < MAP_HEIGHT && w >= 0 && w < MAP_WIDTH)
                 {
-                    count += grid[h][w].walkable;
+                    count += grid[h][w].walkable ? 1 : 0; // on ajoute 1 si la case est vivante, sinon on ajoute 0
                 }
             }
         }
@@ -89,6 +89,7 @@ std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> generateMap(int generations,
 {
     std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> grid;
     initializeMap(grid);
+
 
     for (int gen{0}; gen < generations; gen++)
     {
@@ -110,13 +111,7 @@ std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> generateMap(int generations,
         }
 
         // on copie la map temporaire dans la map principale
-        for (int h = 0; h < MAP_HEIGHT; h++)
-        {
-            for (int w = 0; w < MAP_WIDTH; w++)
-            {
-                grid[h][w] = newGrid[h][w];
-            }
-        }
+        grid = newGrid;
     }
     // displayMap();
 
@@ -148,11 +143,8 @@ bool isAlive(int x, int y)
     return game->grid[y][x].walkable == ALIVE;
 }
 
-
-
 void digTile(int x, int y)
 {
     Game *game = getGame();
     game->grid[y][x].walkable = ALIVE;
-}   
-
+}

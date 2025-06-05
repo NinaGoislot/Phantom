@@ -79,8 +79,6 @@ void createGame(GLFWwindow *window)
         phantom->init();
     }
     game->sceneManager.setCurrentScene(std::make_shared<GameScene>()); // Initialisation de la première scène
-
-    
 }
 
 void initGame()
