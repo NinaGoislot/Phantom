@@ -4,6 +4,25 @@
 void Villain::init()
 {
 position = glm::vec2(10.0f, 10.0f);
+
+try
+    {
+        Texturing::initTexture(villainAtlas, "villain", "png");
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[Villain::init] Erreur lors de l'initialisation de la texture : " << e.what() << std::endl;
+        return;
+    }
+
+    square = Texturing::createPlayerTileMesh(0);
+    if (!square.createVAO())
+    {
+        std::cerr << "[Villain::init] Echec de la création du VAO pour le villain." << std::endl;
+        return;
+    }
+
+    std::cout << "[Villain::init] Villain initialized" << std::endl;
 }
 
 void Villain::move(glm::vec2 direction)
@@ -37,23 +56,17 @@ void Villain::update()
 }
 
 void Villain::draw(glbasimac::GLBI_Engine& engine) {
-        engine.activateTexturing(false);
-       engine.activateTexturing(false); // pas de texture
-    engine.setFlatColor(1.0f, 0.0f, 0.0f); // rouge
+    engine.activateTexturing(true);
+    villainAtlas.attachTexture();
 
     engine.mvMatrixStack.pushMatrix();
     engine.mvMatrixStack.addTranslation(Vector3D(position.x, position.y, 0));
-    engine.mvMatrixStack.addHomothety(Vector3D(1.0f, 1.0f, 1.0f)); // taille du carré
+    // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));
+    engine.setFlatColor(1.0f, 0.0f, 0.0f); // carré rouge
     engine.updateMvMatrix();
-
-    // Carré en OpenGL immédiat pour debug (GL_QUADS n'est plus supporté en core, mais ici c'est à titre simple)
-    // glBegin(GL_TRIANGLE_FAN);
-    //     glVertex2f(-0.5f, -0.5f); // bas gauche
-    //     glVertex2f( 0.5f, -0.5f); // bas droit
-    //     glVertex2f( 0.5f,  0.5f); // haut droit
-    //     glVertex2f(-0.5f,  0.5f); // haut gauche
-    // glEnd();
-
+    square.draw();
     engine.mvMatrixStack.popMatrix();
-    engine.setFlatColor(1.0f, 1.0f, 1.0f); // reset couleur
+
+    villainAtlas.detachTexture();
+    engine.activateTexturing(false);
     }
