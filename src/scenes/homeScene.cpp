@@ -1,6 +1,5 @@
 #include "homeScene.hpp"
 #include "managers/gameManager.hpp"
-<<<<<<< HEAD
 #include "managers/menu.hpp"
 #include "map/pathfinding.hpp"
 #include "managers/texture.hpp"
@@ -26,14 +25,6 @@ void HomeScene::init()
     homeTile = Texturing::createMapTileMesh(0,0,800,800);
     homeTile.createVAO();
 
-=======
-#include "scenes/draw_game.hpp"
-#include "managers/menu.hpp"
-#include "map/pathfinding.hpp"
-
-void HomeScene::init()
-{
->>>>>>> a30a614ab2797bfa5008cb09d8a2a835b302bdb1
 }
 
 void HomeScene::update()
@@ -43,7 +34,6 @@ void HomeScene::update()
 
 void  HomeScene::draw()
 {
-<<<<<<< HEAD
     // myEngine.switchToFlatShading();
     myEngine.activateTexturing(true);
     homeTexture.attachTexture();
@@ -114,11 +104,3 @@ void  HomeScene::destroy()
 //     playerAtlas.detachTexture();
 //     engine.activateTexturing(false);
 // }
-=======
-
-}
-void  HomeScene::destroy()
-{
-    // glDeleteTextures
-}
->>>>>>> a30a614ab2797bfa5008cb09d8a2a835b302bdb1
