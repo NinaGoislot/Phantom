@@ -58,6 +58,11 @@ void Villain::updateAnimatedFrame()
 void Villain::move(glm::vec2 direction)
 {
     // std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
+    if (direction.x == 1) anim_right();
+    if (direction.y == 1) anim_up();
+    if (direction.y == -1) anim_down();
+    if (direction.x == -1) anim_left();
+    
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
 }
 
