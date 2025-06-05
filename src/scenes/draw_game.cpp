@@ -34,6 +34,7 @@ StandardMesh floorTile;
 StandardMesh wallTile;
 StandardMesh itemTile;
 StandardMesh trapTile;
+StandardMesh obstTile;
 
 int computeBitmask(bool north, bool east, bool south, bool west)
 {
@@ -182,6 +183,8 @@ void initTextures()
     itemTile.createVAO();
     trapTile = Texturing::createMapTileMesh(0, 5);
     trapTile.createVAO();
+    obstTile = Texturing::createMapTileMesh(4, 2);
+    obstTile.createVAO();
 }
 
 void DrawGame::init()
