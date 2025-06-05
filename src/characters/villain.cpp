@@ -25,10 +25,61 @@ try
     std::cout << "[Villain::init] Villain initialized" << std::endl;
 }
 
+void Villain::setFrame(int frameIndex)
+{
+    currentFrame = frameIndex;
+    Texturing::updateUVs(square, frameIndex, 0, 16.0f, 32.0f, 256.0f, 32.0f);
+}
+
+void Villain::updateAnimatedFrame()
+{
+    if (frameDirection != lastFrameDirection)
+    {
+        animationStep = 0;
+        animationTimer = 0.0f;
+        lastFrameDirection = frameDirection;
+        setFrame(frameDirection); // Immediately show first frame of new direction
+    }
+
+    animationTimer += static_cast<float>(get_loop_time().getDeltaTime());
+
+    if (animationTimer >= frameDuration)
+    {
+        animationTimer = 0.0f;                   // reset timer
+        animationStep = (animationStep + 1) % 4; // loop through frames
+        currentFrame = frameDirection + animationStep;
+        setFrame(currentFrame);
+    }
+}
+
 void Villain::move(glm::vec2 direction)
 {
     std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
+}
+
+void Villain::anim_up()
+{
+    frameDirection = 4;
+    updateAnimatedFrame();
+}
+
+void Villain::anim_down()
+{
+    frameDirection = 0;
+    updateAnimatedFrame();
+}
+
+void Villain::anim_left()
+{
+    frameDirection = 12;
+    updateAnimatedFrame();
+}
+
+void Villain::anim_right()
+{
+    frameDirection = 8;
+    updateAnimatedFrame();
 }
 
 void Villain::update()

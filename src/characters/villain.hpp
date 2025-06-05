@@ -12,6 +12,22 @@ struct Villain : public Phantom
     void update();
     void draw(glbasimac::GLBI_Engine &engine) override;
 
+    //------------------------------------
+    //------------- ANIMATION ------------
+    //------------------------------------
     StandardMesh square;
     glbasimac::GLBI_Texture villainAtlas;
+    int currentFrame = 0;
+    int frameDirection = 0;
+    int animationStep = 0;
+    float frameDuration = 0.2f; // seconds per animation frame
+    float animationTimer = 0.0f;
+    int lastFrameDirection = -1;
+
+    void anim_up();
+    void anim_down();
+    void anim_left();
+    void anim_right();
+    void setFrame(int frameIndex);
+    void updateAnimatedFrame();
 };
