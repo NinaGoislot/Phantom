@@ -1,4 +1,5 @@
 #include "player.hpp"
+#include "managers/text.hpp"
 #include "managers/gameManager.hpp"
 
 void Player::init()
@@ -139,11 +140,16 @@ void Player::takeDamage(int damage)
         godMode = true;
         damageCooldownTimer = DAMAGE_COOLDOWN;
 
-        std::cout << "[Player::takeDamage] "<< damage<<" damage(s) to player" << std::endl;
-    } else {
+        // textDraw("OUCH! it hurts!",
+        //          400, 400, SimpleText::Color::RED,
+        //          SimpleText::Alignment::CENTER, SimpleText::SIZE_16, true);
+
+        std::cout << "[Player::takeDamage] " << damage << " damage(s) to player" << std::endl;
+    }
+    else
+    {
         std::cout << "[Player::takeDamage] Player is in god mode, no damage taken." << std::endl;
         std::cout << "[Player::takeDamage] Cooldown restant : " << damageCooldownTimer << std::endl;
-
     }
 }
 
