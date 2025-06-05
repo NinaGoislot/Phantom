@@ -94,7 +94,11 @@ void drawItems()
 
             int x = oneItem.positionX;
             int y = oneItem.positionY;
+            // we loop through the oneItems to change their textures
+            int itemId = oneItem.id % 5; 
+            Texturing::updateUVs(itemTile, 6, itemId, 16, 16, 128, 128);
             drawOneTile(x, y, itemTile);
+
             myEngine.mvMatrixStack.popMatrix();
             myEngine.mvMatrixStack.popMatrix();
             myEngine.activateTexturing(false);
@@ -174,12 +178,8 @@ void initTextures()
     floorTile.createVAO();
     wallTile = Texturing::createMapTileMesh(3, 0);
     wallTile.createVAO();
-    for (const auto &oneItem : items())
-    {
-        int itemId = oneItem.id % 5; 
-        itemTile = Texturing::createMapTileMesh(itemId, 6);
-        itemTile.createVAO();
-    }
+    itemTile = Texturing::createMapTileMesh(0, 6);
+    itemTile.createVAO();
     trapTile = Texturing::createMapTileMesh(3, 3);
     trapTile.createVAO();
 }
