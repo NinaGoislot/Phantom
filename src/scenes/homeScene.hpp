@@ -2,9 +2,9 @@
 #include "scene.hpp"
 #include <iostream>
 
-struct MenuScene : public Scene
+struct HomeScene : public Scene
 {
-    MenuScene()=default;
+    HomeScene()=default;
     void init() override;
     void update() override;
     void draw() override;

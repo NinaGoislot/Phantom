@@ -1,22 +1,22 @@
-#include "endScene.hpp"
+#include "victoryScene.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/menu.hpp"
 #include "map/pathfinding.hpp"
 
-void EndScene::init()
+void VictoryScene::init()
 {
 }
 
-void EndScene::update()
+void VictoryScene::update()
 {
 
 }
 
-void EndScene::draw()
+void VictoryScene::draw()
 {
    
 }
-void EndScene::destroy()
+void VictoryScene::destroy()
 {
     // glDeleteTextures
 }

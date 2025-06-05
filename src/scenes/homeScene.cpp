@@ -1,23 +1,23 @@
-#include "menuScene.hpp"
+#include "homeScene.hpp"
 #include "managers/gameManager.hpp"
 #include "scenes/draw_game.hpp"
 #include "managers/menu.hpp"
 #include "map/pathfinding.hpp"
 
-void MenuScene::init()
+void HomeScene::init()
 {
 }
 
-void MenuScene::update()
+void HomeScene::update()
 {
 
 }
 
-void  MenuScene::draw()
+void  HomeScene::draw()
 {
 
 }
-void  MenuScene::destroy()
+void  HomeScene::destroy()
 {
     // glDeleteTextures
 }

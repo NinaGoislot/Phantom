@@ -27,7 +27,10 @@ struct Player
     float speed = 5.0f;
     bool isMoving = false;
 
-    int life {3};
+    int life{3};
+    bool godMode{false}; 
+    float damageCooldownTimer = 0.0f;
+    const float DAMAGE_COOLDOWN = 2.0f;
 
     //------------------------------------
     //------------- FUNCTION -------------
@@ -42,6 +45,7 @@ struct Player
     //------------------------------------
 
     glm::vec2 getPosition();
+    void move(glm::vec2 direction);
 
     //------------------------------------
     //------------- ANIMATION ------------
@@ -64,7 +68,6 @@ struct Player
     void move_down();
     void move_left();
     void move_right();
-    void move(glm::vec2 direction);
     void setFrame(int frameIndex);
     void updateAnimatedFrame();
 };

@@ -5,6 +5,7 @@
 #include "map/pathfinding.hpp"
 #include "map/item.hpp"
 #include "map/trap.hpp"
+#include "managers/time.hpp"
 
 void GameScene::init()
 {
@@ -13,20 +14,27 @@ void GameScene::init()
 
 void GameScene::update()
 {
+    //---------------------------------------------------------------------------------
+    //------------------------ Récupération des objets de game ------------------------
+    //---------------------------------------------------------------------------------
     Game *game = getGame();
     auto currentScene = game->sceneManager.getCurrentScene();
 
-    glm::vec2 pos = game->player->getPosition();
+    glm::vec2 playerPos = game->player->getPosition();
 
+    //---------------------------------------------------------------------------------
+    //-------------------------- Check la position du joueur --------------------------
+    //---------------------------------------------------------------------------------
     try
     {
         for (auto &oneTrap : traps())
         {
-            if (oneTrap.positionX == round(pos.x + 50) &&
-                oneTrap.positionY == floor(pos.y + 50))
+            if (oneTrap.positionX == round(playerPos.x + 50) &&
+                oneTrap.positionY == floor(playerPos.y + 50))
             {
 
                 std::cout << "Player stepped on trap ID: " << oneTrap.id << std::endl;
+                game->player->takeDamage(1);
             }
         }
     }
@@ -36,10 +44,11 @@ void GameScene::update()
         throw;
     }
 
+    //---------------------------------------------------------------------------------
+    //---------------------------------- Collisions -----------------------------------
+    //---------------------------------------------------------------------------------
     try
     {
-        glm::vec2 playerPos = game->player->getPosition();
-
         glm::vec2 offset(50.0f, 50.0f);            // not same coords between map and player
         glm::vec2 playerTile = playerPos + offset; // we need to add 50 to each axis
 
@@ -56,6 +65,10 @@ void GameScene::update()
             {0, -1.0}, // DOWN
             {0, 0.5}   // UP
         };
+
+        //---------------------------------------------------------------------------------
+        //----------------------- Gestion du clavier / interactions -----------------------
+        //---------------------------------------------------------------------------------
 
         if (controls.nbMoveControlsActive() < 2)
         {
@@ -97,15 +110,6 @@ void GameScene::update()
         {
             displayItems(items());
         }
-
-        game->player->isMoving = controls.nbMoveControlsActive() > 0;
-
-        if (game->player->isMoving)
-        {
-            generateFlowField();
-            // drawFlowField(); 
-        }
-
         if (controls.isKeyPressed('s'))
         {
             try
@@ -127,6 +131,36 @@ void GameScene::update()
                 std::cerr << "[GameScene::update] dig impossible " << e.what() << '\n';
             }
         }
+        //---------------------------------------------------------------------------------
+        //---------------------------------- Time update ----------------------------------
+        //---------------------------------------------------------------------------------
+
+        if (game->player->godMode)
+        {
+            if (game->player->damageCooldownTimer > 0.0f)
+            {
+                game->player->damageCooldownTimer -= get_loop_time().getDeltaTime();
+            }
+            else
+            {
+                game->player->godMode = false;
+            }
+        }
+
+        //---------------------------------------------------------------------------------
+        //----------------------- Generer le flow field des ennemis -----------------------
+        //---------------------------------------------------------------------------------
+        game->player->isMoving = controls.nbMoveControlsActive() > 0;
+
+        if (game->player->isMoving)
+        {
+            generateFlowField();
+            // drawFlowField();
+        }
+
+        //---------------------------------------------------------------------------------
+        //--------------------- Gestion de bug -> joueur dans le mur ----------------------
+        //---------------------------------------------------------------------------------
 
         bool isSoftLocked{((!isAlive(round(playerTile.x), round(playerTile.y - 1)) &&
                             !isAlive(round(playerTile.x), floor(playerTile.y + 1)) &&
@@ -171,8 +205,6 @@ void GameScene::update()
 void GameScene::draw()
 {
     DrawGame::render(*getGame());
-
-     
 
     displayMenu(countItemsCollected(items()));
     // try
