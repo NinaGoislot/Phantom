@@ -145,7 +145,7 @@ void initTextures()
     floorTile.createVAO();
     wallTile = Texturing::createMapTileMesh(3, 0);
     wallTile.createVAO();
-    itemTile = Texturing::createMapTileMesh(0, 4);
+    itemTile = Texturing::createMapTileMesh(0, 7);
     itemTile.createVAO();
 }
 
