@@ -21,8 +21,8 @@ void drawOneImage(int &x, int &y, StandardMesh &textureTile)
 
 void HomeScene::init()
 {
-    Texturing::initTexture(homeTexture, "FIRST_SCENE", "png");
-    homeTile = Texturing::createMapTileMesh(0,0,800,800);
+    Texturing::initTexture(homeTexture, "FIRST_SCENE_RECT", "png");
+    homeTile = Texturing::createImageMesh(0,0,1920,1080,1920,1080);
     homeTile.createVAO();
 
 }
@@ -40,7 +40,7 @@ void  HomeScene::draw()
 
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(0, 0, 0));
-    myEngine.mvMatrixStack.addHomothety(10.0);
+    myEngine.mvMatrixStack.addHomothety(25.0);
     // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));
     myEngine.setFlatColor(1.0f, 0.0f, 0.0f); // carré rouge
     myEngine.updateMvMatrix();

@@ -89,6 +89,53 @@ namespace Texturing
         return mesh;
     }
 
+    StandardMesh createImageMesh(int row, int col, int tileWidth, int tileHeight, int atlasWidth, int atlasHeight)
+    {
+        if (tileWidth <= 0 || tileHeight <= 0 || atlasWidth <= 0 || atlasHeight <= 0)
+        {
+            std::cerr << "[createMapTileMesh] Invalid settings : tileWidth = " << tileWidth
+                      << ", tileHeight = " << tileHeight
+                      << ", atlasWidth = " << atlasWidth
+                      << ", atlasHeight = " << atlasHeight << std::endl;
+            throw std::runtime_error("Invalid parameters for createMapTileMesh.");
+        }
+
+        // Normalized UVs (tile size relative to atlas size)
+        float tileWidthNorm = static_cast<float>(tileWidth) / atlasWidth;
+        float tileHeightNorm = static_cast<float>(tileHeight) / atlasHeight;
+
+        float u0 = col * tileWidthNorm;
+        float v0 = 1.0f - (row + 1) * tileHeightNorm; // assuming v=0 at bottom
+        float u1 = u0 + tileWidthNorm;
+        float v1 = v0 + tileHeightNorm;
+
+        // Adjust quad vertex positions according to tile aspect ratio
+        // Positions define a quad centered at origin
+        float aspectRatio = static_cast<float>(tileWidth) / tileHeight;
+
+        float halfWidth = 0.5f * aspectRatio;
+        float halfHeight = 0.5f;
+
+        float positions[] = {
+            -halfWidth, -halfHeight,
+            halfWidth, -halfHeight,
+            halfWidth, halfHeight,
+            -halfWidth, halfHeight};
+
+        float uvs[] = {
+            u0, v0,
+            u1, v0,
+            u1, v1,
+            u0, v1};
+
+        StandardMesh mesh(4, GL_TRIANGLE_FAN);
+        mesh.setNbElt(4);
+        mesh.addOneBuffer(0, 2, positions, "position", true);
+        mesh.addOneBuffer(2, 2, uvs, "texcoord", true);
+
+        return mesh;
+    }
+
     void updateUVs(StandardMesh &mesh, int col, int row, float tileWidth, float tileHeight, float atlasWidth, float atlasHeight)
     {
         float u0 = (col * tileWidth) / atlasWidth;
