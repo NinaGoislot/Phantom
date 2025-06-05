@@ -68,6 +68,15 @@ void GameScene::update()
             }
         }
 
+        if (controls.isKeyPressed('e'))
+        {
+            getItem(items());
+        }
+        if (controls.isKeyPressed('a'))
+        {
+            displayItems(items());
+        }
+
         if (controls.isKeyPressed('s'))
         {
             try
@@ -125,7 +134,7 @@ void GameScene::draw()
 {
     DrawGame::render(*getGame());
 
-     displayMenu(countItemsCollected(items()));
+    displayMenu(countItemsCollected(items()));
     // try
     // {
     //     displayMenu(0);
