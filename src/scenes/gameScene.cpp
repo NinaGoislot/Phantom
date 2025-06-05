@@ -57,7 +57,6 @@ void GameScene::update()
                     game->player->move_down();
                 }
             }
-
             if (controls.isKeyPressed(GLFW_KEY_UP))
             {
                 if (isAlive(round(playerTile.x), floor(playerTile.y + 1)))
