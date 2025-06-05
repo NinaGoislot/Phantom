@@ -2,6 +2,7 @@
 #include "managers/gameManager.hpp"
 #include "scenes/draw_game.hpp"
 #include "managers/menu.hpp"
+#include "map/pathfinding.hpp"
 
 void GameScene::init()
 {
@@ -35,6 +36,31 @@ void GameScene::update()
             }
         }
 
+        game->player->isMoving = controls.nbMoveControlsActive() > 0;
+
+        if (game->player->isMoving)
+        {
+            // generateFlowField();
+
+            // Afficher le flow field dans la console
+            // for (int y = 0; y < MAP_HEIGHT; ++y)
+            // {
+            //     for (int x = 0; x < MAP_WIDTH; ++x)
+            //     {
+            //         const Cell &cell = game->grid[y][x];
+            //         if (cell.direction == glm::ivec2{0, 0})
+            //         {
+            //             std::cout << ". "; // Cellule sans direction
+            //         }
+            //         else
+            //         {
+            //             std::cout << "(" << cell.direction.x << "," << cell.direction.y << ") ";
+            //         }
+            //     }
+            //     std::cout << std::endl;
+            // }
+        }
+
         if (controls.isKeyPressed('s'))
         {
             glm::vec2 pos = game->player->getPosition();
@@ -42,7 +68,7 @@ void GameScene::update()
             {
                 digTile(static_cast<int>(round(pos.x + 50)), static_cast<int>(round(pos.y + 50)));
             }
-            catch(const std::exception& e)
+            catch (const std::exception &e)
             {
                 std::cerr << "[GameScene::update] dig impossible " << e.what() << '\n';
             }
@@ -52,6 +78,14 @@ void GameScene::update()
     {
         std::cerr << "[GameScene::update] Erreur durant input ou mouvement : " << e.what() << std::endl;
         throw;
+    }
+
+    for (auto &phantom : game->phantomsList)
+    {
+        if (phantom)
+        {
+            phantom->update();
+        }
     }
 }
 

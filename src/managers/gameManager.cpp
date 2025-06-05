@@ -14,6 +14,7 @@
 #include "scenes/gameScene.hpp"
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
+#include "characters/villain.hpp"
 
 // External libs
 #include <iostream>
@@ -55,7 +56,7 @@ void createGame(GLFWwindow *window)
     std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> grid = generateMap();
 
     Player *player = new Player{};
-    Game *game = new Game{window, player, SceneManager{}, grid};
+    Game *game = new Game{window, player, {}, SceneManager{}, grid};
     glfwSetWindowUserPointer(window, game);
     if (getGame())
     {
@@ -67,7 +68,14 @@ void createGame(GLFWwindow *window)
         exit(EXIT_FAILURE);
     }
     player->init();
+    game->phantomsList.push_back(std::make_shared<Villain>());
+    for (auto &phantom : game->phantomsList)
+    {
+        phantom->init();
+    }
     game->sceneManager.setCurrentScene(std::make_shared<GameScene>()); // Initialisation de la première scène
+
+    
 }
 
 void initGame()
