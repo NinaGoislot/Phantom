@@ -6,7 +6,6 @@ glm::ivec2 convertToGridCoordinates(glm::vec2 position)
     glm::vec2 adjustedPos = position + glm::vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
     glm::ivec2 entityPos = glm::ivec2(glm::round(adjustedPos));
     return entityPos;
-
 }
 
 void Villain::init()
@@ -42,9 +41,9 @@ void Villain::init()
         int x = rand() % MAP_WIDTH;
         int y = rand() % MAP_HEIGHT;
 
-        glm::ivec2 entityPos = convertToGridCoordinates(glm::vec2 {x, y});
+        glm::ivec2 entityPos = convertToGridCoordinates(glm::vec2{x, y});
 
-        if (isInsideGrid(glm::vec2 {entityPos.x,entityPos.y}) && grid[entityPos.y][entityPos.x].walkable && grid[entityPos.y][entityPos.x].distance >= MIN_DISTANCE_SPAWN)
+        if (isInsideGrid(glm::vec2{entityPos.x, entityPos.y}) && grid[entityPos.y][entityPos.x].walkable && grid[entityPos.y][entityPos.x].distance >= MIN_DISTANCE_SPAWN)
         {
             position = {x, y};
             canSpawn = true;
@@ -83,15 +82,17 @@ void Villain::updateAnimatedFrame()
 
 void Villain::move(glm::vec2 direction)
 {
-    std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
-    if (direction.x == 1) anim_right();
-    if (direction.y == 1) anim_up();
-    if (direction.y == -1) anim_down();
-    if (direction.x == -1) anim_left();
-    
-    std::cout << "[Villain] Moving is in : (" << position.x << ", " << position.y << ")" << std::endl;
-    //player position 
-    std::cout << "[Villain] Player position is : (" << getPlayer()->getPosition().x << ", " << getPlayer()->getPosition().y << ")" << std::endl;
+    if (direction.x == 1)
+        anim_right();
+    if (direction.y == 1)
+        anim_up();
+    if (direction.y == -1)
+        anim_down();
+    if (direction.x == -1)
+        anim_left();
+    // std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
+    // std::cout << "[Villain] Moving is in : (" << position.x << ", " << position.y << ")" << std::endl;
+    // std::cout << "[Villain] Player position is : (" << getPlayer()->getPosition().x << ", " << getPlayer()->getPosition().y << ")" << std::endl;
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
 }
 

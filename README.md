@@ -7,7 +7,7 @@ Bienvenue sur notre readme de notre jeu vidéo Phantom !
 ## Instructions
 
 - Lancez le jeu avec le compilateur GCC
-- Lancer le jeu depuis "dossier parent > bin/debug" dans le terminal
+- Lancer le jeu depuis "dossier parent > bin\debug" dans le terminal
 
 ## Contrôles 
 
