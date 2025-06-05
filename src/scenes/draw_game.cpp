@@ -17,6 +17,7 @@ using namespace glbasimac;
 #include "controls/controls.hpp"
 #include "scenes/draw_game.hpp"
 #include "map/item.hpp"
+#include "map/trap.hpp"
 
 // External libs
 #include <vector>
@@ -32,6 +33,7 @@ GLBI_Texture textureAtlas;
 StandardMesh floorTile;
 StandardMesh wallTile;
 StandardMesh itemTile;
+StandardMesh trapTile;
 
 int computeBitmask(bool north, bool east, bool south, bool west)
 {
@@ -101,6 +103,34 @@ void drawItems()
     }
 }
 
+void drawTraps()
+{
+    std::vector<trap> trapList = traps();
+    // std::cout << "Drawing items..." << std::endl;
+    // displayItems(itemList); // Assuming this function is defined to display items
+    // std::cout << "items.size() = " << itemList.size() << std::endl;
+    for (const auto &oneTrap : trapList)
+    {
+        // std::cout << " dans la boucle drawItems" << std::endl;
+            myEngine.activateTexturing(true);
+            textureAtlas.attachTexture();
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.updateMvMatrix();
+            myEngine.mvMatrixStack.pushMatrix();
+            myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
+            myEngine.updateMvMatrix();
+
+            int x = oneTrap.positionX;
+            int y = oneTrap.positionY;
+            drawOneTile(x, y, trapTile);
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.mvMatrixStack.popMatrix();
+            myEngine.activateTexturing(false);
+            textureAtlas.detachTexture();
+    }
+    
+}
+
 void drawMap()
 {
     myEngine.activateTexturing(true);
@@ -147,6 +177,8 @@ void initTextures()
     wallTile.createVAO();
     itemTile = Texturing::createMapTileMesh(0, 7);
     itemTile.createVAO();
+    trapTile = Texturing::createMapTileMesh(3, 3);
+    trapTile.createVAO();
 }
 
 void DrawGame::init()
@@ -179,6 +211,15 @@ void DrawGame::render(const Game &game)
     catch (const std::exception &e)
     {
         std::cerr << "[DrawGame::render] Erreur dans drawItems : " << e.what() << std::endl;
+    }
+
+    try
+    {
+        drawTraps();
+    }
+    catch (const std::exception &e)
+    {
+        std::cerr << "[DrawGame::render] Erreur dans drawTraps : " << e.what() << std::endl;
     }
 
     try
