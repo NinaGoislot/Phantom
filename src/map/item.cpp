@@ -23,7 +23,7 @@ std::vector<item>& items()
             {
                 posX = std::rand() % MAP_WIDTH;
                 posY = std::rand() % MAP_HEIGHT;
-            } while (!isAlive(posX, posY));
+            } while (!isAlive(posX, posY) || (posX == 50 && posY == 50));
 
             itemList.push_back(createItems(i, posX, posY, false));
         }
