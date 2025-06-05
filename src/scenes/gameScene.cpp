@@ -120,6 +120,10 @@ void GameScene::update()
             displayItems(items());
         }
 
+        if (controls.isKeyPressed(GLFW_KEY_ESCAPE)) {
+            glfwSetWindowShouldClose(getGame()->window, GLFW_TRUE);
+        }
+
         if (controls.isKeyPressed('a'))
         {
             try
