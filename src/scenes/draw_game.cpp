@@ -29,8 +29,8 @@ using namespace glbasimac;
 STP3D::FPSCamera camera;
 
 // textures
-GLBI_Engine myEngine;
 GLBI_Texture textureAtlas;
+GLBI_Texture escapeTexture;
 
 // OpenGL Shapes
 StandardMesh floorTile;
@@ -39,6 +39,7 @@ StandardMesh itemTile;
 StandardMesh trapTile;
 StandardMesh obstTile;
 StandardMesh lifeTile;
+StandardMesh escapeTile;
 
 int computeBitmask(bool north, bool east, bool south, bool west)
 {
@@ -225,7 +226,6 @@ void drawPlayerLife(const Game &game, int &windowX, int &windowY)
         float x = (-halfViewX + 0.5f + i * 0.5f) * -1;
         float y = halfViewY - 0.75f;
         
-
         myEngine.setFlatColor(1.0, 1.0, 1.0);
 
         myEngine.mvMatrixStack.pushMatrix();
@@ -238,6 +238,33 @@ void drawPlayerLife(const Game &game, int &windowX, int &windowY)
         myEngine.activateTexturing(false);
         textureAtlas.detachTexture();
     }
+}
+
+void drawEscapeButton(const Game &game, int &windowX, int &windowY)
+{
+    float aspectRatio = static_cast<float>(windowX) / static_cast<float>(windowY);
+    float halfViewX = GL_VIEW_SIZE * aspectRatio / 2;
+    float halfViewY = GL_VIEW_SIZE / 2;
+
+        myEngine.activateTexturing(true);
+        escapeTexture.attachTexture();
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.updateMvMatrix();
+
+        float x = halfViewX - 1.f;
+        float y = -halfViewY + 0.75f;
+        
+        myEngine.setFlatColor(1.0, 1.0, 1.0);
+
+        myEngine.mvMatrixStack.pushMatrix();
+        myEngine.mvMatrixStack.addTranslation(Vector3D(x, y, 0.0));
+        myEngine.updateMvMatrix();
+        escapeTile.draw();
+        myEngine.mvMatrixStack.popMatrix();
+
+        myEngine.mvMatrixStack.popMatrix();
+        myEngine.activateTexturing(false);
+        escapeTexture.detachTexture();
 }
 
 void initTextures()
@@ -254,10 +281,14 @@ void initTextures()
     obstTile.createVAO();
     lifeTile = Texturing::createMapTileMesh(0, 7);
     lifeTile.createVAO();
+
 }
 
 void DrawGame::init()
 {
+    Texturing::initTexture(escapeTexture, "ESC-BUTTON", "png");
+    escapeTile = Texturing::createImageMesh(0, 0, 100, 70, 100, 70);
+    escapeTile.createVAO();
 
     Texturing::initTexture(textureAtlas, "Map", "png");
 
@@ -326,9 +357,9 @@ void DrawGame::render(const Game &game)
     myEngine.switchToFlatShading();
 
     drawPlayerLife(game, windowX, windowY);
+    drawEscapeButton(game, windowX, windowY);
 
     myEngine.setViewMatrix(camera.viewMatrix);
-
 
     int playerX = static_cast<int>(game.player->getPosition().x) + MAP_WIDTH / 2;
     int playerY = static_cast<int>(game.player->getPosition().y) + MAP_HEIGHT / 2;
@@ -341,9 +372,9 @@ void DrawGame::render(const Game &game)
     {
         camera.position_cam.x = halfViewX - MAP_WIDTH / 2;
     }
-    else if (playerX >= MAP_WIDTH - halfViewX - 5)
+    else if (playerX >= MAP_WIDTH - halfViewX - 2)
     {
-        camera.position_cam.x = MAP_WIDTH - halfViewX - MAP_WIDTH / 2 - 5;
+        camera.position_cam.x = MAP_WIDTH - halfViewX - MAP_WIDTH / 2 - 2;
     }
     else
     {

@@ -50,6 +50,19 @@ void onMouseMove(GLFWwindow *window, double xpos, double ypos)
 
 void onClick(GLFWwindow *window, int button, int action, int mods)
 {
+    // Get the game state from the window user pointer
+    Game *game = getGame();
+    auto currentScene = game->sceneManager.getCurrentScene();
+    if (!currentScene)
+    {
+        throw std::runtime_error("Aucune scène active trouvée dans SceneManager.");
+    }
+
+    if (button >= 0)
+    {
+        bool pressed = action == GLFW_PRESS || action == GLFW_REPEAT;
+        currentScene->controls.setKeyState(button, pressed);
+    }
 }
 
 void Controls::setKeyState(int key, bool isPressed)
@@ -61,6 +74,12 @@ bool Controls::isKeyPressed(int key) const
 {
     auto key_it = keyStates.find(key);
     return key_it != keyStates.end() && key_it->second;
+}
+
+bool Controls::isMousePressed(int button) const
+{
+    auto mouse_it = keyStates.find(button);
+    return mouse_it != keyStates.end() && mouse_it->second;
 }
 
 void Controls::reset()

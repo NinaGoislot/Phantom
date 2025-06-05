@@ -50,7 +50,7 @@ std::string textWritten(std::string const &text)
 
 // function to draw the text (we can change a lot of parameters here)
 void textDraw(std::string const &text, float x, float y, SimpleText::Color color, SimpleText::Alignment alignment, SimpleText::FontSize size, bool isWriting)
-{
+{;
     // we can change the color here
     TextRenderer().SetColor(SimpleText::TEXT_COLOR, color);
     
