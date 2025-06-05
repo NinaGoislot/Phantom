@@ -1,12 +1,17 @@
 #include "villain.hpp"
 #include "map/pathfinding.hpp"
 
+glm::ivec2 convertToGridCoordinates(glm::vec2 position)
+{
+    glm::vec2 adjustedPos = position + glm::vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
+    glm::ivec2 entityPos = glm::ivec2(glm::round(adjustedPos));
+    return entityPos;
+
+}
+
 void Villain::init()
 {
-position = glm::vec2(10.0f, 10.0f);
-speed = 1.0f;
-
-try
+    try
     {
         Texturing::initTexture(villainAtlas, "villain", "png");
     }
@@ -23,39 +28,55 @@ try
         return;
     }
 
+    speed = 2.0f;
+
+    // random spaww
+    const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid = getGrid();
+    const int MIN_DISTANCE_SPAWN = MAX_DISTANCE;
+
+    srand(static_cast<unsigned>(time(nullptr))); // seed
+
+    bool canSpawn = false;
+    while (!canSpawn)
+    {
+        int x = rand() % MAP_WIDTH;
+        int y = rand() % MAP_HEIGHT;
+
+        glm::ivec2 entityPos = convertToGridCoordinates(glm::vec2 {x, y});
+
+        if (isInsideGrid(glm::vec2 {entityPos.x,entityPos.y}) && grid[entityPos.y][entityPos.x].walkable && grid[entityPos.y][entityPos.x].distance >= MIN_DISTANCE_SPAWN)
+        {
+            position = {x, y};
+            canSpawn = true;
+        }
+    }
+
     std::cout << "[Villain::init] Villain initialized" << std::endl;
-    position = glm::vec2(10.0f, 10.0f);
-    speed = 1.0f;
 }
 
 void Villain::move(glm::vec2 direction)
 {
-    // std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
+    std::cout << "[Villain] Moving in direction: (" << direction.x << ", " << direction.y << ")" << std::endl;
+    std::cout << "[Villain] Moving is in : (" << position.x << ", " << position.y << ")" << std::endl;
+    //player position 
+    std::cout << "[Villain] Player position is : (" << getPlayer()->getPosition().x << ", " << getPlayer()->getPosition().y << ")" << std::endl;
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
 }
 
 void Villain::update()
 {
-    glm::vec2 playerPos = getPlayer()->getPosition();
-    float maxDistance = static_cast<float>(GL_VIEW_SIZE);
+    auto &grid = getGrid();
+    glm::vec2 gridPos = convertToGridCoordinates(position);
 
-    // Si joueur trop loin => ne bouge pas
-    if (glm::distance2(position, playerPos) > maxDistance * maxDistance)
-    {
-        return;
-    }
+    Cell &cell = grid[gridPos.y][gridPos.x];
 
-    glm::ivec2 gridPos = position;
-    // if (!isInsideGrid(gridPos)){
-    //     return;
-    // }
-
-    glm::vec2 dir = getGrid()[gridPos.y][gridPos.x].direction;
+    glm::vec2 dir = glm::vec2(cell.direction);
 
     move(dir);
 }
 
-void Villain::draw(glbasimac::GLBI_Engine& engine) {
+void Villain::draw(glbasimac::GLBI_Engine &engine)
+{
     engine.activateTexturing(true);
     villainAtlas.attachTexture();
 
@@ -69,4 +90,4 @@ void Villain::draw(glbasimac::GLBI_Engine& engine) {
 
     villainAtlas.detachTexture();
     engine.activateTexturing(false);
-    }
+}

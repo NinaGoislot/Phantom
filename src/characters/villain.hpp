@@ -11,6 +11,7 @@ struct Villain : public Phantom
     void move(glm::vec2 direction) override;
     void update();
     void draw(glbasimac::GLBI_Engine &engine) override;
+    
 
     StandardMesh square;
     glbasimac::GLBI_Texture villainAtlas;

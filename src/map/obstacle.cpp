@@ -16,7 +16,7 @@ std::vector<obstacle>& obstacles()
     if (obstList.empty())
     {
         std::srand(std::time(nullptr) + 100); // rand seed different than item or trap
-        for (int i = 0; i < 100; ++i)
+        for (int i = 0; i < NB_OBSTACLE_TO_GENERATE; ++i)
         {
             int posX, posY;
             do

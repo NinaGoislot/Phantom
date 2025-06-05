@@ -13,9 +13,6 @@ struct item
     bool collected;
 };
 
-const int NB_ITEM_TO_GENERATE = 30;
-const int NB_ITEM_TO_FIND = 5;
-
 // static std::vector<item> items;
 
 item createItems(int id, int positionX, int positionY, bool collected = false);

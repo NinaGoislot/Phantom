@@ -120,56 +120,6 @@ void GameScene::update()
             displayItems(items());
         }
 
-        game->player->isMoving = controls.nbMoveControlsActive() > 0;
-
-        if (game->player->isMoving)
-        {
-            generateFlowField();
-
-            // Afficher le flow field dans la console
-            for (int y = 0; y < MAP_HEIGHT; ++y)
-            {
-                for (int x = 0; x < MAP_WIDTH; ++x)
-                {
-                    const Cell &cell = game->grid[y][x];
-                    if (cell.direction == glm::ivec2{0, 0})
-                    {
-                        std::cout << ". "; // Cellule sans direction
-                    }
-                    else
-                    {
-                        std::cout << "(" << cell.direction.x << "," << cell.direction.y << ") ";
-                    }
-                }
-                std::cout << std::endl;
-            }
-        }
-
-        game->player->isMoving = controls.nbMoveControlsActive() > 0;
-
-        if (game->player->isMoving)
-        {
-            // generateFlowField();
-
-            // Afficher le flow field dans la console
-            // for (int y = 0; y < MAP_HEIGHT; ++y)
-            // {
-            //     for (int x = 0; x < MAP_WIDTH; ++x)
-            //     {
-            //         const Cell &cell = game->grid[y][x];
-            //         if (cell.direction == glm::ivec2{0, 0})
-            //         {
-            //             std::cout << ". "; // Cellule sans direction
-            //         }
-            //         else
-            //         {
-            //             std::cout << "(" << cell.direction.x << "," << cell.direction.y << ") ";
-            //         }
-            //     }
-            //     std::cout << std::endl;
-            // }
-        }
-
         if (controls.isKeyPressed('a'))
         {
             try
@@ -214,6 +164,7 @@ void GameScene::update()
 
         if (game->player->isMoving)
         {
+            std::cout << "[GameScene::update] Player is moving, generating new flow field." << std::endl;
             generateFlowField();
             // drawFlowField();
         }
@@ -252,6 +203,10 @@ void GameScene::update()
         std::cerr << "[GameScene::update] Erreur durant input ou mouvement : " << e.what() << std::endl;
         throw;
     }
+
+    //------------------------------------------------------------------------------------
+    //------------------------------- Mouvement des entités ------------------------------
+    //------------------------------------------------------------------------------------
 
     for (auto &phantom : game->phantomsList)
     {
