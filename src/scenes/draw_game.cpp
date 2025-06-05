@@ -18,10 +18,12 @@ using namespace glbasimac;
 #include "scenes/draw_game.hpp"
 #include "map/item.hpp"
 #include "map/trap.hpp"
+#include "map/floor.hpp"
 
 // External libs
 #include <vector>
 #include <cmath>
+#include <algorithm>
 
 STP3D::FPSCamera camera;
 
@@ -96,7 +98,7 @@ void drawItems()
             int x = oneItem.positionX;
             int y = oneItem.positionY;
             // we loop through the oneItems to change their textures
-            int itemId = oneItem.id % 5; 
+            int itemId = oneItem.id % 5;
             Texturing::updateUVs(itemTile, 6, itemId, 16, 16, 128, 128);
             drawOneTile(x, y, itemTile);
 
@@ -144,12 +146,20 @@ void drawMap()
     myEngine.mvMatrixStack.pushMatrix();
     myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
     myEngine.updateMvMatrix();
+    const auto &tileMap = getTileIdMap();
     for (int h{0}; h < MAP_WIDTH; h++)
     {
         for (int w{0}; w < MAP_HEIGHT; w++)
         {
             if (isAlive(w, h))
             {
+                // int tileId = tileMap[w][h];
+                // int tileCol = tileId % 3;
+                // int tileRow = tileId / 3;
+
+                // Texturing::updateUVs(floorTile, tileCol, tileRow, 16, 16, 128, 128);
+
+                // RANDOM FLOOR TILING FEATURE // MAKE IT LAG
                 drawOneTile(w, h, floorTile);
             }
             else
@@ -209,7 +219,7 @@ void DrawGame::render(const Game &game)
     {
         std::cerr << "[DrawGame::render] Erreur dans drawMap : " << e.what() << std::endl;
     }
-       try
+    try
     {
         drawItems();
     }
