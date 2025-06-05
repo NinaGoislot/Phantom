@@ -21,7 +21,7 @@ void displayItems(std::vector<item> &items);
 
 std::vector<item>& items();
 
-std::vector<item> getItem(std::vector<item> &items);
+void getItem(std::vector<item> &items);
 
 void playerCloseToItem(std::vector<item> &items);
 

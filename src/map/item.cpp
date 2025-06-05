@@ -46,7 +46,7 @@ void displayItems(std::vector<item> &items)
 
 
 
-std::vector<item> getItem(std::vector<item> &items)
+void getItem(std::vector<item> &items)
 {
     Player *player = getGame()->player;
     int playerZone = 1;
@@ -62,12 +62,10 @@ std::vector<item> getItem(std::vector<item> &items)
             {
                 oneItem.collected = true;
                 std::cout << "Item " << oneItem.id << " collected!" << std::endl;
-                return items;
             }
         }
     }
     std::cout << "There are no item to collect here" << std::endl;
-    return items;
 }
 
 void playerCloseToItem(std::vector<item> &items)

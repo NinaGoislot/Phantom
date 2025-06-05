@@ -287,72 +287,35 @@ void DrawGame::render(const Game &game)
 
     // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
     // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
-    int positionX {0};
-    int positionY {0};
+    int windowX {0};
+    int windowY {0};
 
-    camera.position_cam.x = game.player->getPosition().x;
-    // Set camera height to 1.0f
-    camera.position_cam.y = game.player->getPosition().y;
-    // std::cout << "Camera position updated to: " << camera.position_cam.x << ", " << camera.position_cam.y << std::endl;
+    int playerX = static_cast<int>(game.player->getPosition().x) + MAP_WIDTH / 2;
+    int playerY = static_cast<int>(game.player->getPosition().y) + MAP_HEIGHT / 2;
+
+    glfwGetWindowSize(getGame()->window, &windowX, &windowY);
+
+    // int halfView = GL_VIEW_SIZE / 2;
+    float aspectRatio = static_cast<float>(windowX) / static_cast<float>(windowY);
+    float halfViewX = GL_VIEW_SIZE * aspectRatio / 2;
+    float halfViewY = GL_VIEW_SIZE / 2;
+
+
+    if (playerX <= halfViewX) {
+        camera.position_cam.x = halfViewX - MAP_WIDTH / 2;
+    } else if (playerX >= MAP_WIDTH - halfViewX - 5) {
+        camera.position_cam.x = MAP_WIDTH - halfViewX - MAP_WIDTH / 2 - 5;
+    } else {
+        camera.position_cam.x = game.player->getPosition().x;
+    }
+
+    if (playerY <= halfViewY) {
+        camera.position_cam.y = halfViewY - MAP_HEIGHT / 2;
+    } else if (playerY >= MAP_HEIGHT - halfViewY) {
+        camera.position_cam.y = MAP_HEIGHT - halfViewY - MAP_HEIGHT / 2;
+    } else {
+        camera.position_cam.y = game.player->getPosition().y;
+    }
+
     camera.updateViewMatrix();
 }
-
-// voilà comment j'ai appelé mes fonctions tah l'époque
-
-// void drawOneTile(int &x, int &y, float color)
-// {
-//     myEngine.mvMatrixStack.pushMatrix();
-//     myEngine.mvMatrixStack.addTranslation(Vector3D(static_cast<float>(x), static_cast<float>(y), 0.0));
-//     myEngine.updateMvMatrix();
-//     myEngine.setFlatColor(color, color, color);
-//     carre.drawShape();
-//     myEngine.mvMatrixStack.popMatrix();
-// }
-
-// void drawMap()
-// {
-//     myEngine.mvMatrixStack.pushMatrix();
-//     myEngine.mvMatrixStack.addHomothety(0.2);
-//     myEngine.updateMvMatrix();
-//     carre.drawShape();
-//     myEngine.mvMatrixStack.pushMatrix();
-//     myEngine.mvMatrixStack.addTranslation(Vector3D(-MAP_WIDTH / 2, -MAP_HEIGHT / 2, 0.0));
-//     myEngine.updateMvMatrix();
-//     for (int h{0}; h < MAP_WIDTH; h++)
-//     {
-//         for (int w{0}; w < MAP_HEIGHT; w++)
-//         {
-//             if (isAlive(w, h))
-//             {
-//                 drawOneTile(w, h, 1.0);
-//             }
-//             else
-//             {
-//                 drawOneTile(w, h, 0.0);
-//             }
-//         }
-//     }
-//     myEngine.mvMatrixStack.popMatrix();
-//     myEngine.mvMatrixStack.popMatrix();
-// }
-
-// void initScene()
-// {
-//     textInit();
-
-//     // to add
-//     generateMap(10);
-//     playerSpawner(5);
-
-//     std::vector<float> originCoord{1.0, 1.0, -1.0, 1.0, -1.0, -1.0, 1.0, -1.0}; // manually put coord here to match the first arm not ideal
-//     carre.initShape(originCoord);
-//     carre.changeNature(GL_TRIANGLE_FAN);
-// }
-
-// void renderScene()
-// {
-//     myEngine.switchToFlatShading();
-//     drawMap();
-//     displayMenu(0); // Display the menu with item 0
-//     // textDraw("Lorem ipsum", width, height, SimpleText::CENTER, SimpleText::SIZE_16);
-// }
