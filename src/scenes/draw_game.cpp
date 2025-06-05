@@ -338,9 +338,9 @@ void DrawGame::render(const Game &game)
     {
         camera.position_cam.x = halfViewX - MAP_WIDTH / 2;
     }
-    else if (playerX >= MAP_WIDTH - halfViewX - 5)
+    else if (playerX >= MAP_WIDTH - halfViewX - 2)
     {
-        camera.position_cam.x = MAP_WIDTH - halfViewX - MAP_WIDTH / 2 - 5;
+        camera.position_cam.x = MAP_WIDTH - halfViewX - MAP_WIDTH / 2 - 2;
     }
     else
     {
