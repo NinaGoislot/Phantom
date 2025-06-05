@@ -23,6 +23,7 @@
 #include "scenes/homeScene.hpp"
 #include "map/grid.hpp"
 #include "map/item.hpp"
+#include "map/pathfinding.hpp"
 
 #include "tools/camera.hpp"
 
@@ -77,6 +78,7 @@ void createGame(GLFWwindow *window)
         std::cerr << "[gameManager] Failed to create game object" << std::endl;
         exit(EXIT_FAILURE);
     }
+    generateFlowField();
     player->init();
     game->phantomsList.push_back(std::make_shared<Villain>());
     for (auto &phantom : game->phantomsList)

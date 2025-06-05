@@ -164,6 +164,7 @@ void GameScene::update()
 
         if (game->player->isMoving)
         {
+            std::cout << "[GameScene::update] Player is moving, generating new flow field." << std::endl;
             generateFlowField();
             // drawFlowField();
         }
@@ -202,6 +203,10 @@ void GameScene::update()
         std::cerr << "[GameScene::update] Erreur durant input ou mouvement : " << e.what() << std::endl;
         throw;
     }
+
+    //------------------------------------------------------------------------------------
+    //------------------------------- Mouvement des entités ------------------------------
+    //------------------------------------------------------------------------------------
 
     for (auto &phantom : game->phantomsList)
     {

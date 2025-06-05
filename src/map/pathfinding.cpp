@@ -1,9 +1,6 @@
 #include "pathfinding.hpp"
-#include "managers/gameManager.hpp"
 #include "map/grid.hpp"
 #include <queue>
-
-const int MAX_DISTANCE = GL_VIEW_SIZE / 2;
 
 bool isInsideGrid(const glm::ivec2 &pos)
 {
@@ -14,16 +11,12 @@ void generateFlowField()
 {
     // params
     glm::vec2 rawPos = getPlayer()->getPosition();
-    rawPos.x = MAP_WIDTH / 2;  // Conversion cordonnées joueur -> coordonnées grille
-    rawPos.y = MAP_HEIGHT / 2; // Conversion cordonnées joueur -> coordonnées grille
-    glm::ivec2 playerPos = glm::ivec2(glm::round(rawPos));
+    glm::vec2 adjustedPos = rawPos + glm::vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2); // Conversion cordonnées joueur -> coordonnées grille
+    glm::ivec2 playerPos = glm::ivec2(glm::round(adjustedPos));
 
     std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid = getGrid();
     // distance max pour le calcul du flow field = la taille de la vue
     std::array<glm::ivec2, 4> directions = {glm::ivec2{0, 1}, glm::ivec2{1, 0}, glm::ivec2{0, -1}, glm::ivec2{-1, 0}}; // Directions possibles
-
-    // Initialisation du centre du flow field
-    grid[playerPos.y][playerPos.x].direction = {0, 0}; // le joueur est l'objectif à atteindre, donc pas de direction
 
     // Initialisation de la queue pour BFS
     for (int y = 0; y < MAP_HEIGHT; ++y)
@@ -36,8 +29,12 @@ void generateFlowField()
         }
     }
 
+    // Initialisation du player pour le flow field
+    grid[playerPos.y][playerPos.x].direction = {0, 0}; // le joueur est l'objectif à atteindre, donc pas de direction
     grid[playerPos.y][playerPos.x].visited = true;
     grid[playerPos.y][playerPos.x].distance = 0;
+
+    // BFS pour remplir le flow field
     std::queue<glm::ivec2> cellQueue;
     cellQueue.push(playerPos);
 
@@ -48,6 +45,8 @@ void generateFlowField()
 
         int current_distance = grid[currentCell.y][currentCell.x].distance;
 
+        // if (current_distance >= MAX_DISTANCE)
+        //     continue; // Si la distance actuelle est supérieure à la distance maximale, on ne continue pas
         for (const glm::ivec2 &dir : directions)
         {
             glm::ivec2 neighborCell = currentCell + dir;
