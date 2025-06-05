@@ -16,15 +16,6 @@ bool isMoveControl(int key, Controls &controls)
     return false;
 }
 
-// void key_callback(int key, int /*scancode*/, int action, int mods)
-// {
-//     // update _keysState
-//     if (key >= 0 && key < _keysState.size())
-//     {
-//         _keysState[key] = action == GLFW_PRESS || action == GLFW_REPEAT;
-//     }
-// }
-
 void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int action, const int mods)
 {
     int convertedKey = key;
@@ -50,50 +41,7 @@ void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int
         bool pressed = action == GLFW_PRESS || action == GLFW_REPEAT;
         currentScene->controls.setKeyState(convertedKey, pressed);
     }
-
-    // printf("Condition is: %d\n", action == GLFW_PRESS || action == GLFW_REPEAT);
-    // printf("okay ?: %d\n", Controls::_keysState[convertedKey]);
-    // printf("---------------------------------------------------\n");
-
-    // updatePlayer(window, key, *(game->player));
 }
-
-// void onKeyPress(GLFWwindow *window, const int key, const int scancode, const int action, const int mods)
-// {
-//     // Get the game state from the window user pointer
-//     Game *game = static_cast<Game *>(glfwGetWindowUserPointer(window));
-//     if (game == nullptr)
-//     {
-//         printf("Game not found.\n");
-//         return;
-//     }
-
-//     if (action == GLFW_PRESS || action == GLFW_REPEAT)
-//     {
-//         if (isMoveControl(key))
-//         {
-//             updatePlayer(window,  key, *(game->player));
-//             return;
-//         }
-//         else
-//         {
-//             const char *keyName = glfwGetKeyName(key, 0);
-//             if (keyName != nullptr)
-//             {
-//                 char convertedKey = keyName[0];
-//                 switch (convertedKey)
-//                 {
-//                 case 'q':
-//                     printf("Touche Q pressée, On ferme toooooout.\n");
-//                     glfwSetWindowShouldClose(window, GLFW_TRUE);
-//                     break;
-//                 default:
-//                     break;
-//                 }
-//             }
-//         }
-//     }
-// }
 
 void onMouseMove(GLFWwindow *window, double xpos, double ypos)
 {

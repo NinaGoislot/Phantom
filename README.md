@@ -5,28 +5,44 @@ Bienvenue sur notre readme de notre jeu vidéo Phantom !
 
 ## Contrôles 
 
-Phantom peut se joueur soit avec les touches <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> ou avec les flèches directionnelles <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>.
+Phantom peut se joueur soit avec les touches <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> ou avec les flèches directionnelles <kbd>↑</kbd> <kbd>↓</kbd> <kbd>←</kbd> <kbd>→</kbd>. Utilisez les flèches directionnelles pour une experience focalisée : pas de déplacement en diagonal possible. Utilisez <kbd>Z</kbd><kbd>Q</kbd><kbd>S</kbd><kbd>D</kbd> pour explorer le jeu plus rapidement.
 
-Pour miner devant soit la touche doit <kbd>A</kbd> doit être actionnée.
 
-Pour récupérer un morceau de canne sur le sol il interagir avec celui-ci avec la touche <kbd>E</kbd>.
+Pour miner les blocs, la touche est <kbd>A</kbd>.
+
+Pour récupérer un item, c'est la touche <kbd>E</kbd>.
+
+## Coup d'oeil sur le lore
+
+Phantom est un jeu où nous incarnons une petite flamme partant dans une quête risquée. Un vieux sage à la tête triangle lui annonce qu’il a perdu sa vieille canne magique dans la cave du méchant vivant dans le grand manoir de la colline. Celle ci s'st cassée en plusieurs morceaux la dernière fois qu'il s'y ai aventuré et il aimerait la récupérer.
+
+Le joueur se lance donc la recherche des morceaux perdus pour reconstruire la canne de M. PépéNG tout en se faisant pourchasser par l'hôte du manoir et plusieurs fantômes semblant hanter les lieux.
+
+A la fin de son épopée la flamme toute contente part restituer les bouts de canne au vieux sage qui se révèle être un démon qui avait besoin de collecter les 5 morceaux de bâton magique pour conquérir le monde. Ne jamais se fier aux apparences. 
+
 
 ## Fonctionnalités
 
 ### Gestion des collisions
 
-Notre joueur ne peut naturellement pas passer au travers des murs, nous prenons la coordonnées du joueur et nous ne permettons le déplacement que si le bloc en face du déplacement en appliquant un offset est une tuile de sol. Même si les detections de collisions sont censés fonctionner, nous avons implémenté une fonction de softlock qui en boucle bouge le joueur vers le haut si dans ce cas il peut bouger librement. Il ne peut bouger que 5 fois maximum pour éviter une boucle infinie cependant il peut donc rester bloqué 
+Notre joueur ne peut naturellement pas passer au travers des murs. Nous prenons les coordonnées du joueur et nous ne permettons le déplacement que si le futur bloc est une tuile de sol. Même si les detections de collisions sont censés fonctionner, nous avons implémenté une fonction de softlock qui redirige le joueur vers le haut si il se retrouvait coincé. 
 
-### Creusage
+### Minage
 
-Notre joueur peut creuser que si les cases en face de lui sont des murs. Il peut le faire à l'aide de la touche <kbd>A</kbd>.
+Notre joueur ne peut creuser que si les cases en face de lui sont des murs. Il peut le faire à l'aide de la touche <kbd>A</kbd>. 
 
 ### Items
 
-Pour pouvoir gagner le jeu il est nécessaire de récupérer 5 items, qui sont des morceaux de cannes. Ces items sont placés de manière aléatoire sur les cases libres de la carte. Au bout du cinquième morceau de canne le joueur gagne et est conduit à la scène de victoire. 
+Pour pouvoir gagner le jeu il est nécessaire de récupérer 5 items, qui sont des morceaux de cannes. Ces items sont placés de manière aléatoire sur les cases libres de la carte. Au bout du cinquième morceau de canne, le joueur "gagne" et est conduit à la scène de victoire. 
 
 ## Architecture 
+### Organisation des fichiers
 
+Le projet est décomposé en 5 parties de code : 
+
+**1 - Les managers**
+
+    Regroupent les fichiers en charge de toute une partie du code. Un gestionnaire de scene, du jeu, des textures, ect. 
 ## Génération de carte 
 
 ### Cases incassables
