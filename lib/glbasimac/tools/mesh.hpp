@@ -53,6 +53,9 @@ namespace STP3D
 		};
 		~StandardMesh();
 
+		StandardMesh(StandardMesh const &) = delete;
+		StandardMesh &operator=(StandardMesh const &) = delete;
+
 		/// Set the number of elements in each buffers
 		void setNbElt(unsigned int elts) { nb_elts = elts; };
 		void addOneBuffer(unsigned int id_attribute, unsigned int one_elt_size,
@@ -67,6 +70,40 @@ namespace STP3D
 		bool createVAO();
 		unsigned int getIdVAO();
 		void draw() const;
+
+
+        // create move constructor and move assignment operator
+        StandardMesh(StandardMesh&& other) noexcept
+            : buffers(std::move(other.buffers)), nb_elts(other.nb_elts),
+              size_one_elt(std::move(other.size_one_elt)), attr_id(std::move(other.attr_id)),
+              attr_semantic(std::move(other.attr_semantic)), copied(std::move(other.copied)),
+              gl_type_mesh(other.gl_type_mesh), vbo_id(std::move(other.vbo_id)), id_vao(other.id_vao)
+        {
+            other.id_vao = 0;
+        }
+
+        StandardMesh& operator=(StandardMesh&& other) noexcept
+        {
+            if(id_vao != 0 && vbo_id.size() > 0){
+                glDeleteBuffers(vbo_id.size(), &(vbo_id[0]));
+                glDeleteVertexArrays(1, &id_vao);
+            }
+            if (this != &other)
+            {
+                buffers = std::move(other.buffers);
+                nb_elts = other.nb_elts;
+                size_one_elt = std::move(other.size_one_elt);
+                attr_id = std::move(other.attr_id);
+                attr_semantic = std::move(other.attr_semantic);
+                copied = std::move(other.copied);
+                gl_type_mesh = other.gl_type_mesh;
+                vbo_id = std::move(other.vbo_id);
+                id_vao = other.id_vao;
+
+                other.id_vao = 0;
+            }
+            return *this;
+        }
 
 	private:
 		//  User defined members

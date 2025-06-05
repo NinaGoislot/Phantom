@@ -47,12 +47,12 @@ void Villain::draw(glbasimac::GLBI_Engine& engine) {
     engine.updateMvMatrix();
 
     // Carré en OpenGL immédiat pour debug (GL_QUADS n'est plus supporté en core, mais ici c'est à titre simple)
-    glBegin(GL_TRIANGLE_FAN);
-        glVertex2f(-0.5f, -0.5f); // bas gauche
-        glVertex2f( 0.5f, -0.5f); // bas droit
-        glVertex2f( 0.5f,  0.5f); // haut droit
-        glVertex2f(-0.5f,  0.5f); // haut gauche
-    glEnd();
+    // glBegin(GL_TRIANGLE_FAN);
+    //     glVertex2f(-0.5f, -0.5f); // bas gauche
+    //     glVertex2f( 0.5f, -0.5f); // bas droit
+    //     glVertex2f( 0.5f,  0.5f); // haut droit
+    //     glVertex2f(-0.5f,  0.5f); // haut gauche
+    // glEnd();
 
     engine.mvMatrixStack.popMatrix();
     engine.setFlatColor(1.0f, 1.0f, 1.0f); // reset couleur

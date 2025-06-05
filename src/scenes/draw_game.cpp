@@ -180,7 +180,7 @@ void initTextures()
     wallTile.createVAO();
     itemTile = Texturing::createMapTileMesh(0, 6);
     itemTile.createVAO();
-    trapTile = Texturing::createMapTileMesh(3, 3);
+    trapTile = Texturing::createMapTileMesh(0, 5);
     trapTile.createVAO();
 }
 
