@@ -10,6 +10,7 @@ using namespace glbasimac;
 //External files
 #include "managers/sceneManager.hpp"
 #include "characters/player.hpp"
+#include "characters/phantom.hpp"
 #include "map/grid.hpp"
 
 /* Minimal time wanted between two images */
@@ -26,6 +27,7 @@ struct Game
 {
     GLFWwindow* window;  
     Player* player;
+    std::vector<std::shared_ptr<Phantom>> phantomsList; // Liste des fantômes
     SceneManager sceneManager {};
     std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> grid;
 };

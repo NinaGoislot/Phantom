@@ -1,4 +1,6 @@
 #include "player.hpp"
+#include "managers/gameManager.hpp"
+#include "scenes/endScene.hpp"
 
 void Player::init()
 {
@@ -123,4 +125,14 @@ void Player::draw(glbasimac::GLBI_Engine &engine)
 glm::vec2 Player::getPosition()
 {
     return position;
+}
+
+void Player::takeDamage(int damage)
+{
+    life -= damage;
+    if (life <= 0)
+    {
+        std::cout << "[Player] You died!" << std::endl;
+        getGame()->sceneManager.setCurrentScene(std::make_shared<EndScene>());
+    }
 }
