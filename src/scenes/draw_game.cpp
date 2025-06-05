@@ -274,7 +274,6 @@ void DrawGame::render(const Game &game)
         std::cerr << "[DrawGame::render] Erreur dans drawObstacles : " << e.what() << std::endl;
     }
 
-    game.player->draw(myEngine);
     for (const auto &phantom : game.phantomsList)
     {
         if (phantom)
@@ -282,6 +281,7 @@ void DrawGame::render(const Game &game)
             phantom->draw(myEngine);
         }
     }
+    game.player->draw(myEngine);
 
     playerCloseToItem(items());
 
