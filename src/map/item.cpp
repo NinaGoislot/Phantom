@@ -14,7 +14,7 @@ void checkIfVictory(std::vector<item> &items)
     const int count = countItemsCollected(items);
     if (count >= NB_ITEM_TO_FIND)
     {
-        lunchVictoryScene();
+        launchVictoryScene();
     }
 } 
 
@@ -56,7 +56,6 @@ void displayItems(std::vector<item> &items)
 
 
 
-void getItem(std::vector<item> &items)
 void getItem(std::vector<item> &items)
 {
     Player *player = getGame()->player;

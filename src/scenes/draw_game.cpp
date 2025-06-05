@@ -211,6 +211,10 @@ void drawMap()
 
 void drawPlayerLife(const Game &game, int &windowX, int &windowY)
 {
+    float aspectRatio = static_cast<float>(windowX) / static_cast<float>(windowY);
+    float halfViewX = GL_VIEW_SIZE * aspectRatio / 2;
+    float halfViewY = GL_VIEW_SIZE / 2;
+
     for (int i{0}; i < game.player->getLife(); i++)
     {
         myEngine.activateTexturing(true);
@@ -218,8 +222,9 @@ void drawPlayerLife(const Game &game, int &windowX, int &windowY)
         myEngine.mvMatrixStack.pushMatrix();
         myEngine.updateMvMatrix();
 
-        float x = static_cast<float>(windowX / 100 + i * 0.5f - 2);
-        float y = static_cast<float>(windowY / 100) - 0.25f;
+        float x = (-halfViewX + 0.5f + i * 0.5f) * -1;
+        float y = halfViewY - 0.75f;
+        
 
         myEngine.setFlatColor(1.0, 1.0, 1.0);
 
@@ -318,17 +323,16 @@ void DrawGame::render(const Game &game)
 
     glfwGetWindowSize(getGame()->window, &windowX, &windowY);
 
+    myEngine.switchToFlatShading();
+
     drawPlayerLife(game, windowX, windowY);
 
     myEngine.setViewMatrix(camera.viewMatrix);
 
-    // std::cout << "Camera position: " << camera.position_cam.x << ", " << camera.position_cam.y << ", " << camera.position_cam.z << std::endl;
-    // std::cout << "Player position: " << game.player->getPosition().x << ", " << game.player->getPosition().y << std::endl;
 
     int playerX = static_cast<int>(game.player->getPosition().x) + MAP_WIDTH / 2;
     int playerY = static_cast<int>(game.player->getPosition().y) + MAP_HEIGHT / 2;
 
-    // int halfView = GL_VIEW_SIZE / 2;
     float aspectRatio = static_cast<float>(windowX) / static_cast<float>(windowY);
     float halfViewX = GL_VIEW_SIZE * aspectRatio / 2;
     float halfViewY = GL_VIEW_SIZE / 2;

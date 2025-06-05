@@ -134,7 +134,7 @@ void Player::takeDamage(int damage)
         if (life <= 0)
         {
             std::cout << "[Player] You died!" << std::endl;
-            lunchLoseScene();
+            launchLoseScene();
         }
         godMode = true;
         damageCooldownTimer = DAMAGE_COOLDOWN;

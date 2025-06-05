@@ -66,12 +66,7 @@ void LooseScene::draw()
     drawBackgroundEnd(endTexture, endTile);
     drawButtonEnd(endButtonTexture, endButtonTile);
 }
-<<<<<<< HEAD:src/scenes/endScene.cpp
-
-void EndScene::destroy()
-=======
 void LooseScene::destroy()
->>>>>>> main:src/scenes/looseScene.cpp
 {
     // glDeleteTextures
 }

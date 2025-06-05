@@ -42,7 +42,7 @@ Player* getPlayer();
 std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT>& getGrid();
 
 // Setters
-void lunchVictoryScene();
-void lunchLoseScene();
-void lunchGameScene();
-void lunchHomeScene();
+void launchVictoryScene();
+void launchLoseScene();
+void launchGameScene();
+void launchHomeScene();
