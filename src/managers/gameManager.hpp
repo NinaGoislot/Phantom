@@ -20,7 +20,7 @@ static const float GL_VIEW_SIZE = 20.; // Vue caméra
 static const int WINDOW_WIDTH = 800;
 static const int WINDOW_HEIGHT = 800;
 
-static const int NB_ITEM_TO_GENERATE = 10;
+static const int NB_ITEM_TO_GENERATE = 5;
 static const int NB_ITEM_TO_FIND = 5;
 static const int NB_OBSTACLE_TO_GENERATE = GL_VIEW_SIZE/2;
 
