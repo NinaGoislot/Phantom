@@ -21,7 +21,7 @@ void LooseScene::init()
     looseTile = Texturing::createImageMesh(0, 0, 1920, 1080, 1920, 1080);
     looseTile.createVAO();
 
-    Texturing::initTexture(looseButtonTexture, "FIRST_SCENE-button", "png");
+    Texturing::initTexture(looseButtonTexture, "LOOSE_SCENE-button", "png");
     looseButtonTile = Texturing::createImageMesh(0, 0, BUTTON_SIZE_X, BUTTON_SIZE_Y, BUTTON_SIZE_X, BUTTON_SIZE_Y);
     looseButtonTile.createVAO();
 }
