@@ -73,7 +73,11 @@ Le projet est conçu en programmation orienté objet principalement. Dans le cas
 
 ### Cases incassables
 
+<<<<<<< HEAD
 Les cases incassables sont générés aléatoirement et sont placées sur la carte sur les cases libres. Représentés par des rochers, ils suivent le même système de collision que pour les murs, cependant ils ne peuvent être creusés.
+=======
+Les cases incassables sont générées aléatoirement et sont placés sur la carte sur les cases libres. Les rochers suivent les même système de collision que pour les murs, cependant ils ne peuvent être creusés.
+>>>>>>> 35c415a48313ccd4f53e8f1505db5ee132bc7f4c
 
 ### Pièges
 
@@ -144,6 +148,8 @@ En ce qui concerne les difficultés il y en a eu un certain nombre en effet . Le
 ### Architecture de code
 
 Nous voulions un code le plus clean possible, avec une architecture qui se rapproche des véritables jeux standards. Cela à pris un peu de temps au début, mais nous avons évitons un grand nombre de conflits au sein de nos avancées respectives grâce à ça !
+
+Il a été notamment très difficile de faire apparaître des textures sur les différents meshes au départ et une bonne partie du déboguage a été porté là dessus. Particulièrement en ce qui concerne les UVs et le découpage des tilesets. L'aide du renderDoc ainsi que de nos professeurs a été particulièrement utile.
 
 ### Problème de compilateur
 
