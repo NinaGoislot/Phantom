@@ -5,9 +5,11 @@
 #include "managers/texture.hpp"
 
 GLBI_Texture homeTexture;
-StandardMesh homeTile;
-StandardMesh mesh;
+GLBI_Texture buttonTexture;
 
+StandardMesh homeTile;
+StandardMesh buttonTile;
+StandardMesh mesh;
 
 void drawOneImage(int &x, int &y, StandardMesh &textureTile)
 {
@@ -25,16 +27,17 @@ void HomeScene::init()
     homeTile = Texturing::createImageMesh(0,0,1920,1080,1920,1080);
     homeTile.createVAO();
 
+    Texturing::initTexture(buttonTexture, "FIRST_SCENE-button", "png");
+    buttonTile = Texturing::createMapTileMesh(0, 0, 245, 245);
+    buttonTile.createVAO();
 }
 
 void HomeScene::update()
 {
-
 }
 
-void  HomeScene::draw()
+void drawBackground()
 {
-    // myEngine.switchToFlatShading();
     myEngine.activateTexturing(true);
     homeTexture.attachTexture();
 
@@ -51,7 +54,32 @@ void  HomeScene::draw()
     myEngine.activateTexturing(false);
 }
 
-void  HomeScene::destroy()
+void drawButton()
+{
+    myEngine.activateTexturing(true);
+    buttonTexture.attachTexture();
+
+    myEngine.mvMatrixStack.pushMatrix();
+    myEngine.mvMatrixStack.addTranslation(Vector3D(0, 0, 0));
+    myEngine.mvMatrixStack.addHomothety(5.0);
+    // engine.mvMatrixStack.addTranslation(Vector3D(2., 6., 0));
+    myEngine.setFlatColor(1.0f, 0.0f, 0.0f); // carré rouge
+    myEngine.updateMvMatrix();
+    buttonTile.draw();
+    myEngine.mvMatrixStack.popMatrix();
+
+    buttonTexture.detachTexture();
+    myEngine.activateTexturing(false);
+}
+
+void HomeScene::draw()
+{
+    // myEngine.switchToFlatShading();
+    drawBackground();
+    drawButton();
+}
+
+void HomeScene::destroy()
 {
     // glDeleteTextures
 }
