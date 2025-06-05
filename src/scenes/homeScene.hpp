@@ -1,10 +1,6 @@
 #pragma once 
 #include "scene.hpp"
-#include "glbasimac/glbi_texture.hpp"
 #include <iostream>
-#include "tools/mesh.hpp"
-
-void drawOneImage(int &x, int &y, StandardMesh &textureTile);
 
 struct HomeScene : public Scene
 {

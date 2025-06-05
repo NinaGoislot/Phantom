@@ -11,6 +11,7 @@ class Controls
 public:
     void setKeyState(int key, bool isPressed);
     bool isKeyPressed(int key) const;
+    bool isMousePressed(int button) const;
     void reset();
     int nbMoveControlsActive();
     std::vector<int> moveControls = {

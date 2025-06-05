@@ -29,7 +29,6 @@ using namespace glbasimac;
 STP3D::FPSCamera camera;
 
 // textures
-GLBI_Engine myEngine;
 GLBI_Texture textureAtlas;
 
 // OpenGL Shapes
@@ -225,7 +224,6 @@ void drawPlayerLife(const Game &game, int &windowX, int &windowY)
         float x = (-halfViewX + 0.5f + i * 0.5f) * -1;
         float y = halfViewY - 0.75f;
         
-
         myEngine.setFlatColor(1.0, 1.0, 1.0);
 
         myEngine.mvMatrixStack.pushMatrix();
@@ -328,7 +326,6 @@ void DrawGame::render(const Game &game)
     drawPlayerLife(game, windowX, windowY);
 
     myEngine.setViewMatrix(camera.viewMatrix);
-
 
     int playerX = static_cast<int>(game.player->getPosition().x) + MAP_WIDTH / 2;
     int playerY = static_cast<int>(game.player->getPosition().y) + MAP_HEIGHT / 2;

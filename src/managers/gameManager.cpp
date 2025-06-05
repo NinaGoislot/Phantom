@@ -32,6 +32,8 @@
 #include <array>
 #include <math.h>
 
+GLBI_Engine myEngine;
+
 void onError(int error, const char *description)
 {
     std::cout << "GLFW Error (" << error << ") : " << description << std::endl;
@@ -86,7 +88,7 @@ void createGame(GLFWwindow *window)
         phantom->init();
     }
 
-    launchGameScene();
+    launchHomeScene();
 }
 
 void initGame()
