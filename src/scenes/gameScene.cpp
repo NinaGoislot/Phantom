@@ -31,7 +31,7 @@ void GameScene::update()
         for (auto &oneTrap : traps())
         {
             if (oneTrap.positionX == round(playerPos.x + 50) &&
-                oneTrap.positionY == floor(playerPos.y + 50))
+                oneTrap.positionY == round(playerPos.y + 50))
             {
 
                 std::cout << "Player stepped on trap ID: " << oneTrap.id << std::endl;
