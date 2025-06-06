@@ -49,3 +49,4 @@ void launchVictoryScene();
 void launchLooseScene();
 void launchGameScene();
 void launchHomeScene();
+void relaunchGameScene();

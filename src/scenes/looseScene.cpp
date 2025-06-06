@@ -56,7 +56,7 @@ void LooseScene::draw()
             mouseY <= (buttonCenterY + BUTTON_SIZE_Y / 2))
         {
             std::cout << "Button clicked!" << std::endl;
-            launchGameScene();
+            relaunchGameScene();
         }
     }
 }

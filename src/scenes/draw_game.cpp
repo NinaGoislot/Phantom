@@ -180,11 +180,11 @@ void drawMap()
         {
             if (isAlive(w, h))
             {
-                // int tileId = tileMap[w][h];
-                // int tileCol = tileId % 3;
-                // int tileRow = tileId / 3;
+                int tileId = tileMap[w][h];
+                int tileCol = tileId % 3;
+                int tileRow = tileId / 3;
 
-                // Texturing::updateUVs(floorTile, tileCol, tileRow, 16, 16, 128, 128);
+                Texturing::updateUVs(floorTile, tileCol, tileRow, 16, 16, 128, 128);
 
                 // RANDOM FLOOR TILING FEATURE // MAKE IT LAG
                 drawOneTile(w, h, floorTile);

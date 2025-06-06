@@ -13,7 +13,7 @@ void Villain::checkIfPlayerIsTouched(const glm::vec2 &position)
     auto &grid = getGrid();
     glm::ivec2 posGrid = convertToGridCoordinates(position);
 
-    if (grid[posGrid.y][posGrid.x].distance < 2)
+    if (grid[posGrid.y][posGrid.x].distance < 1)
     {
         launchLooseScene();
     }

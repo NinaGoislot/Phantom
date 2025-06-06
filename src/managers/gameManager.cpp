@@ -91,8 +91,6 @@ void createGame(GLFWwindow *window)
     {
         phantom->init();
     }
-
-    launchHomeScene();
 }
 
 void initGame()
@@ -151,6 +149,7 @@ void initGame()
     glClearColor(0.2f, 0.f, 0.f, 0.f);
 
     createGame(window);
+    launchHomeScene();
 }
 
 Game *getGame()
@@ -219,4 +218,11 @@ void launchHomeScene()
 {
     Game *game = getGame();
     game->sceneManager.setCurrentScene(std::make_shared<HomeScene>());
+};
+void relaunchGameScene()
+{
+    delete getGame()->player;
+    delete getGame();
+    createGame(glfwGetCurrentContext());
+    launchGameScene();
 };
