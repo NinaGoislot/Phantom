@@ -12,13 +12,17 @@ public:
 
     virtual void init() = 0;
     virtual void move(glm::vec2 direction) = 0;
-    virtual void draw(glbasimac::GLBI_Engine& engine) = 0;
+    virtual void draw(glbasimac::GLBI_Engine &engine) = 0;
     virtual void update() = 0;
-
+    virtual glm::ivec2 convertToGridCoordinates(glm::vec2 position) = 0;
+    virtual void checkIfPlayerIsTouched(const glm::vec2 &position) = 0;
 
     glm::vec2 position{};
     float scale = 1.;
     glm::vec2 size{1, 1.};
 
     float speed = 5.0f;
+    int viewRange {};
+
+
 };

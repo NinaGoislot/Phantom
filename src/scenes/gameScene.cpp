@@ -216,7 +216,12 @@ void GameScene::update()
     {
         if (phantom)
         {
-            phantom->update();
+            auto gridPos = phantom->convertToGridCoordinates(phantom->position);
+            Cell &cell = game->grid[gridPos.y][gridPos.x];
+            if (cell.distance <= phantom->viewRange)
+            {
+                phantom->update();
+            }
         }
     }
 }

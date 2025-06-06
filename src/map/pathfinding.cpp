@@ -67,6 +67,67 @@ void generateFlowField()
     }
 }
 
+//flow field par rapport à une distance donnée
+void generateFlowFieldExtended(int maxDistance)
+{
+    // params
+    glm::vec2 rawPos = getPlayer()->getPosition();
+    glm::vec2 adjustedPos = rawPos + glm::vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2); // Conversion cordonnées joueur -> coordonnées grille
+    glm::ivec2 playerPos = glm::ivec2(glm::round(adjustedPos));
+
+    std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid = getGrid();
+    // distance max pour le calcul du flow field = la taille de la vue
+    std::array<glm::ivec2, 4> directions = {glm::ivec2{0, 1}, glm::ivec2{1, 0}, glm::ivec2{0, -1}, glm::ivec2{-1, 0}}; // Directions possibles
+
+    // Initialisation de la queue pour BFS
+    for (int y = 0; y < MAP_HEIGHT; ++y)
+    {
+        for (int x = 0; x < MAP_WIDTH; ++x)
+        {
+            grid[y][x].direction = {0, 0};
+            grid[y][x].visited = false;
+            grid[y][x].distance = maxDistance; // Initialiser la distance à la distance maximale
+        }
+    }
+
+    // Initialisation du player pour le flow field
+    grid[playerPos.y][playerPos.x].direction = {0, 0}; // le joueur est l'objectif à atteindre, donc pas de direction
+    grid[playerPos.y][playerPos.x].visited = true;
+    grid[playerPos.y][playerPos.x].distance = 0;
+
+    // BFS pour remplir le flow field
+    std::queue<glm::ivec2> cellQueue;
+    cellQueue.push(playerPos);
+
+    while (!cellQueue.empty())
+    {
+        glm::ivec2 currentCell = cellQueue.front();
+        cellQueue.pop();
+
+        int current_distance = grid[currentCell.y][currentCell.x].distance;
+
+        // if (current_distance >= MAX_DISTANCE)
+        //     continue; // Si la distance actuelle est supérieure à la distance maximale, on ne continue pas
+        for (const glm::ivec2 &dir : directions)
+        {
+            glm::ivec2 neighborCell = currentCell + dir;
+
+            // Vérifier si la cellule voisine est dans les limites de la grille
+            if (isInsideGrid(neighborCell))
+            {
+                if (!grid[neighborCell.y][neighborCell.x].visited && grid[currentCell.y][currentCell.x].distance < maxDistance)
+                { // Si la cellule voisine n'a pas encore de direction (on compare à un vecteur {0;0}, l'initialisation par défaut)
+                    // Calculer la distance entre la cellule actuelle et le joueur
+                    grid[neighborCell.y][neighborCell.x].visited = true;
+                    grid[neighborCell.y][neighborCell.x].distance = current_distance + 1;
+                    grid[neighborCell.y][neighborCell.x].direction = currentCell - neighborCell;
+                    cellQueue.push(neighborCell);
+                }
+            }
+        }
+    }
+}
+
 void drawFlowField()
 {
     auto &grid = getGrid();

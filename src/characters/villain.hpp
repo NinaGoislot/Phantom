@@ -11,7 +11,8 @@ struct Villain : public Phantom
     void move(glm::vec2 direction) override;
     void update();
     void draw(glbasimac::GLBI_Engine &engine) override;
-    
+    glm::ivec2 convertToGridCoordinates(glm::vec2 position) override;
+    void checkIfPlayerIsTouched(const glm::vec2 &position) override;
 
     //------------------------------------
     //------------- ANIMATION ------------

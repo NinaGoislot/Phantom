@@ -17,6 +17,8 @@
 #include "managers/gameManager.hpp"
 #include "managers/text.hpp"
 #include "characters/villain.hpp"
+#include "characters/patricia.hpp"
+#include "characters/patrick.hpp"
 #include "scenes/gameScene.hpp"
 #include "scenes/victoryScene.hpp"
 #include "scenes/looseScene.hpp"
@@ -83,6 +85,8 @@ void createGame(GLFWwindow *window)
     generateFlowField();
     player->init();
     game->phantomsList.push_back(std::make_shared<Villain>());
+    game->phantomsList.push_back(std::make_shared<Patricia>());
+    game->phantomsList.push_back(std::make_shared<Patrick>());
     for (auto &phantom : game->phantomsList)
     {
         phantom->init();

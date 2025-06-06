@@ -1,11 +1,22 @@
 #include "villain.hpp"
 #include "map/pathfinding.hpp"
 
-glm::ivec2 convertToGridCoordinates(glm::vec2 position)
+glm::ivec2 Villain::convertToGridCoordinates(glm::vec2 position)
 {
     glm::vec2 adjustedPos = position + glm::vec2(MAP_WIDTH / 2, MAP_HEIGHT / 2);
     glm::ivec2 entityPos = glm::ivec2(glm::round(adjustedPos));
     return entityPos;
+}
+
+void Villain::checkIfPlayerIsTouched(const glm::vec2 &position)
+{
+    auto &grid = getGrid();
+    glm::ivec2 posGrid = convertToGridCoordinates(position);
+
+    if (grid[posGrid.y][posGrid.x].distance < 2)
+    {
+        launchLooseScene();
+    }
 }
 
 // void checkIfPlayerIsTouched(const glm::vec2& position)
@@ -17,17 +28,6 @@ glm::ivec2 convertToGridCoordinates(glm::vec2 position)
 //        launchLooseScene();
 //     }
 // }
-
-void checkIfPlayerIsTouched(const glm::vec2& position)
-{
-    auto &grid = getGrid();
-    glm::ivec2 posGrid = convertToGridCoordinates(position);
-
-    if (grid[posGrid.y][posGrid.x].distance < 2)
-    {
-       launchLooseScene();
-    }
-}
 
 void Villain::init()
 {
@@ -49,6 +49,7 @@ void Villain::init()
     }
 
     speed = 2.0f;
+    viewRange = MAP_WIDTH > MAP_HEIGHT ? MAP_WIDTH : MAP_HEIGHT;
 
     // random spaww
     const std::array<std::array<Cell, MAP_WIDTH>, MAP_HEIGHT> &grid = getGrid();
@@ -115,8 +116,6 @@ void Villain::move(glm::vec2 direction)
     // std::cout << "[Villain] Moving is in : (" << position.x << ", " << position.y << ")" << std::endl;
     // std::cout << "[Villain] Player position is : (" << getPlayer()->getPosition().x << ", " << getPlayer()->getPosition().y << ")" << std::endl;
     position += direction * speed * static_cast<float>(get_loop_time().getDeltaTime());
-
-    
 }
 
 void Villain::anim_up()
